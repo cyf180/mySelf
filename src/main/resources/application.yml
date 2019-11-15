@@ -1,0 +1,57 @@
+spring:
+  profiles:
+    active: @profileActive@
+  http:
+    encoding:
+      charset: utf-8
+      enabled: true
+      force: true
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  redis:
+      host: 192.168.0.39
+      port: 6379
+      password:
+      database: 13
+
+server:
+  port: 93
+  tomcat:
+    remote-ip-header: x-forwarded-for
+    basedir: /tdpro/uploadtmp
+  use-forward-headers: true
+
+swagger:
+  package: com.tdpro.controller
+
+# MyBatis
+mybatis:
+      # 配置类型别名
+      typeAliasesPackage: com.tdpro.entity/**
+      # dao层接口
+      basePackage: com.tdpro.mapper
+      # 配置mapper的扫描，找到所有的mapper.xml映射文件
+      mapperLocations: classpath:mybatis/mapper/*.xml
+      # 加载全局的配置文件
+      configLocation: classpath:mybatis/mybatis-config.xml
+
+qiniu:
+  imgPath: http://xdj2img.txw18.com
+
+wxconfig:
+  appid: wxcfee96fb699a352d
+  secret: b44e8c250f83dacb7d1752f3bea54784
+
+cabinet:
+  publicKey: 0b309ef3482eee3bb76c86c21beb9c36aba5a09c183e0ea05e3c31440a2543688c3f63a75c0e33e6cb3e9ee5ee9d2adeae4233e6a079abf531576094b3440c208236b017003cbcb250441aabeecde8fabe595ac8f75d622face16a81b08dca66e2d96cb91a0edfd2ade7ce3ef184e3fccdc0788e3a37e72be6f28ae8a5219e06ee7f03b59f55dcd3138e3f2798435980bc8c37fdd5f981c465f0e350fc38ea35720abd171158143d06dc43f9c15f072635b4cadfb4cf0a9c8550084742f7eb26
+  privateKey: 2037ccd76869e9ff2da6edf8cbdf0bffcfa38ccdbac3c6d5c37ce9a3bedfd171caab2b7cffc30c722432cac6dd55aca6702c9714425256a053507a873642b92e6b8bea641e074436f8094b84c316ae038786264ce9457c8c92d23acd99036ad3d797d2b64c082bf83224f27d1168ba14a4b7263ff33232f1781e9a7a74fb6c50daf615e855b395418de530ad641960ba380eccf77f847366cc40c9be975873da9f2c7b9aa72c317035de0313d0a46a0b071cd2a13aaf19b3083d4a0aa2793eaf3c1cb5e763d868532d0234da1a953508136160b78f163c1c900bf1433fe0ec1ecd2196686bddc8e39b075e2d5a245a7b04c44be34d3c17cecbe91bb0b2640dfd6965efcf0e3093b79621f04771e9c90c33b4263511a468693582ea3e418c9f579ccdfab935fa7eaceb0fbe19a5ae4999
+  secret: 00c7ece0e7806f2d83c340b6925c1ac2
+  broadcastCabinetNo: 8&BCECTy1HJR3s^S
+
+com.tdpro.common.utils.jwt:
+  tokenExpirationTime: 43200 # Number of minutes
+  refreshTokenExpTime: 43200 # Minutes
+  tokenIssuer: http://zerocat.cn
+  tokenSigningKey: FpD5q^8cQ2uhta@voS0vZyEqk@1!KWoS
+

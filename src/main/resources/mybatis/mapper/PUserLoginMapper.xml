@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tdpro.mapper.PUserLoginMapper" >
+  <resultMap id="BaseResultMap" type="com.tdpro.entity.PUserLogin" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="uid" property="uid" jdbcType="BIGINT" />
+    <result column="openId" property="openId" jdbcType="VARCHAR" />
+    <result column="headPath" property="headPath" jdbcType="VARCHAR" />
+    <result column="nickName" property="nickName" jdbcType="VARCHAR" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, `uid`, openId, headPath, nickName, createTime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from p_user_login
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from p_user_login
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tdpro.entity.PUserLogin" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into p_user_login (`uid`, openId, headPath, 
+      nickName, createTime)
+    values (#{uid,jdbcType=BIGINT}, #{openId,jdbcType=VARCHAR}, #{headPath,jdbcType=VARCHAR}, 
+      #{nickName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tdpro.entity.PUserLogin" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into p_user_login
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="uid != null" >
+        `uid`,
+      </if>
+      <if test="openId != null" >
+        openId,
+      </if>
+      <if test="headPath != null" >
+        headPath,
+      </if>
+      <if test="nickName != null" >
+        nickName,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="uid != null" >
+        #{uid,jdbcType=BIGINT},
+      </if>
+      <if test="openId != null" >
+        #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="headPath != null" >
+        #{headPath,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null" >
+        #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tdpro.entity.PUserLogin" >
+    update p_user_login
+    <set >
+      <if test="uid != null" >
+        `uid` = #{uid,jdbcType=BIGINT},
+      </if>
+      <if test="openId != null" >
+        openId = #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="headPath != null" >
+        headPath = #{headPath,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null" >
+        nickName = #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tdpro.entity.PUserLogin" >
+    update p_user_login
+    set `uid` = #{uid,jdbcType=BIGINT},
+      openId = #{openId,jdbcType=VARCHAR},
+      headPath = #{headPath,jdbcType=VARCHAR},
+      nickName = #{nickName,jdbcType=VARCHAR},
+      createTime = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectInfoByUid" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    select
+    <include refid="Base_Column_List" />
+    from p_user_login
+    where uid = #{uid,jdbcType=BIGINT}
+  </select>
+</mapper>
