@@ -52,3 +52,22 @@ CREATE TABLE `p_knot_config` (
   `rate` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '利率',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='结算区间配置表';
+
+CREATE TABLE `p_goods` (
+  `id` bigint(11) NOT NULL AUTO_INCREMENT,
+  `classId` bigint(11) NOT NULL DEFAULT '0' COMMENT '分类id',
+  `goodsName` varchar(100) NOT NULL COMMENT '商品名称',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品表';
+
+CREATE TABLE `p_goods_class` (
+  `id` bigint(11) NOT NULL AUTO_INCREMENT,
+  `className` varchar(50) NOT NULL COMMENT '分类名',
+  `sort` int(11) NOT NULL DEFAULT '0' COMMENT '排序',
+  `explain` varchar(200) DEFAULT NULL COMMENT '说明',
+  `iconPath` varchar(200) DEFAULT NULL COMMENT '图标地址',
+  `isShow` int(1) NOT NULL DEFAULT '0' COMMENT '是否显示(0:否 1:是)',
+  `isDel` int(1) NOT NULL DEFAULT '0' COMMENT '是否删除(-1:是 0:否)',
+  `createTime` datetime DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品分类表';
