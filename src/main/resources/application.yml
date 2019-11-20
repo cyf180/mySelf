@@ -54,4 +54,9 @@ com.tdpro.common.utils.jwt:
   refreshTokenExpTime: 43200 # Minutes
   tokenIssuer: http://zerocat.cn
   tokenSigningKey: FpD5q^8cQ2uhta@voS0vZyEqk@1!KWoS
+  headerString: tdProAuthor
+
+blockerPath:
+  userPath: /user/
+
 

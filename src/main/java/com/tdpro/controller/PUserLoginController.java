@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/pro/userLogin/")
+@RequestMapping("/user/userLogin/")
 @Api(tags = "三方表查询相关接口")
 public class PUserLoginController {
     @Autowired
