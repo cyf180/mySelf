@@ -52,4 +52,33 @@ public class UserSiteServiceImpl implements UserSiteService {
         }
         return ResponseUtils.successRes(1);
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
+    public  Response setUserSiteDefault(UserSiteETD siteETD){
+        if(null == siteETD.getId() || null == siteETD.getUid()){
+            return  ResponseUtils.errorRes("操作异常");
+        }
+        PUserSite siteInfo = userSiteMapper.selectByPrimaryKey(siteETD.getId());
+        if(null == siteInfo){
+            return ResponseUtils.errorRes("收货地址不存在");
+        }
+        if(!siteInfo.getUid().equals(siteETD.getUid())){
+            return ResponseUtils.errorRes("操作异常");
+        }
+        if(siteInfo.getIsDefault().equals(new Integer(1))){
+            return ResponseUtils.errorRes("当前地址已是默认地址");
+        }
+        UserSiteETD siteETD1 = new UserSiteETD();
+        siteETD1.setId(siteInfo.getId());
+        siteETD1.setUid(siteInfo.getUid());
+        userSiteMapper.updateNotIsDefaultByUid(siteETD1);
+        PUserSite userSiteUPD = new PUserSite();
+        userSiteUPD.setId(siteInfo.getId());
+        userSiteUPD.setIsDefault(1);
+        if(0 == userSiteMapper.updateByPrimaryKeySelective(userSiteUPD)){
+            throw new RuntimeException("删除失败");
+        }
+        return ResponseUtils.successRes(1);
+    }
 }

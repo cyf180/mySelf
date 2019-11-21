@@ -120,4 +120,11 @@
     where uid=#{0}
     order by isDefault desc,id desc
   </select>
+  <update id="updateNotIsDefaultByUid" parameterType="com.tdpro.entity.extend.UserSiteETD">
+    update p_user_site
+    set isDefault = 0
+    where uid = #{uid}
+    and id != #{id}
+    and isDefault=1
+  </update>
 </mapper>

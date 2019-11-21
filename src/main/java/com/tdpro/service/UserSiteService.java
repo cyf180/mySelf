@@ -17,4 +17,11 @@ public interface UserSiteService {
      * @return
      */
     Response delUserSite(UserSiteETD siteETD);
+
+    /**
+     * 设置默认收货地址
+     * @param siteETD
+     * @return
+     */
+    Response setUserSiteDefault(UserSiteETD siteETD);
 }

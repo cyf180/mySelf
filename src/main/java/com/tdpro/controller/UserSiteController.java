@@ -1,6 +1,7 @@
 package com.tdpro.controller;
 
 import com.tdpro.common.utils.Response;
+import com.tdpro.common.utils.ResponseUtils;
 import com.tdpro.entity.extend.UserSiteETD;
 import com.tdpro.service.UserSiteService;
 import io.swagger.annotations.Api;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 @RestController
 @RequestMapping("/user/site/")
@@ -19,6 +22,9 @@ import javax.validation.Valid;
 public class UserSiteController {
     @Autowired
     private UserSiteService userSiteService;
+    Lock delLock = new ReentrantLock();
+    Lock defaultLock = new ReentrantLock();
+
     @GetMapping("siteList")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "pageNo", value = "当前页码", required = false, dataType = "int", paramType = "query"),
@@ -30,13 +36,41 @@ public class UserSiteController {
         return userSiteService.userSiteList(siteETD);
     }
 
-    @PostMapping("delSit")
+    @PostMapping("delSite")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "当前页码", required = true, dataType = "long", paramType = "form")
+            @ApiImplicitParam(name = "id", value = "地址", required = true, dataType = "long", paramType = "form")
     })
     @ApiOperation(value = "用户删除收货地址")
     public Response delUserSit(@ApiIgnore @RequestAttribute Long uid,@Valid @RequestBody UserSiteETD siteETD){
-        siteETD.setUid(uid);
-        return userSiteService.delUserSite(siteETD);
+        Response response;
+        try {
+            delLock.lock();
+            siteETD.setUid(uid);
+            response = userSiteService.delUserSite(siteETD);
+        }catch (Exception e){
+            response = ResponseUtils.errorRes(e.getMessage());
+        }finally {
+            delLock.unlock();
+        }
+        return response;
+    }
+
+    @PostMapping("defaultSite")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "地址id", required = true, dataType = "long", paramType = "form")
+    })
+    @ApiOperation(value = "用户删除收货地址")
+    public Response defaultSite(@ApiIgnore @RequestAttribute Long uid,@Valid @RequestBody UserSiteETD siteETD){
+        Response response;
+        try {
+            defaultLock.lock();
+            siteETD.setUid(uid);
+            response =  userSiteService.setUserSiteDefault(siteETD);
+        }catch (Exception e){
+            response = ResponseUtils.errorRes(e.getMessage());
+        }finally {
+            defaultLock.unlock();
+        }
+        return response;
     }
 }

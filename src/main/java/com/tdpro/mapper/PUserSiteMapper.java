@@ -20,4 +20,6 @@ public interface PUserSiteMapper {
     int updateByPrimaryKey(PUserSite record);
 
     List<UserSiteETD> selectListByUid(Long uid);
+
+    int updateNotIsDefaultByUid(UserSiteETD siteETD);
 }
