@@ -1,18 +1,19 @@
-package com.zerocat.entity;
+package com.tdpro.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
-public class DUserLogin implements Serializable {
+public class PUserMonthKnot implements Serializable {
     private Long id;
 
     private Long uid;
 
-    private String openId;
+    private BigDecimal knotPrice;
 
-    private String headPath;
+    private Integer knotOrderNum;
 
-    private String nickName;
+    private Date knotTime;
 
     private Date createTime;
 
@@ -34,28 +35,28 @@ public class DUserLogin implements Serializable {
         this.uid = uid;
     }
 
-    public String getOpenId() {
-        return openId;
+    public BigDecimal getKnotPrice() {
+        return knotPrice;
     }
 
-    public void setOpenId(String openId) {
-        this.openId = openId == null ? null : openId.trim();
+    public void setKnotPrice(BigDecimal knotPrice) {
+        this.knotPrice = knotPrice;
     }
 
-    public String getHeadPath() {
-        return headPath;
+    public Integer getKnotOrderNum() {
+        return knotOrderNum;
     }
 
-    public void setHeadPath(String headPath) {
-        this.headPath = headPath == null ? null : headPath.trim();
+    public void setKnotOrderNum(Integer knotOrderNum) {
+        this.knotOrderNum = knotOrderNum;
     }
 
-    public String getNickName() {
-        return nickName;
+    public Date getKnotTime() {
+        return knotTime;
     }
 
-    public void setNickName(String nickName) {
-        this.nickName = nickName == null ? null : nickName.trim();
+    public void setKnotTime(Date knotTime) {
+        this.knotTime = knotTime;
     }
 
     public Date getCreateTime() {
@@ -74,9 +75,9 @@ public class DUserLogin implements Serializable {
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
         sb.append(", uid=").append(uid);
-        sb.append(", openId=").append(openId);
-        sb.append(", headPath=").append(headPath);
-        sb.append(", nickName=").append(nickName);
+        sb.append(", knotPrice=").append(knotPrice);
+        sb.append(", knotOrderNum=").append(knotOrderNum);
+        sb.append(", knotTime=").append(knotTime);
         sb.append(", createTime=").append(createTime);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tdpro.mapper.PKnotConfigMapper" >
+  <resultMap id="BaseResultMap" type="com.tdpro.entity.PKnotConfig" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="smallValue" property="smallValue" jdbcType="INTEGER" />
+    <result column="bigValue" property="bigValue" jdbcType="INTEGER" />
+    <result column="rate" property="rate" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, smallValue, bigValue, rate
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from p_knot_config
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from p_knot_config
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tdpro.entity.PKnotConfig" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into p_knot_config (smallValue, bigValue, rate
+      )
+    values (#{smallValue,jdbcType=INTEGER}, #{bigValue,jdbcType=INTEGER}, #{rate,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tdpro.entity.PKnotConfig" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into p_knot_config
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="smallValue != null" >
+        smallValue,
+      </if>
+      <if test="bigValue != null" >
+        bigValue,
+      </if>
+      <if test="rate != null" >
+        rate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="smallValue != null" >
+        #{smallValue,jdbcType=INTEGER},
+      </if>
+      <if test="bigValue != null" >
+        #{bigValue,jdbcType=INTEGER},
+      </if>
+      <if test="rate != null" >
+        #{rate,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tdpro.entity.PKnotConfig" >
+    update p_knot_config
+    <set >
+      <if test="smallValue != null" >
+        smallValue = #{smallValue,jdbcType=INTEGER},
+      </if>
+      <if test="bigValue != null" >
+        bigValue = #{bigValue,jdbcType=INTEGER},
+      </if>
+      <if test="rate != null" >
+        rate = #{rate,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tdpro.entity.PKnotConfig" >
+    update p_knot_config
+    set smallValue = #{smallValue,jdbcType=INTEGER},
+      bigValue = #{bigValue,jdbcType=INTEGER},
+      rate = #{rate,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

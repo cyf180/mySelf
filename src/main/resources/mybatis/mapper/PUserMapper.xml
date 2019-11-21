@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tdpro.mapper.PUserMapper" >
+  <resultMap id="BaseResultMap" type="com.tdpro.entity.PUser" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="isUser" property="isUser" jdbcType="INTEGER" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="payPassword" property="payPassword" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="strawUid" property="strawUid" jdbcType="BIGINT" />
+    <result column="nickName" property="nickName" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="balance" property="balance" jdbcType="DECIMAL" />
+    <result column="integral" property="integral" jdbcType="DECIMAL" />
+    <result column="totalIntegral" property="totalIntegral" jdbcType="DECIMAL" />
+    <result column="bankName" property="bankName" jdbcType="VARCHAR" />
+    <result column="bankBranch" property="bankBranch" jdbcType="VARCHAR" />
+    <result column="bankCard" property="bankCard" jdbcType="VARCHAR" />
+    <result column="idCard" property="idCard" jdbcType="VARCHAR" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="disableTime" property="disableTime" jdbcType="TIMESTAMP" />
+    <result column="uncoilTime" property="uncoilTime" jdbcType="TIMESTAMP" />
+    <result column="strawPath" property="strawPath" jdbcType="VARCHAR" />
+    <result column="knotId" property="knotId" jdbcType="BIGINT" />
+    <result column="knotAmount" property="knotAmount" jdbcType="DECIMAL" />
+    <result column="teamOneNum" property="teamOneNum" jdbcType="INTEGER" />
+    <result column="teamSuitNum" property="teamSuitNum" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, isUser, phone, payPassword, `state`, strawUid, nickName, `name`, balance, integral, 
+    totalIntegral, bankName, bankBranch, bankCard, idCard, createTime, disableTime, uncoilTime, 
+    strawPath, knotId, knotAmount, teamOneNum, teamSuitNum
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from p_user
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from p_user
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tdpro.entity.PUser" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into p_user (isUser, phone, payPassword, 
+      `state`, strawUid, nickName, 
+      `name`, balance, integral, 
+      totalIntegral, bankName, bankBranch, 
+      bankCard, idCard, createTime, 
+      disableTime, uncoilTime, strawPath, 
+      knotId, knotAmount, teamOneNum, 
+      teamSuitNum)
+    values (#{isUser,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR}, #{payPassword,jdbcType=VARCHAR}, 
+      #{state,jdbcType=INTEGER}, #{strawUid,jdbcType=BIGINT}, #{nickName,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{balance,jdbcType=DECIMAL}, #{integral,jdbcType=DECIMAL}, 
+      #{totalIntegral,jdbcType=DECIMAL}, #{bankName,jdbcType=VARCHAR}, #{bankBranch,jdbcType=VARCHAR}, 
+      #{bankCard,jdbcType=VARCHAR}, #{idCard,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{disableTime,jdbcType=TIMESTAMP}, #{uncoilTime,jdbcType=TIMESTAMP}, #{strawPath,jdbcType=VARCHAR}, 
+      #{knotId,jdbcType=BIGINT}, #{knotAmount,jdbcType=DECIMAL}, #{teamOneNum,jdbcType=INTEGER}, 
+      #{teamSuitNum,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tdpro.entity.PUser" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into p_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="isUser != null" >
+        isUser,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="payPassword != null" >
+        payPassword,
+      </if>
+      <if test="state != null" >
+        `state`,
+      </if>
+      <if test="strawUid != null" >
+        strawUid,
+      </if>
+      <if test="nickName != null" >
+        nickName,
+      </if>
+      <if test="name != null" >
+        `name`,
+      </if>
+      <if test="balance != null" >
+        balance,
+      </if>
+      <if test="integral != null" >
+        integral,
+      </if>
+      <if test="totalIntegral != null" >
+        totalIntegral,
+      </if>
+      <if test="bankName != null" >
+        bankName,
+      </if>
+      <if test="bankBranch != null" >
+        bankBranch,
+      </if>
+      <if test="bankCard != null" >
+        bankCard,
+      </if>
+      <if test="idCard != null" >
+        idCard,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="disableTime != null" >
+        disableTime,
+      </if>
+      <if test="uncoilTime != null" >
+        uncoilTime,
+      </if>
+      <if test="strawPath != null" >
+        strawPath,
+      </if>
+      <if test="knotId != null" >
+        knotId,
+      </if>
+      <if test="knotAmount != null" >
+        knotAmount,
+      </if>
+      <if test="teamOneNum != null" >
+        teamOneNum,
+      </if>
+      <if test="teamSuitNum != null" >
+        teamSuitNum,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="isUser != null" >
+        #{isUser,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="payPassword != null" >
+        #{payPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="strawUid != null" >
+        #{strawUid,jdbcType=BIGINT},
+      </if>
+      <if test="nickName != null" >
+        #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="balance != null" >
+        #{balance,jdbcType=DECIMAL},
+      </if>
+      <if test="integral != null" >
+        #{integral,jdbcType=DECIMAL},
+      </if>
+      <if test="totalIntegral != null" >
+        #{totalIntegral,jdbcType=DECIMAL},
+      </if>
+      <if test="bankName != null" >
+        #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankBranch != null" >
+        #{bankBranch,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCard != null" >
+        #{bankCard,jdbcType=VARCHAR},
+      </if>
+      <if test="idCard != null" >
+        #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="disableTime != null" >
+        #{disableTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="uncoilTime != null" >
+        #{uncoilTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="strawPath != null" >
+        #{strawPath,jdbcType=VARCHAR},
+      </if>
+      <if test="knotId != null" >
+        #{knotId,jdbcType=BIGINT},
+      </if>
+      <if test="knotAmount != null" >
+        #{knotAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="teamOneNum != null" >
+        #{teamOneNum,jdbcType=INTEGER},
+      </if>
+      <if test="teamSuitNum != null" >
+        #{teamSuitNum,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tdpro.entity.PUser" >
+    update p_user
+    <set >
+      <if test="isUser != null" >
+        isUser = #{isUser,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="payPassword != null" >
+        payPassword = #{payPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        `state` = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="strawUid != null" >
+        strawUid = #{strawUid,jdbcType=BIGINT},
+      </if>
+      <if test="nickName != null" >
+        nickName = #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="balance != null" >
+        balance = #{balance,jdbcType=DECIMAL},
+      </if>
+      <if test="integral != null" >
+        integral = #{integral,jdbcType=DECIMAL},
+      </if>
+      <if test="totalIntegral != null" >
+        totalIntegral = #{totalIntegral,jdbcType=DECIMAL},
+      </if>
+      <if test="bankName != null" >
+        bankName = #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankBranch != null" >
+        bankBranch = #{bankBranch,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCard != null" >
+        bankCard = #{bankCard,jdbcType=VARCHAR},
+      </if>
+      <if test="idCard != null" >
+        idCard = #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="disableTime != null" >
+        disableTime = #{disableTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="uncoilTime != null" >
+        uncoilTime = #{uncoilTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="strawPath != null" >
+        strawPath = #{strawPath,jdbcType=VARCHAR},
+      </if>
+      <if test="knotId != null" >
+        knotId = #{knotId,jdbcType=BIGINT},
+      </if>
+      <if test="knotAmount != null" >
+        knotAmount = #{knotAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="teamOneNum != null" >
+        teamOneNum = #{teamOneNum,jdbcType=INTEGER},
+      </if>
+      <if test="teamSuitNum != null" >
+        teamSuitNum = #{teamSuitNum,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tdpro.entity.PUser" >
+    update p_user
+    set isUser = #{isUser,jdbcType=INTEGER},
+      phone = #{phone,jdbcType=VARCHAR},
+      payPassword = #{payPassword,jdbcType=VARCHAR},
+      `state` = #{state,jdbcType=INTEGER},
+      strawUid = #{strawUid,jdbcType=BIGINT},
+      nickName = #{nickName,jdbcType=VARCHAR},
+      `name` = #{name,jdbcType=VARCHAR},
+      balance = #{balance,jdbcType=DECIMAL},
+      integral = #{integral,jdbcType=DECIMAL},
+      totalIntegral = #{totalIntegral,jdbcType=DECIMAL},
+      bankName = #{bankName,jdbcType=VARCHAR},
+      bankBranch = #{bankBranch,jdbcType=VARCHAR},
+      bankCard = #{bankCard,jdbcType=VARCHAR},
+      idCard = #{idCard,jdbcType=VARCHAR},
+      createTime = #{createTime,jdbcType=TIMESTAMP},
+      disableTime = #{disableTime,jdbcType=TIMESTAMP},
+      uncoilTime = #{uncoilTime,jdbcType=TIMESTAMP},
+      strawPath = #{strawPath,jdbcType=VARCHAR},
+      knotId = #{knotId,jdbcType=BIGINT},
+      knotAmount = #{knotAmount,jdbcType=DECIMAL},
+      teamOneNum = #{teamOneNum,jdbcType=INTEGER},
+      teamSuitNum = #{teamSuitNum,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="getUserCentre" resultType="com.tdpro.entity.extend.UserETD" parameterType="java.lang.Long">
+    select u.id,u.balance,u.integral,u.teamOneNum,u.teamSuitNum,u.isUser,k.rate,u.phone,
+    (select count(*) from p_user where strawUid=u.id) as teamPeopleNum,
+    (select count(*) from p_collect where uid=u.id) as collectNum,
+    (select count(*) from p_user_voucher where uid=u.id and state=0 and useState=0) as voucherNum,
+    (select count(*) from p_order where uid=u.id and state=0 and isDel=0) as waitingPayOrderNum,
+    (select count(*) from p_order where uid=u.id and state=1 and isDel=0) as waitingSendOrderNum,
+    (select count(*) from p_order where uid=u.id and state=2 and isDel=0) as waitingTakeOrderNum
+    from p_user u
+    left join p_knot_config k on u.knotId=k.id
+    where u.id=#{0}
+  </select>
+  <select id="getTeamPeopleNum" resultType="java.lang.Integer" parameterType="java.lang.Long">
+    select count(*) from p_user where strawUid=#{0}
+  </select>
+</mapper>

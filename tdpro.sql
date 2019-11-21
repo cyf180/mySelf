@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50540
 File Encoding         : 65001
 
-Date: 2019-11-20 23:23:29
+Date: 2019-11-21 15:15:44
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -151,11 +151,12 @@ CREATE TABLE `p_knot_config` (
   `bigValue` int(6) NOT NULL DEFAULT '0' COMMENT '最大值',
   `rate` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '利率',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='结算区间配置表';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='结算区间配置表';
 
 -- ----------------------------
 -- Records of p_knot_config
 -- ----------------------------
+INSERT INTO `p_knot_config` VALUES ('2', '1', '500', '0.03');
 
 -- ----------------------------
 -- Table structure for p_order
@@ -245,7 +246,7 @@ CREATE TABLE `p_user` (
 -- ----------------------------
 -- Records of p_user
 -- ----------------------------
-INSERT INTO `p_user` VALUES ('1', '1', '18087760500', null, '0', '0', '剃刀', '剃刀', '0.00', '0.00', '0.00', '建设银行', '春城支行', '8965656565656', '4545454545455', '2019-11-20 18:30:34', null, null, null, '0', '0.00', '0', '0');
+INSERT INTO `p_user` VALUES ('1', '0', '18087760500', null, '0', '0', '剃刀', '剃刀', '100.00', '350.00', '350.00', '建设银行', '春城支行', '8965656565656', '4545454545455', '2019-11-20 18:30:34', null, null, null, '2', '0.00', '10', '15');
 
 -- ----------------------------
 -- Table structure for p_user_knot
@@ -336,11 +337,12 @@ CREATE TABLE `p_user_voucher` (
   `startTime` datetime DEFAULT NULL COMMENT '开始时间',
   `endTime` datetime DEFAULT NULL COMMENT '结束时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户券表';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='用户券表';
 
 -- ----------------------------
 -- Records of p_user_voucher
 -- ----------------------------
+INSERT INTO `p_user_voucher` VALUES ('1', '1', '1', '0', '0', null, null);
 
 -- ----------------------------
 -- Table structure for p_voucher
@@ -362,8 +364,9 @@ CREATE TABLE `p_voucher` (
   `isDel` int(2) NOT NULL DEFAULT '0' COMMENT '删除状态(-1:删除 0:正常)',
   `createTime` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='券表';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='券表';
 
 -- ----------------------------
 -- Records of p_voucher
 -- ----------------------------
+INSERT INTO `p_voucher` VALUES ('1', '68元抵用券', '63.00', '0.00', '0', '0.00', '0', '0', '0', null, null, '0', '0', '2019-11-21 15:11:04');

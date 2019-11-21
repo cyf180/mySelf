@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tdpro.mapper.PUserMonthKnotMapper" >
+  <resultMap id="BaseResultMap" type="com.tdpro.entity.PUserMonthKnot" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="uid" property="uid" jdbcType="BIGINT" />
+    <result column="knotPrice" property="knotPrice" jdbcType="DECIMAL" />
+    <result column="knotOrderNum" property="knotOrderNum" jdbcType="INTEGER" />
+    <result column="knotTime" property="knotTime" jdbcType="TIMESTAMP" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, `uid`, knotPrice, knotOrderNum, knotTime, createTime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from p_user_month_knot
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from p_user_month_knot
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tdpro.entity.PUserMonthKnot" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into p_user_month_knot (`uid`, knotPrice, knotOrderNum, 
+      knotTime, createTime)
+    values (#{uid,jdbcType=BIGINT}, #{knotPrice,jdbcType=DECIMAL}, #{knotOrderNum,jdbcType=INTEGER}, 
+      #{knotTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tdpro.entity.PUserMonthKnot" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into p_user_month_knot
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="uid != null" >
+        `uid`,
+      </if>
+      <if test="knotPrice != null" >
+        knotPrice,
+      </if>
+      <if test="knotOrderNum != null" >
+        knotOrderNum,
+      </if>
+      <if test="knotTime != null" >
+        knotTime,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="uid != null" >
+        #{uid,jdbcType=BIGINT},
+      </if>
+      <if test="knotPrice != null" >
+        #{knotPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="knotOrderNum != null" >
+        #{knotOrderNum,jdbcType=INTEGER},
+      </if>
+      <if test="knotTime != null" >
+        #{knotTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tdpro.entity.PUserMonthKnot" >
+    update p_user_month_knot
+    <set >
+      <if test="uid != null" >
+        `uid` = #{uid,jdbcType=BIGINT},
+      </if>
+      <if test="knotPrice != null" >
+        knotPrice = #{knotPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="knotOrderNum != null" >
+        knotOrderNum = #{knotOrderNum,jdbcType=INTEGER},
+      </if>
+      <if test="knotTime != null" >
+        knotTime = #{knotTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tdpro.entity.PUserMonthKnot" >
+    update p_user_month_knot
+    set `uid` = #{uid,jdbcType=BIGINT},
+      knotPrice = #{knotPrice,jdbcType=DECIMAL},
+      knotOrderNum = #{knotOrderNum,jdbcType=INTEGER},
+      knotTime = #{knotTime,jdbcType=TIMESTAMP},
+      createTime = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

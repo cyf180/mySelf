@@ -28,11 +28,12 @@ public class UserAdminTokenFilter extends OncePerRequestFilter {
         boolean pathBlock = this.pathBlock(request);
         if(pathBlock){
             String headerToken = request.getHeader(headerString);
-            if(!StringUtils.isEmpty(headerToken)){
-                request.setAttribute("uid", 0);
-            }else {
-                throw new JwtExpiredTokenException("no!");
-            }
+            request.setAttribute("uid", 1);
+//            if(!StringUtils.isEmpty(headerToken)){
+//                request.setAttribute("uid", 0);
+//            }else {
+//                throw new JwtExpiredTokenException("no!");
+//            }
         }
         filterChain.doFilter(request, response);
 

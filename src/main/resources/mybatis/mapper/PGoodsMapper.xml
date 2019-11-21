@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tdpro.mapper.PGoodsMapper" >
+  <resultMap id="BaseResultMap" type="com.tdpro.entity.PGoods" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="classId" property="classId" jdbcType="BIGINT" />
+    <result column="goodsName" property="goodsName" jdbcType="VARCHAR" />
+    <result column="zoneType" property="zoneType" jdbcType="INTEGER" />
+    <result column="isSuit" property="isSuit" jdbcType="INTEGER" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="specification" property="specification" jdbcType="VARCHAR" />
+    <result column="hostImg" property="hostImg" jdbcType="VARCHAR" />
+    <result column="details" property="details" jdbcType="VARCHAR" />
+    <result column="isDel" property="isDel" jdbcType="INTEGER" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, classId, goodsName, zoneType, isSuit, price, title, specification, hostImg, details, 
+    isDel, createTime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from p_goods
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from p_goods
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tdpro.entity.PGoods" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into p_goods (classId, goodsName, zoneType, 
+      isSuit, price, title, 
+      specification, hostImg, details, 
+      isDel, createTime)
+    values (#{classId,jdbcType=BIGINT}, #{goodsName,jdbcType=VARCHAR}, #{zoneType,jdbcType=INTEGER}, 
+      #{isSuit,jdbcType=INTEGER}, #{price,jdbcType=DECIMAL}, #{title,jdbcType=VARCHAR}, 
+      #{specification,jdbcType=VARCHAR}, #{hostImg,jdbcType=VARCHAR}, #{details,jdbcType=VARCHAR}, 
+      #{isDel,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tdpro.entity.PGoods" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into p_goods
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="classId != null" >
+        classId,
+      </if>
+      <if test="goodsName != null" >
+        goodsName,
+      </if>
+      <if test="zoneType != null" >
+        zoneType,
+      </if>
+      <if test="isSuit != null" >
+        isSuit,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="specification != null" >
+        specification,
+      </if>
+      <if test="hostImg != null" >
+        hostImg,
+      </if>
+      <if test="details != null" >
+        details,
+      </if>
+      <if test="isDel != null" >
+        isDel,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="classId != null" >
+        #{classId,jdbcType=BIGINT},
+      </if>
+      <if test="goodsName != null" >
+        #{goodsName,jdbcType=VARCHAR},
+      </if>
+      <if test="zoneType != null" >
+        #{zoneType,jdbcType=INTEGER},
+      </if>
+      <if test="isSuit != null" >
+        #{isSuit,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="specification != null" >
+        #{specification,jdbcType=VARCHAR},
+      </if>
+      <if test="hostImg != null" >
+        #{hostImg,jdbcType=VARCHAR},
+      </if>
+      <if test="details != null" >
+        #{details,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tdpro.entity.PGoods" >
+    update p_goods
+    <set >
+      <if test="classId != null" >
+        classId = #{classId,jdbcType=BIGINT},
+      </if>
+      <if test="goodsName != null" >
+        goodsName = #{goodsName,jdbcType=VARCHAR},
+      </if>
+      <if test="zoneType != null" >
+        zoneType = #{zoneType,jdbcType=INTEGER},
+      </if>
+      <if test="isSuit != null" >
+        isSuit = #{isSuit,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="specification != null" >
+        specification = #{specification,jdbcType=VARCHAR},
+      </if>
+      <if test="hostImg != null" >
+        hostImg = #{hostImg,jdbcType=VARCHAR},
+      </if>
+      <if test="details != null" >
+        details = #{details,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        isDel = #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tdpro.entity.PGoods" >
+    update p_goods
+    set classId = #{classId,jdbcType=BIGINT},
+      goodsName = #{goodsName,jdbcType=VARCHAR},
+      zoneType = #{zoneType,jdbcType=INTEGER},
+      isSuit = #{isSuit,jdbcType=INTEGER},
+      price = #{price,jdbcType=DECIMAL},
+      title = #{title,jdbcType=VARCHAR},
+      specification = #{specification,jdbcType=VARCHAR},
+      hostImg = #{hostImg,jdbcType=VARCHAR},
+      details = #{details,jdbcType=VARCHAR},
+      isDel = #{isDel,jdbcType=INTEGER},
+      createTime = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

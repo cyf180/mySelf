@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tdpro.mapper.POrderMapper" >
+  <resultMap id="BaseResultMap" type="com.tdpro.entity.POrder" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="orderNo" property="orderNo" jdbcType="VARCHAR" />
+    <result column="uid" property="uid" jdbcType="BIGINT" />
+    <result column="goodsId" property="goodsId" jdbcType="BIGINT" />
+    <result column="zoneType" property="zoneType" jdbcType="INTEGER" />
+    <result column="isSuit" property="isSuit" jdbcType="INTEGER" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="goodsName" property="goodsName" jdbcType="VARCHAR" />
+    <result column="totalPrice" property="totalPrice" jdbcType="DECIMAL" />
+    <result column="realPrice" property="realPrice" jdbcType="DECIMAL" />
+    <result column="number" property="number" jdbcType="INTEGER" />
+    <result column="payType" property="payType" jdbcType="INTEGER" />
+    <result column="receiptName" property="receiptName" jdbcType="VARCHAR" />
+    <result column="receiptPhone" property="receiptPhone" jdbcType="VARCHAR" />
+    <result column="receiptSite" property="receiptSite" jdbcType="VARCHAR" />
+    <result column="suiteName" property="suiteName" jdbcType="VARCHAR" />
+    <result column="isDel" property="isDel" jdbcType="INTEGER" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="payTime" property="payTime" jdbcType="TIMESTAMP" />
+    <result column="wxOrderNo" property="wxOrderNo" jdbcType="VARCHAR" />
+    <result column="callbackPrice" property="callbackPrice" jdbcType="DECIMAL" />
+    <result column="logisticsName" property="logisticsName" jdbcType="VARCHAR" />
+    <result column="logisticsNo" property="logisticsNo" jdbcType="VARCHAR" />
+    <result column="seendTime" property="seendTime" jdbcType="TIMESTAMP" />
+    <result column="userNote" property="userNote" jdbcType="VARCHAR" />
+    <result column="backNote" property="backNote" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, orderNo, `uid`, goodsId, zoneType, isSuit, `state`, goodsName, totalPrice, realPrice, 
+    `number`, payType, receiptName, receiptPhone, receiptSite, suiteName, isDel, createTime, 
+    payTime, wxOrderNo, callbackPrice, logisticsName, logisticsNo, seendTime, userNote, 
+    backNote
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from p_order
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from p_order
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tdpro.entity.POrder" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into p_order (orderNo, `uid`, goodsId, 
+      zoneType, isSuit, `state`, 
+      goodsName, totalPrice, realPrice, 
+      `number`, payType, receiptName, 
+      receiptPhone, receiptSite, suiteName, 
+      isDel, createTime, payTime, 
+      wxOrderNo, callbackPrice, logisticsName, 
+      logisticsNo, seendTime, userNote, 
+      backNote)
+    values (#{orderNo,jdbcType=VARCHAR}, #{uid,jdbcType=BIGINT}, #{goodsId,jdbcType=BIGINT}, 
+      #{zoneType,jdbcType=INTEGER}, #{isSuit,jdbcType=INTEGER}, #{state,jdbcType=INTEGER}, 
+      #{goodsName,jdbcType=VARCHAR}, #{totalPrice,jdbcType=DECIMAL}, #{realPrice,jdbcType=DECIMAL}, 
+      #{number,jdbcType=INTEGER}, #{payType,jdbcType=INTEGER}, #{receiptName,jdbcType=VARCHAR}, 
+      #{receiptPhone,jdbcType=VARCHAR}, #{receiptSite,jdbcType=VARCHAR}, #{suiteName,jdbcType=VARCHAR}, 
+      #{isDel,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{payTime,jdbcType=TIMESTAMP}, 
+      #{wxOrderNo,jdbcType=VARCHAR}, #{callbackPrice,jdbcType=DECIMAL}, #{logisticsName,jdbcType=VARCHAR}, 
+      #{logisticsNo,jdbcType=VARCHAR}, #{seendTime,jdbcType=TIMESTAMP}, #{userNote,jdbcType=VARCHAR}, 
+      #{backNote,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tdpro.entity.POrder" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into p_order
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="orderNo != null" >
+        orderNo,
+      </if>
+      <if test="uid != null" >
+        `uid`,
+      </if>
+      <if test="goodsId != null" >
+        goodsId,
+      </if>
+      <if test="zoneType != null" >
+        zoneType,
+      </if>
+      <if test="isSuit != null" >
+        isSuit,
+      </if>
+      <if test="state != null" >
+        `state`,
+      </if>
+      <if test="goodsName != null" >
+        goodsName,
+      </if>
+      <if test="totalPrice != null" >
+        totalPrice,
+      </if>
+      <if test="realPrice != null" >
+        realPrice,
+      </if>
+      <if test="number != null" >
+        `number`,
+      </if>
+      <if test="payType != null" >
+        payType,
+      </if>
+      <if test="receiptName != null" >
+        receiptName,
+      </if>
+      <if test="receiptPhone != null" >
+        receiptPhone,
+      </if>
+      <if test="receiptSite != null" >
+        receiptSite,
+      </if>
+      <if test="suiteName != null" >
+        suiteName,
+      </if>
+      <if test="isDel != null" >
+        isDel,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="payTime != null" >
+        payTime,
+      </if>
+      <if test="wxOrderNo != null" >
+        wxOrderNo,
+      </if>
+      <if test="callbackPrice != null" >
+        callbackPrice,
+      </if>
+      <if test="logisticsName != null" >
+        logisticsName,
+      </if>
+      <if test="logisticsNo != null" >
+        logisticsNo,
+      </if>
+      <if test="seendTime != null" >
+        seendTime,
+      </if>
+      <if test="userNote != null" >
+        userNote,
+      </if>
+      <if test="backNote != null" >
+        backNote,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="orderNo != null" >
+        #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null" >
+        #{uid,jdbcType=BIGINT},
+      </if>
+      <if test="goodsId != null" >
+        #{goodsId,jdbcType=BIGINT},
+      </if>
+      <if test="zoneType != null" >
+        #{zoneType,jdbcType=INTEGER},
+      </if>
+      <if test="isSuit != null" >
+        #{isSuit,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="goodsName != null" >
+        #{goodsName,jdbcType=VARCHAR},
+      </if>
+      <if test="totalPrice != null" >
+        #{totalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="realPrice != null" >
+        #{realPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="number != null" >
+        #{number,jdbcType=INTEGER},
+      </if>
+      <if test="payType != null" >
+        #{payType,jdbcType=INTEGER},
+      </if>
+      <if test="receiptName != null" >
+        #{receiptName,jdbcType=VARCHAR},
+      </if>
+      <if test="receiptPhone != null" >
+        #{receiptPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="receiptSite != null" >
+        #{receiptSite,jdbcType=VARCHAR},
+      </if>
+      <if test="suiteName != null" >
+        #{suiteName,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payTime != null" >
+        #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="wxOrderNo != null" >
+        #{wxOrderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="callbackPrice != null" >
+        #{callbackPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="logisticsName != null" >
+        #{logisticsName,jdbcType=VARCHAR},
+      </if>
+      <if test="logisticsNo != null" >
+        #{logisticsNo,jdbcType=VARCHAR},
+      </if>
+      <if test="seendTime != null" >
+        #{seendTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userNote != null" >
+        #{userNote,jdbcType=VARCHAR},
+      </if>
+      <if test="backNote != null" >
+        #{backNote,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tdpro.entity.POrder" >
+    update p_order
+    <set >
+      <if test="orderNo != null" >
+        orderNo = #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null" >
+        `uid` = #{uid,jdbcType=BIGINT},
+      </if>
+      <if test="goodsId != null" >
+        goodsId = #{goodsId,jdbcType=BIGINT},
+      </if>
+      <if test="zoneType != null" >
+        zoneType = #{zoneType,jdbcType=INTEGER},
+      </if>
+      <if test="isSuit != null" >
+        isSuit = #{isSuit,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        `state` = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="goodsName != null" >
+        goodsName = #{goodsName,jdbcType=VARCHAR},
+      </if>
+      <if test="totalPrice != null" >
+        totalPrice = #{totalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="realPrice != null" >
+        realPrice = #{realPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="number != null" >
+        `number` = #{number,jdbcType=INTEGER},
+      </if>
+      <if test="payType != null" >
+        payType = #{payType,jdbcType=INTEGER},
+      </if>
+      <if test="receiptName != null" >
+        receiptName = #{receiptName,jdbcType=VARCHAR},
+      </if>
+      <if test="receiptPhone != null" >
+        receiptPhone = #{receiptPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="receiptSite != null" >
+        receiptSite = #{receiptSite,jdbcType=VARCHAR},
+      </if>
+      <if test="suiteName != null" >
+        suiteName = #{suiteName,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        isDel = #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payTime != null" >
+        payTime = #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="wxOrderNo != null" >
+        wxOrderNo = #{wxOrderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="callbackPrice != null" >
+        callbackPrice = #{callbackPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="logisticsName != null" >
+        logisticsName = #{logisticsName,jdbcType=VARCHAR},
+      </if>
+      <if test="logisticsNo != null" >
+        logisticsNo = #{logisticsNo,jdbcType=VARCHAR},
+      </if>
+      <if test="seendTime != null" >
+        seendTime = #{seendTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userNote != null" >
+        userNote = #{userNote,jdbcType=VARCHAR},
+      </if>
+      <if test="backNote != null" >
+        backNote = #{backNote,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tdpro.entity.POrder" >
+    update p_order
+    set orderNo = #{orderNo,jdbcType=VARCHAR},
+      `uid` = #{uid,jdbcType=BIGINT},
+      goodsId = #{goodsId,jdbcType=BIGINT},
+      zoneType = #{zoneType,jdbcType=INTEGER},
+      isSuit = #{isSuit,jdbcType=INTEGER},
+      `state` = #{state,jdbcType=INTEGER},
+      goodsName = #{goodsName,jdbcType=VARCHAR},
+      totalPrice = #{totalPrice,jdbcType=DECIMAL},
+      realPrice = #{realPrice,jdbcType=DECIMAL},
+      `number` = #{number,jdbcType=INTEGER},
+      payType = #{payType,jdbcType=INTEGER},
+      receiptName = #{receiptName,jdbcType=VARCHAR},
+      receiptPhone = #{receiptPhone,jdbcType=VARCHAR},
+      receiptSite = #{receiptSite,jdbcType=VARCHAR},
+      suiteName = #{suiteName,jdbcType=VARCHAR},
+      isDel = #{isDel,jdbcType=INTEGER},
+      createTime = #{createTime,jdbcType=TIMESTAMP},
+      payTime = #{payTime,jdbcType=TIMESTAMP},
+      wxOrderNo = #{wxOrderNo,jdbcType=VARCHAR},
+      callbackPrice = #{callbackPrice,jdbcType=DECIMAL},
+      logisticsName = #{logisticsName,jdbcType=VARCHAR},
+      logisticsNo = #{logisticsNo,jdbcType=VARCHAR},
+      seendTime = #{seendTime,jdbcType=TIMESTAMP},
+      userNote = #{userNote,jdbcType=VARCHAR},
+      backNote = #{backNote,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
