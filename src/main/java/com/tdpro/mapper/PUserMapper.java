@@ -2,7 +2,10 @@ package com.tdpro.mapper;
 
 import com.tdpro.entity.PUser;
 import com.tdpro.entity.extend.UserETD;
+import com.tdpro.entity.extend.UserTeamETD;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 @Mapper
 public interface PUserMapper {
@@ -21,4 +24,6 @@ public interface PUserMapper {
     UserETD getUserCentre(Long id);
 
     int getTeamPeopleNum(Long id);
+
+    List<UserTeamETD> userTeamList(Long id);
 }

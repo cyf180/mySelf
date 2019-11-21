@@ -1,6 +1,7 @@
 package com.tdpro.controller;
 
 import com.tdpro.common.utils.Response;
+import com.tdpro.entity.extend.UserTeamETD;
 import com.tdpro.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -22,5 +23,12 @@ public class UserController {
     @ApiOperation(value = "会员中心接口")
     public Response getUserCentre(@ApiIgnore @RequestAttribute Long uid){
         return userService.userInformation(uid);
+    }
+
+    @GetMapping("teamList")
+    @ApiOperation(value = "我的团队列表接口",response = UserTeamETD.class)
+    public Response getTeamList(@ApiIgnore @RequestAttribute Long uid,UserTeamETD teamETD){
+        teamETD.setId(uid);
+        return userService.mayTeamList(teamETD);
     }
 }

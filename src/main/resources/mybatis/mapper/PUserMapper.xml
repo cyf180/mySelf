@@ -317,4 +317,12 @@
   <select id="getTeamPeopleNum" resultType="java.lang.Integer" parameterType="java.lang.Long">
     select count(*) from p_user where strawUid=#{0}
   </select>
+  <select id="userTeamList" resultType="com.tdpro.entity.extend.UserTeamETD" parameterType="java.lang.Long">
+    select u.id,u.strawUid,u.phone,u.balance,u.integral,u.isUser,u.nickName,ul.headPath,
+    (select ifnull(sum(`number`),0) from p_order where uid=u.id and state > 0) as payOrderNum
+    from p_user u
+    left join p_user_login ul on u.id=ul.uid
+    where u.strawUid=#{0}
+    order by u.id desc
+  </select>
 </mapper>
