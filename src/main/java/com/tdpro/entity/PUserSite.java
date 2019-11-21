@@ -8,6 +8,8 @@ public class PUserSite implements Serializable {
 
     private Long uid;
 
+    private String name;
+
     private String phone;
 
     private String site;
@@ -32,6 +34,14 @@ public class PUserSite implements Serializable {
 
     public void setUid(Long uid) {
         this.uid = uid;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
     }
 
     public String getPhone() {
@@ -74,6 +84,7 @@ public class PUserSite implements Serializable {
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
         sb.append(", uid=").append(uid);
+        sb.append(", name=").append(name);
         sb.append(", phone=").append(phone);
         sb.append(", site=").append(site);
         sb.append(", isDefault=").append(isDefault);

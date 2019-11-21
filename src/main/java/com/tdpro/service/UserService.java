@@ -16,5 +16,12 @@ public interface UserService {
      * @param userTeamETD
      * @return
      */
-    Response mayTeamList(UserTeamETD userTeamETD);
+    Response myTeamList(UserTeamETD userTeamETD);
+
+    /**
+     * 用户资料
+     * @param uid
+     * @return
+     */
+    Response userMaterial(Long uid);
 }

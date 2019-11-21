@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tdpro.mapper.PLogMapper" >
+  <resultMap id="BaseResultMap" type="com.tdpro.entity.PLog" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="addName" property="addName" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="operation" property="operation" jdbcType="VARCHAR" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+    <result column="uid" property="uid" jdbcType="BIGINT" />
+    <result column="adminId" property="adminId" jdbcType="BIGINT" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, addName, `type`, `operation`, note, `uid`, adminId, createTime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from p_log
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from p_log
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tdpro.entity.PLog" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into p_log (addName, `type`, `operation`, 
+      note, `uid`, adminId, createTime
+      )
+    values (#{addName,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{operation,jdbcType=VARCHAR}, 
+      #{note,jdbcType=VARCHAR}, #{uid,jdbcType=BIGINT}, #{adminId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tdpro.entity.PLog" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into p_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="addName != null" >
+        addName,
+      </if>
+      <if test="type != null" >
+        `type`,
+      </if>
+      <if test="operation != null" >
+        `operation`,
+      </if>
+      <if test="note != null" >
+        note,
+      </if>
+      <if test="uid != null" >
+        `uid`,
+      </if>
+      <if test="adminId != null" >
+        adminId,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="addName != null" >
+        #{addName,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="operation != null" >
+        #{operation,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null" >
+        #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null" >
+        #{uid,jdbcType=BIGINT},
+      </if>
+      <if test="adminId != null" >
+        #{adminId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tdpro.entity.PLog" >
+    update p_log
+    <set >
+      <if test="addName != null" >
+        addName = #{addName,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        `type` = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="operation != null" >
+        `operation` = #{operation,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null" >
+        note = #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null" >
+        `uid` = #{uid,jdbcType=BIGINT},
+      </if>
+      <if test="adminId != null" >
+        adminId = #{adminId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tdpro.entity.PLog" >
+    update p_log
+    set addName = #{addName,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      `operation` = #{operation,jdbcType=VARCHAR},
+      note = #{note,jdbcType=VARCHAR},
+      `uid` = #{uid,jdbcType=BIGINT},
+      adminId = #{adminId,jdbcType=BIGINT},
+      createTime = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50540
 File Encoding         : 65001
 
-Date: 2019-11-21 15:15:44
+Date: 2019-11-21 17:32:51
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -159,6 +159,27 @@ CREATE TABLE `p_knot_config` (
 INSERT INTO `p_knot_config` VALUES ('2', '1', '500', '0.03');
 
 -- ----------------------------
+-- Table structure for p_log
+-- ----------------------------
+DROP TABLE IF EXISTS `p_log`;
+CREATE TABLE `p_log` (
+  `id` bigint(11) NOT NULL AUTO_INCREMENT,
+  `addName` varchar(50) DEFAULT NULL COMMENT '操作人名',
+  `type` int(2) NOT NULL DEFAULT '0' COMMENT '0:用户端操作 1: 后台操作',
+  `operation` varchar(100) NOT NULL COMMENT '操作名',
+  `note` varchar(200) DEFAULT NULL COMMENT '操作说明',
+  `uid` bigint(11) NOT NULL DEFAULT '0' COMMENT '用户id',
+  `adminId` bigint(11) NOT NULL DEFAULT '0' COMMENT '后台账号Id',
+  `createTime` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='操作日志表';
+
+-- ----------------------------
+-- Records of p_log
+-- ----------------------------
+INSERT INTO `p_log` VALUES ('1', '18087760500', '0', '会员删除收货地址', '会员删除收货地址ID: 2', '1', '0', '2019-11-21 17:32:00');
+
+-- ----------------------------
 -- Table structure for p_order
 -- ----------------------------
 DROP TABLE IF EXISTS `p_order`;
@@ -241,12 +262,13 @@ CREATE TABLE `p_user` (
   `teamOneNum` int(11) NOT NULL DEFAULT '0' COMMENT '团队单品数',
   `teamSuitNum` int(11) NOT NULL DEFAULT '0' COMMENT '团队套装数',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='用户表';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='用户表';
 
 -- ----------------------------
 -- Records of p_user
 -- ----------------------------
-INSERT INTO `p_user` VALUES ('1', '0', '18087760500', null, '0', '0', '剃刀', '剃刀', '100.00', '350.00', '350.00', '建设银行', '春城支行', '8965656565656', '4545454545455', '2019-11-20 18:30:34', null, null, null, '2', '0.00', '10', '15');
+INSERT INTO `p_user` VALUES ('1', '1', '18087760500', null, '0', '0', '剃刀', '剃刀', '100.00', '350.00', '350.00', '建设银行', '春城支行', '8965656565656', '4545454545455', '2019-11-20 18:30:34', null, null, null, '2', '0.00', '10', '15');
+INSERT INTO `p_user` VALUES ('2', '0', '18087760501', null, '0', '1', 'zz', 'zz', '0.00', '0.00', '0.00', '建设银行', '春城支行', '8965656565656', '6666666', '2019-11-21 16:02:34', null, null, null, '0', '0.00', '0', '0');
 
 -- ----------------------------
 -- Table structure for p_user_knot
@@ -281,12 +303,13 @@ CREATE TABLE `p_user_login` (
   `nickName` varchar(100) DEFAULT NULL COMMENT '昵称',
   `createTime` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='用户微信登录表';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='用户微信登录表';
 
 -- ----------------------------
 -- Records of p_user_login
 -- ----------------------------
-INSERT INTO `p_user_login` VALUES ('2', '1', 'asdasasdas', null, '剃刀', '2019-11-20 18:31:09');
+INSERT INTO `p_user_login` VALUES ('2', '1', 'oT-qp5bUQbu_L3MiR0-ldyYJyrr8', 'https://wx.qlogo.cn/mmopen/vi_32/KtGa6HIf2e69iajCS0XLtOIvH58e05ehdd5rbRntcgcQfIWD2Yk6bAUcE36d3ymHUD0LLdNjBq1errUQ1nFLMsA/132', '剃刀', '2019-11-20 18:31:09');
+INSERT INTO `p_user_login` VALUES ('3', '2', 'qp5cfcwPHoNU4GonXaFW0e9aQ', 'https://wx.qlogo.cn/mmhead/9aajCPUNsPb2CWILmoCniabapJnzxg4rkWBJZ4icFg4ws/132', '丰', '2019-11-21 16:04:01');
 
 -- ----------------------------
 -- Table structure for p_user_month_knot
@@ -313,16 +336,19 @@ DROP TABLE IF EXISTS `p_user_site`;
 CREATE TABLE `p_user_site` (
   `id` bigint(11) NOT NULL AUTO_INCREMENT,
   `uid` bigint(11) NOT NULL DEFAULT '0' COMMENT '会员id',
+  `name` varchar(50) DEFAULT NULL COMMENT '收件人',
   `phone` varchar(50) DEFAULT NULL COMMENT '手机',
   `site` varchar(200) DEFAULT NULL COMMENT '地址',
   `isDefault` int(1) NOT NULL DEFAULT '0' COMMENT '是否默认(0:否 1:是)',
   `createTime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户收货地址表';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='用户收货地址表';
 
 -- ----------------------------
 -- Records of p_user_site
 -- ----------------------------
+INSERT INTO `p_user_site` VALUES ('1', '1', '萨达', '18087760500', '云南省昆明市官渡区世纪城15号', '0', '2019-11-21 16:36:04');
+INSERT INTO `p_user_site` VALUES ('3', '1', '萨达', '18087760502', '云南省昭通市昭阳区180号', '1', '2019-11-21 17:03:41');
 
 -- ----------------------------
 -- Table structure for p_user_voucher
