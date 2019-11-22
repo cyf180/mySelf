@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50540
 File Encoding         : 65001
 
-Date: 2019-11-22 11:48:57
+Date: 2019-11-22 13:16:58
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -43,13 +43,15 @@ CREATE TABLE `p_collect` (
   `uid` bigint(11) NOT NULL DEFAULT '0' COMMENT '会员Id',
   `goodsId` bigint(11) NOT NULL DEFAULT '0' COMMENT '产品id',
   `createTime` datetime DEFAULT NULL COMMENT '时间',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='收藏表';
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `userGoodsIndexes` (`uid`,`goodsId`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='收藏表';
 
 -- ----------------------------
 -- Records of p_collect
 -- ----------------------------
 INSERT INTO `p_collect` VALUES ('1', '1', '2', '2019-11-22 10:10:32');
+INSERT INTO `p_collect` VALUES ('4', '1', '1', '2019-11-22 12:01:04');
 
 -- ----------------------------
 -- Table structure for p_goods
@@ -68,7 +70,8 @@ CREATE TABLE `p_goods` (
   `details` varchar(250) DEFAULT NULL COMMENT '商品详情',
   `isDel` int(1) NOT NULL DEFAULT '0' COMMENT '-1：删除 0 正常',
   `createTime` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `classIndexes` (`classId`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='商品表';
 
 -- ----------------------------
@@ -107,7 +110,8 @@ CREATE TABLE `p_goods_exchange` (
   `goodsId` bigint(11) NOT NULL DEFAULT '0' COMMENT '商品id',
   `voucherId` bigint(11) NOT NULL DEFAULT '0' COMMENT '券id',
   `number` int(4) NOT NULL DEFAULT '0' COMMENT '数量',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `goodsVoucherIndexes` (`goodsId`,`voucherId`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='兑换商品配置表';
 
 -- ----------------------------
@@ -122,7 +126,8 @@ CREATE TABLE `p_goods_img` (
   `id` bigint(11) NOT NULL AUTO_INCREMENT,
   `goodsId` bigint(11) NOT NULL DEFAULT '0' COMMENT '商品Id',
   `imgPath` varchar(50) DEFAULT NULL COMMENT '图片地址',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `goodsIndexes` (`goodsId`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='产品图片地址';
 
 -- ----------------------------
@@ -138,7 +143,8 @@ CREATE TABLE `p_goods_suit` (
   `goodsId` bigint(11) NOT NULL DEFAULT '0' COMMENT '商品id',
   `explain` varchar(100) NOT NULL COMMENT '套装说明',
   `createTime` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `suitGoodsIndexes` (`goodsId`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品套装配置表';
 
 -- ----------------------------
@@ -214,7 +220,9 @@ CREATE TABLE `p_order` (
   `seendTime` datetime DEFAULT NULL COMMENT '发货时间',
   `userNote` varchar(200) DEFAULT NULL COMMENT '用户备注',
   `backNote` varchar(200) DEFAULT NULL COMMENT '后台备注',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `orderUserIndexes` (`uid`) USING BTREE,
+  KEY `orderGoodsIndexes` (`goodsId`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单表';
 
 -- ----------------------------
@@ -230,7 +238,8 @@ CREATE TABLE `p_order_voucher` (
   `orderId` bigint(11) NOT NULL DEFAULT '0' COMMENT '订单id',
   `uid` bigint(11) NOT NULL DEFAULT '0' COMMENT '会员id',
   `userVoucherId` bigint(11) NOT NULL DEFAULT '0' COMMENT '用户券Id',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `orderVoucherOrderIndexes` (`orderId`,`uid`,`userVoucherId`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单兑换券使用表';
 
 -- ----------------------------
@@ -288,7 +297,9 @@ CREATE TABLE `p_user_knot` (
   `payPrice` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '支付金额',
   `knotType` int(2) NOT NULL DEFAULT '0' COMMENT '结算类型(0:购买积分结算 1:提出结算 2:积分转换)',
   `createTime` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `userKnotUserIndexes` (`uid`) USING BTREE,
+  KEY `userKnotPayUidIndexes` (`payUid`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='会员结算表';
 
 -- ----------------------------
