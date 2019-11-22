@@ -2,6 +2,7 @@ package com.tdpro.service;
 
 import com.tdpro.common.utils.Response;
 import com.tdpro.entity.extend.UserTeamETD;
+import com.tdpro.entity.extend.UserUPD;
 
 public interface UserService {
     /**
@@ -24,4 +25,11 @@ public interface UserService {
      * @return
      */
     Response userMaterial(Long uid);
+
+    /**
+     * 用户资料修改
+     * @param userUPD
+     * @return
+     */
+    Response updateUser(UserUPD userUPD);
 }

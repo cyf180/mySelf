@@ -79,4 +79,11 @@
       createTime = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="selectListByUid" resultType="com.tdpro.entity.extend.CollectETD" parameterType="java.lang.Long">
+    select cl.id,cl.uid,cl.goodsId,cl.createTime,g.goodsName,g.hostImg,g.price,g.specification
+    from p_collect cl
+    left join p_goods g on cl.goodsId=g.id
+    where cl.uid=#{0}
+    order by cl.createTime desc
+  </select>
 </mapper>

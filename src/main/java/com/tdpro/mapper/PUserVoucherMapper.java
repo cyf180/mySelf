@@ -1,7 +1,10 @@
 package com.tdpro.mapper;
 
 import com.tdpro.entity.PUserVoucher;
+import com.tdpro.entity.extend.UserVoucherETD;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 @Mapper
 public interface PUserVoucherMapper {
@@ -16,4 +19,6 @@ public interface PUserVoucherMapper {
     int updateByPrimaryKeySelective(PUserVoucher record);
 
     int updateByPrimaryKey(PUserVoucher record);
+
+    List<UserVoucherETD> selectListByUid(UserVoucherETD voucherETD);
 }

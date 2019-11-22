@@ -114,4 +114,12 @@
       endTime = #{endTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="selectListByUid" resultType="com.tdpro.entity.extend.UserVoucherETD" parameterType="com.tdpro.entity.extend.UserVoucherETD">
+    select uv.id,uv.uid,uv.voucherId,uv.useState,uv.state,uv.startTime,uv.endTime,v.voucherName,v.faceValue,v.price,v.isSill,v.mainSill,
+    v.timeType,v.useExplain,(select count(*) from p_user_voucher where voucherId=uv.voucherId and useState=0 and state=0) as number
+    from p_user_voucher uv
+    left join p_voucher v on uv.voucherId=v.id
+    where uv.uid=#{uid}
+    group by uv.voucherId
+  </select>
 </mapper>
