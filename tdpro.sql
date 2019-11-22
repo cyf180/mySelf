@@ -10,10 +10,32 @@ Target Server Type    : MYSQL
 Target Server Version : 50540
 File Encoding         : 65001
 
-Date: 2019-11-22 13:16:58
+Date: 2019-11-22 17:21:12
 */
 
 SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for p_admin
+-- ----------------------------
+DROP TABLE IF EXISTS `p_admin`;
+CREATE TABLE `p_admin` (
+  `id` bigint(11) NOT NULL AUTO_INCREMENT,
+  `phone` varchar(50) NOT NULL COMMENT '手机号(账号)',
+  `name` varchar(50) NOT NULL COMMENT '姓名',
+  `six` int(2) NOT NULL DEFAULT '0' COMMENT '性别(0：女 1：男)',
+  `password` varchar(100) NOT NULL COMMENT '密码',
+  `rid` bigint(11) NOT NULL DEFAULT '0' COMMENT '权限id',
+  `state` int(2) NOT NULL DEFAULT '0' COMMENT '状态(-1:禁用 0:正常)',
+  `disableTime` datetime DEFAULT NULL COMMENT '禁用时间',
+  `liftingTime` datetime DEFAULT NULL COMMENT '解禁时间',
+  `createTime` datetime DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of p_admin
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for p_advert
@@ -190,6 +212,24 @@ CREATE TABLE `p_log` (
 INSERT INTO `p_log` VALUES ('1', '18087760500', '0', '会员删除收货地址', '会员删除收货地址ID: 2', '1', '0', '2019-11-21 17:32:00');
 
 -- ----------------------------
+-- Table structure for p_menu
+-- ----------------------------
+DROP TABLE IF EXISTS `p_menu`;
+CREATE TABLE `p_menu` (
+  `id` bigint(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `mid` bigint(11) unsigned NOT NULL DEFAULT '0' COMMENT '所属父级菜单',
+  `menuName` varchar(50) NOT NULL COMMENT '菜单名',
+  `menuUrl` varchar(100) DEFAULT NULL COMMENT '菜单url',
+  `menuType` varchar(50) DEFAULT NULL COMMENT '类型说明',
+  `menuApiPath` varchar(50) DEFAULT NULL COMMENT '接口地址',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=200 DEFAULT CHARSET=utf8 COMMENT='后台管理菜单表';
+
+-- ----------------------------
+-- Records of p_menu
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for p_order
 -- ----------------------------
 DROP TABLE IF EXISTS `p_order`;
@@ -244,6 +284,39 @@ CREATE TABLE `p_order_voucher` (
 
 -- ----------------------------
 -- Records of p_order_voucher
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for p_role
+-- ----------------------------
+DROP TABLE IF EXISTS `p_role`;
+CREATE TABLE `p_role` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `roleRank` varchar(50) NOT NULL COMMENT '权限标识',
+  `roleName` varchar(50) DEFAULT NULL COMMENT '权限名',
+  `roleTime` datetime DEFAULT NULL COMMENT '添加时间',
+  `roleStatus` int(4) unsigned DEFAULT '0' COMMENT '状态  ',
+  `roleType` enum('1','2') DEFAULT '1' COMMENT '角色类型1： 管理员  2: 门店角色',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='后台管理角色表';
+
+-- ----------------------------
+-- Records of p_role
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for p_role_menu
+-- ----------------------------
+DROP TABLE IF EXISTS `p_role_menu`;
+CREATE TABLE `p_role_menu` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `rid` int(11) unsigned NOT NULL COMMENT '权限id',
+  `mid` int(11) unsigned NOT NULL COMMENT '目录id',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=32348 DEFAULT CHARSET=utf8 COMMENT='角色菜单关联表';
+
+-- ----------------------------
+-- Records of p_role_menu
 -- ----------------------------
 
 -- ----------------------------
