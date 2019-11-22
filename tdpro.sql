@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50540
 File Encoding         : 65001
 
-Date: 2019-11-21 17:32:51
+Date: 2019-11-22 11:48:57
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -44,11 +44,12 @@ CREATE TABLE `p_collect` (
   `goodsId` bigint(11) NOT NULL DEFAULT '0' COMMENT '产品id',
   `createTime` datetime DEFAULT NULL COMMENT '时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='收藏表';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='收藏表';
 
 -- ----------------------------
 -- Records of p_collect
 -- ----------------------------
+INSERT INTO `p_collect` VALUES ('1', '1', '2', '2019-11-22 10:10:32');
 
 -- ----------------------------
 -- Table structure for p_goods
@@ -68,11 +69,13 @@ CREATE TABLE `p_goods` (
   `isDel` int(1) NOT NULL DEFAULT '0' COMMENT '-1：删除 0 正常',
   `createTime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品表';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='商品表';
 
 -- ----------------------------
 -- Records of p_goods
 -- ----------------------------
+INSERT INTO `p_goods` VALUES ('1', '1', '毛里男士外套', '0', '0', '1200.00', '毛里男士外套', '件', '257.jpg', '撒大大撒多驱蚊器二', '0', '2019-11-22 10:08:43');
+INSERT INTO `p_goods` VALUES ('2', '1', '七匹狼男士冬季羽绒服', '0', '0', '1523.00', '七匹狼男士冬季羽绒服', '件', '3554847.jpg', '韦尔奇二群翁', '0', '2019-11-22 10:10:18');
 
 -- ----------------------------
 -- Table structure for p_goods_class
@@ -88,11 +91,12 @@ CREATE TABLE `p_goods_class` (
   `isDel` int(1) NOT NULL DEFAULT '0' COMMENT '是否删除(-1:是 0:否)',
   `createTime` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品分类表';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='商品分类表';
 
 -- ----------------------------
 -- Records of p_goods_class
 -- ----------------------------
+INSERT INTO `p_goods_class` VALUES ('1', '男装', '0', '男孩子的衣服', null, '1', '0', '2019-11-22 10:06:43');
 
 -- ----------------------------
 -- Table structure for p_goods_exchange
@@ -267,7 +271,7 @@ CREATE TABLE `p_user` (
 -- ----------------------------
 -- Records of p_user
 -- ----------------------------
-INSERT INTO `p_user` VALUES ('1', '1', '18087760500', null, '0', '0', '剃刀', '剃刀', '100.00', '350.00', '350.00', '建设银行', '春城支行', '8965656565656', '4545454545455', '2019-11-20 18:30:34', null, null, null, '2', '0.00', '10', '15');
+INSERT INTO `p_user` VALUES ('1', '1', '18087760500', null, '0', '0', '剃刀', '云飞', '100.00', '350.00', '350.00', '招商银行', '春城支行', '6666666666', '555555555555555', '2019-11-20 18:30:34', null, null, null, '2', '0.00', '10', '15');
 INSERT INTO `p_user` VALUES ('2', '0', '18087760501', null, '0', '1', 'zz', 'zz', '0.00', '0.00', '0.00', '建设银行', '春城支行', '8965656565656', '6666666', '2019-11-21 16:02:34', null, null, null, '0', '0.00', '0', '0');
 
 -- ----------------------------
@@ -363,12 +367,14 @@ CREATE TABLE `p_user_voucher` (
   `startTime` datetime DEFAULT NULL COMMENT '开始时间',
   `endTime` datetime DEFAULT NULL COMMENT '结束时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='用户券表';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='用户券表';
 
 -- ----------------------------
 -- Records of p_user_voucher
 -- ----------------------------
 INSERT INTO `p_user_voucher` VALUES ('1', '1', '1', '0', '0', null, null);
+INSERT INTO `p_user_voucher` VALUES ('2', '1', '2', '0', '0', null, null);
+INSERT INTO `p_user_voucher` VALUES ('3', '1', '2', '0', '0', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
 
 -- ----------------------------
 -- Table structure for p_voucher
@@ -389,10 +395,12 @@ CREATE TABLE `p_voucher` (
   `state` int(2) NOT NULL DEFAULT '0' COMMENT '状态(-1:过期 0:正常)',
   `isDel` int(2) NOT NULL DEFAULT '0' COMMENT '删除状态(-1:删除 0:正常)',
   `createTime` datetime DEFAULT NULL COMMENT '创建时间',
+  `useExplain` varchar(200) DEFAULT NULL COMMENT '使用说明',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='券表';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='券表';
 
 -- ----------------------------
 -- Records of p_voucher
 -- ----------------------------
-INSERT INTO `p_voucher` VALUES ('1', '68元抵用券', '63.00', '0.00', '0', '0.00', '0', '0', '0', null, null, '0', '0', '2019-11-21 15:11:04');
+INSERT INTO `p_voucher` VALUES ('1', '68元抵用券', '63.00', '0.00', '0', '0.00', '0', '0', '0', null, null, '0', '0', '2019-11-21 15:11:04', '范德萨发生的');
+INSERT INTO `p_voucher` VALUES ('2', '34元抵用券', '34.00', '0.00', '0', '0.00', '0', '0', '0', null, null, '0', '0', '2019-11-22 11:00:01', '客户客户客家话');
