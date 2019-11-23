@@ -8,7 +8,7 @@ public class PAdvert implements Serializable {
 
     private String title;
 
-    private Integer ort;
+    private Integer sort;
 
     private String imgPath;
 
@@ -36,12 +36,12 @@ public class PAdvert implements Serializable {
         this.title = title == null ? null : title.trim();
     }
 
-    public Integer getOrt() {
-        return ort;
+    public Integer getSort() {
+        return sort;
     }
 
-    public void setOrt(Integer ort) {
-        this.ort = ort;
+    public void setSort(Integer sort) {
+        this.sort = sort;
     }
 
     public String getImgPath() {
@@ -84,7 +84,7 @@ public class PAdvert implements Serializable {
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
         sb.append(", title=").append(title);
-        sb.append(", ort=").append(ort);
+        sb.append(", sort=").append(sort);
         sb.append(", imgPath=").append(imgPath);
         sb.append(", note=").append(note);
         sb.append(", isDel=").append(isDel);

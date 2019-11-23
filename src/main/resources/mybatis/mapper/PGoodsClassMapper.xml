@@ -125,4 +125,13 @@
       createTime = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="selectList" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select
+    <include refid="Base_Column_List" />
+    from p_goods_class
+    where isDel=0
+    and isShow=1
+    order by sort asc,createTime desc
+    limit 0,#{0}
+  </select>
 </mapper>

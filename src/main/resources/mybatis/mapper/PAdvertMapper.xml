@@ -4,14 +4,14 @@
   <resultMap id="BaseResultMap" type="com.tdpro.entity.PAdvert" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="title" property="title" jdbcType="VARCHAR" />
-    <result column="ort" property="ort" jdbcType="INTEGER" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
     <result column="imgPath" property="imgPath" jdbcType="VARCHAR" />
     <result column="note" property="note" jdbcType="VARCHAR" />
     <result column="isDel" property="isDel" jdbcType="INTEGER" />
     <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, title, ort, imgPath, note, isDel, createTime
+    id, title, sort, imgPath, note, isDel, createTime
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -27,10 +27,10 @@
     <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into p_advert (title, ort, imgPath, 
+    insert into p_advert (title, sort, imgPath,
       note, isDel, createTime
       )
-    values (#{title,jdbcType=VARCHAR}, #{ort,jdbcType=INTEGER}, #{imgPath,jdbcType=VARCHAR}, 
+    values (#{title,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER}, #{imgPath,jdbcType=VARCHAR},
       #{note,jdbcType=VARCHAR}, #{isDel,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
       )
   </insert>
@@ -43,8 +43,8 @@
       <if test="title != null" >
         title,
       </if>
-      <if test="ort != null" >
-        ort,
+      <if test="sort != null" >
+        sort,
       </if>
       <if test="imgPath != null" >
         imgPath,
@@ -63,8 +63,8 @@
       <if test="title != null" >
         #{title,jdbcType=VARCHAR},
       </if>
-      <if test="ort != null" >
-        #{ort,jdbcType=INTEGER},
+      <if test="sort != null" >
+        #{sort,jdbcType=INTEGER},
       </if>
       <if test="imgPath != null" >
         #{imgPath,jdbcType=VARCHAR},
@@ -86,8 +86,8 @@
       <if test="title != null" >
         title = #{title,jdbcType=VARCHAR},
       </if>
-      <if test="ort != null" >
-        ort = #{ort,jdbcType=INTEGER},
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=INTEGER},
       </if>
       <if test="imgPath != null" >
         imgPath = #{imgPath,jdbcType=VARCHAR},
@@ -107,11 +107,18 @@
   <update id="updateByPrimaryKey" parameterType="com.tdpro.entity.PAdvert" >
     update p_advert
     set title = #{title,jdbcType=VARCHAR},
-      ort = #{ort,jdbcType=INTEGER},
+      sort = #{sort,jdbcType=INTEGER},
       imgPath = #{imgPath,jdbcType=VARCHAR},
       note = #{note,jdbcType=VARCHAR},
       isDel = #{isDel,jdbcType=INTEGER},
       createTime = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="selectList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from p_advert
+    where isDel = 0
+    order by sort asc,createTime desc
+  </select>
 </mapper>

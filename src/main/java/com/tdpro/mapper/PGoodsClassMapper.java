@@ -3,6 +3,8 @@ package com.tdpro.mapper;
 import com.tdpro.entity.PGoodsClass;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 @Mapper
 public interface PGoodsClassMapper {
     int deleteByPrimaryKey(Long id);
@@ -16,4 +18,6 @@ public interface PGoodsClassMapper {
     int updateByPrimaryKeySelective(PGoodsClass record);
 
     int updateByPrimaryKey(PGoodsClass record);
+
+    List<PGoodsClass> selectList(Integer num);
 }

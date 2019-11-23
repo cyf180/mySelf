@@ -172,4 +172,27 @@
       createTime = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="pageList" resultType="com.tdpro.entity.extend.GoodsETD" parameterType="com.tdpro.entity.extend.GoodsETD">
+    select id,classId,goodsName,zoneType,isSuit,price,title,specification,hostImg,details,createTime
+    from p_goods
+    <where>
+      isDel = 0
+      <if test="classId != null">
+        and classId=#{classId}
+      </if>
+      <if test="zoneType != null">
+        and zoneType=#{zoneType}
+      </if>
+      <if test="isSuit != null">
+        and isSuit=#{isSuit}
+      </if>
+    </where>
+    order by sort asc,createTime desc
+  </select>
+  <select id="selectInfo" resultType="com.tdpro.entity.extend.GoodsETD" parameterType="com.tdpro.entity.extend.GoodsETD">
+    select id,classId,goodsName,zoneType,isSuit,price,title,specification,hostImg,details,createTime
+    from p_goods
+    where id=#{id}
+    and isDel = 0
+  </select>
 </mapper>

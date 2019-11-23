@@ -66,4 +66,10 @@
       imgPath = #{imgPath,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="selectListByGoodsId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    select
+    <include refid="Base_Column_List" />
+    from p_goods_img
+    where goodsId = #{0}
+  </select>
 </mapper>
