@@ -22,4 +22,6 @@ public interface PUserSiteMapper {
     List<UserSiteETD> selectListByUid(Long uid);
 
     int updateNotIsDefaultByUid(UserSiteETD siteETD);
+
+    UserSiteETD selectOneByUid(Long uid);
 }

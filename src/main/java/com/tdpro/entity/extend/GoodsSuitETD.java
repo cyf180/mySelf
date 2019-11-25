@@ -12,4 +12,5 @@ public class GoodsSuitETD {
     @ApiModelProperty(value = "名称（说明）")
     private String explain;
     private Date createTime;
+    private Integer number;
 }

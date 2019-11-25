@@ -5,12 +5,10 @@ import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.StringUtil;
 import com.tdpro.common.utils.Response;
 import com.tdpro.common.utils.ResponseUtils;
+import com.tdpro.entity.PGoodsExchange;
 import com.tdpro.entity.PGoodsImg;
-import com.tdpro.entity.extend.GoodsETD;
-import com.tdpro.entity.extend.GoodsSuitETD;
-import com.tdpro.mapper.PGoodsImgMapper;
-import com.tdpro.mapper.PGoodsMapper;
-import com.tdpro.mapper.PGoodsSuitMapper;
+import com.tdpro.entity.extend.*;
+import com.tdpro.mapper.*;
 import com.tdpro.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +26,11 @@ public class GoodsServiceImpl implements GoodsService {
     private PGoodsImgMapper goodsImgMapper;
     @Autowired
     private PGoodsSuitMapper goodsSuitMapper;
+    @Autowired
+    private PUserSiteMapper userSiteMapper;
+    @Autowired
+    private PGoodsExchangeMapper exchangeMapper;
+
     @Override
     public List<GoodsETD> goodsList(GoodsETD goodsETD){
         Integer pageNo = goodsETD.getPageNo() == null ? 1 : goodsETD.getPageNo();
@@ -73,5 +76,28 @@ public class GoodsServiceImpl implements GoodsService {
             }
         }
         return ResponseUtils.successRes(goodsInfo);
+    }
+
+    @Override
+    public Response goodsAffirm(Long id,Long uid) {
+        if(null == uid){
+            return ResponseUtils.errorRes("请先登录");
+        }
+        if(null == id){
+            return ResponseUtils.errorRes("产品信息错误");
+        }
+        OrderCartETD orderCart = goodsMapper.selectAffirmById(id);
+        if(null == orderCart){
+            return ResponseUtils.errorRes("商品已下架");
+        }
+        UserSiteETD userSite = userSiteMapper.selectOneByUid(uid);
+        if(null != userSite){
+            orderCart.setUserSite(userSite);
+        }
+        List<GoodsExchangeETD> exchangeList = exchangeMapper.selectListByGoodsId(orderCart.getGoodsId());
+        if(null != exchangeList && exchangeList.size() > 0){
+            orderCart.setGoodsExchangeList(exchangeList);
+        }
+        return ResponseUtils.successRes(orderCart);
     }
 }

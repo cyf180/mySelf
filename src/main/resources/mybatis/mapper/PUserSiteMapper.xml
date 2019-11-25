@@ -127,4 +127,10 @@
     and id != #{id}
     and isDefault=1
   </update>
+  <select id="selectOneByUid" resultType="com.tdpro.entity.extend.UserSiteETD" parameterType="java.lang.Long">
+    select id,uid,`name`,phone,site,isDefault,createTime
+    from p_user_site
+    where uid=#{0}
+    limit 1
+  </select>
 </mapper>

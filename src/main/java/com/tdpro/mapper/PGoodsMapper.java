@@ -2,6 +2,7 @@ package com.tdpro.mapper;
 
 import com.tdpro.entity.PGoods;
 import com.tdpro.entity.extend.GoodsETD;
+import com.tdpro.entity.extend.OrderCartETD;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -23,4 +24,6 @@ public interface PGoodsMapper {
     List<GoodsETD> pageList(GoodsETD goodsETD);
 
     GoodsETD selectInfo(GoodsETD goodsETD);
+
+    OrderCartETD selectAffirmById(Long id);
 }

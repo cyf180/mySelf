@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tdpro.mapper.PCartMapper" >
+  <resultMap id="BaseResultMap" type="com.tdpro.entity.PCart" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="uid" property="uid" jdbcType="BIGINT" />
+    <result column="goodsId" property="goodsId" jdbcType="BIGINT" />
+    <result column="orderId" property="orderId" jdbcType="BIGINT" />
+    <result column="suitId" property="suitId" jdbcType="BIGINT" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="suitName" property="suitName" jdbcType="VARCHAR" />
+    <result column="goodsName" property="goodsName" jdbcType="VARCHAR" />
+    <result column="number" property="number" jdbcType="INTEGER" />
+    <result column="isKnot" property="isKnot" jdbcType="INTEGER" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, `uid`, goodsId, orderId, suitId, price, suitName, goodsName, `number`, isKnot, 
+    createTime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from p_cart
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from p_cart
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tdpro.entity.PCart" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into p_cart (`uid`, goodsId, orderId, 
+      suitId, price, suitName, 
+      goodsName, `number`, isKnot, 
+      createTime)
+    values (#{uid,jdbcType=BIGINT}, #{goodsId,jdbcType=BIGINT}, #{orderId,jdbcType=BIGINT}, 
+      #{suitId,jdbcType=BIGINT}, #{price,jdbcType=DECIMAL}, #{suitName,jdbcType=VARCHAR}, 
+      #{goodsName,jdbcType=VARCHAR}, #{number,jdbcType=INTEGER}, #{isKnot,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tdpro.entity.PCart" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into p_cart
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="uid != null" >
+        `uid`,
+      </if>
+      <if test="goodsId != null" >
+        goodsId,
+      </if>
+      <if test="orderId != null" >
+        orderId,
+      </if>
+      <if test="suitId != null" >
+        suitId,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="suitName != null" >
+        suitName,
+      </if>
+      <if test="goodsName != null" >
+        goodsName,
+      </if>
+      <if test="number != null" >
+        `number`,
+      </if>
+      <if test="isKnot != null" >
+        isKnot,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="uid != null" >
+        #{uid,jdbcType=BIGINT},
+      </if>
+      <if test="goodsId != null" >
+        #{goodsId,jdbcType=BIGINT},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=BIGINT},
+      </if>
+      <if test="suitId != null" >
+        #{suitId,jdbcType=BIGINT},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="suitName != null" >
+        #{suitName,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsName != null" >
+        #{goodsName,jdbcType=VARCHAR},
+      </if>
+      <if test="number != null" >
+        #{number,jdbcType=INTEGER},
+      </if>
+      <if test="isKnot != null" >
+        #{isKnot,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tdpro.entity.PCart" >
+    update p_cart
+    <set >
+      <if test="uid != null" >
+        `uid` = #{uid,jdbcType=BIGINT},
+      </if>
+      <if test="goodsId != null" >
+        goodsId = #{goodsId,jdbcType=BIGINT},
+      </if>
+      <if test="orderId != null" >
+        orderId = #{orderId,jdbcType=BIGINT},
+      </if>
+      <if test="suitId != null" >
+        suitId = #{suitId,jdbcType=BIGINT},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="suitName != null" >
+        suitName = #{suitName,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsName != null" >
+        goodsName = #{goodsName,jdbcType=VARCHAR},
+      </if>
+      <if test="number != null" >
+        `number` = #{number,jdbcType=INTEGER},
+      </if>
+      <if test="isKnot != null" >
+        isKnot = #{isKnot,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tdpro.entity.PCart" >
+    update p_cart
+    set `uid` = #{uid,jdbcType=BIGINT},
+      goodsId = #{goodsId,jdbcType=BIGINT},
+      orderId = #{orderId,jdbcType=BIGINT},
+      suitId = #{suitId,jdbcType=BIGINT},
+      price = #{price,jdbcType=DECIMAL},
+      suitName = #{suitName,jdbcType=VARCHAR},
+      goodsName = #{goodsName,jdbcType=VARCHAR},
+      `number` = #{number,jdbcType=INTEGER},
+      isKnot = #{isKnot,jdbcType=INTEGER},
+      createTime = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

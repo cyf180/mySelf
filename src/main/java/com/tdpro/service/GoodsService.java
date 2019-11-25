@@ -19,4 +19,11 @@ public interface GoodsService {
      * @return
      */
     Response goodsInfo(GoodsETD goodsETD);
+
+    /**
+     * 商品确认
+     * @param id
+     * @return
+     */
+    Response goodsAffirm(Long id,Long uid);
 }

@@ -1,7 +1,10 @@
 package com.tdpro.mapper;
 
 import com.tdpro.entity.PGoodsExchange;
+import com.tdpro.entity.extend.GoodsExchangeETD;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 @Mapper
 public interface PGoodsExchangeMapper {
@@ -16,4 +19,6 @@ public interface PGoodsExchangeMapper {
     int updateByPrimaryKeySelective(PGoodsExchange record);
 
     int updateByPrimaryKey(PGoodsExchange record);
+
+    List<GoodsExchangeETD> selectListByGoodsId(Long goodsId);
 }
