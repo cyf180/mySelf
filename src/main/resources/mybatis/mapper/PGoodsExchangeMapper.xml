@@ -85,4 +85,12 @@
     left join p_voucher v on e.voucherId=v.id
     where e.goodsId = #{0}
   </select>
+  <select id="selectByGoodsIdAndVoucherId" resultType="com.tdpro.entity.extend.GoodsExchangeETD" >
+    select e.id,e.goodsId,e.voucherId,e.number,v.voucherName,v.faceValue
+    from p_goods_exchange e
+    left join p_voucher v on e.voucherId=v.id
+    where e.goodsId = #{goodsId}
+    and e.voucherId=#{voucherId}
+    limit 1
+  </select>
 </mapper>

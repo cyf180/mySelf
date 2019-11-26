@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50540
 File Encoding         : 65001
 
-Date: 2019-11-22 17:21:12
+Date: 2019-11-26 17:34:45
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -44,7 +44,7 @@ DROP TABLE IF EXISTS `p_advert`;
 CREATE TABLE `p_advert` (
   `id` bigint(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(100) NOT NULL COMMENT '标题',
-  `ort` int(11) NOT NULL DEFAULT '0' COMMENT '排序',
+  `sort` int(11) NOT NULL DEFAULT '0' COMMENT '排序',
   `imgPath` varchar(100) DEFAULT NULL COMMENT '图片地址',
   `note` varchar(200) DEFAULT NULL COMMENT '备注',
   `isDel` int(2) NOT NULL DEFAULT '0' COMMENT '现实状态(-1:下架 0:正常)',
@@ -55,6 +55,36 @@ CREATE TABLE `p_advert` (
 -- ----------------------------
 -- Records of p_advert
 -- ----------------------------
+
+-- ----------------------------
+-- Table structure for p_cart
+-- ----------------------------
+DROP TABLE IF EXISTS `p_cart`;
+CREATE TABLE `p_cart` (
+  `id` bigint(11) NOT NULL AUTO_INCREMENT,
+  `uid` bigint(11) NOT NULL DEFAULT '0' COMMENT '用户id',
+  `goodsId` bigint(11) NOT NULL DEFAULT '0' COMMENT '产品id',
+  `orderId` bigint(11) NOT NULL DEFAULT '0' COMMENT '订单id',
+  `suitId` bigint(11) NOT NULL DEFAULT '0' COMMENT '规格id',
+  `price` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '价格',
+  `suitName` varchar(50) DEFAULT NULL COMMENT '规名称',
+  `goodsName` varchar(50) NOT NULL COMMENT '产品名称',
+  `number` int(10) NOT NULL DEFAULT '1' COMMENT '数量',
+  `isKnot` int(2) NOT NULL DEFAULT '0' COMMENT '是否结算(0:未 1:结算)',
+  `createTime` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `goodsId` (`goodsId`) USING BTREE,
+  KEY `uid` (`uid`) USING BTREE,
+  KEY `orderId` (`orderId`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='购物车';
+
+-- ----------------------------
+-- Records of p_cart
+-- ----------------------------
+INSERT INTO `p_cart` VALUES ('1', '1', '2', '3', '4', '1523.00', '加绒', '七匹狼男士冬季羽绒服', '1', '0', '2019-11-26 14:28:15');
+INSERT INTO `p_cart` VALUES ('2', '1', '2', '3', '5', '1523.00', '特加绒', '七匹狼男士冬季羽绒服', '1', '0', '2019-11-26 14:28:42');
+INSERT INTO `p_cart` VALUES ('3', '1', '1', '5', '0', '1200.00', null, '毛里男士外套', '1', '0', '2019-11-26 15:19:37');
+INSERT INTO `p_cart` VALUES ('4', '1', '1', '6', '0', '1200.00', null, '毛里男士外套', '2', '0', '2019-11-26 15:30:49');
 
 -- ----------------------------
 -- Table structure for p_collect
@@ -92,6 +122,9 @@ CREATE TABLE `p_goods` (
   `details` varchar(250) DEFAULT NULL COMMENT '商品详情',
   `isDel` int(1) NOT NULL DEFAULT '0' COMMENT '-1：删除 0 正常',
   `createTime` datetime DEFAULT NULL,
+  `sort` int(2) NOT NULL DEFAULT '0' COMMENT '排序',
+  `repertory` int(11) NOT NULL DEFAULT '0' COMMENT '库存',
+  `soldNum` int(11) NOT NULL DEFAULT '0' COMMENT '售出数量',
   PRIMARY KEY (`id`),
   KEY `classIndexes` (`classId`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='商品表';
@@ -99,8 +132,8 @@ CREATE TABLE `p_goods` (
 -- ----------------------------
 -- Records of p_goods
 -- ----------------------------
-INSERT INTO `p_goods` VALUES ('1', '1', '毛里男士外套', '0', '0', '1200.00', '毛里男士外套', '件', '257.jpg', '撒大大撒多驱蚊器二', '0', '2019-11-22 10:08:43');
-INSERT INTO `p_goods` VALUES ('2', '1', '七匹狼男士冬季羽绒服', '0', '0', '1523.00', '七匹狼男士冬季羽绒服', '件', '3554847.jpg', '韦尔奇二群翁', '0', '2019-11-22 10:10:18');
+INSERT INTO `p_goods` VALUES ('1', '1', '毛里男士外套', '0', '0', '1200.00', '毛里男士外套', '件', '257.jpg', '撒大大撒多驱蚊器二', '0', '2019-11-22 10:08:43', '0', '2', '0');
+INSERT INTO `p_goods` VALUES ('2', '1', '七匹狼男士冬季羽绒服', '2', '1', '1523.00', '七匹狼男士冬季羽绒服', '件', '3554847.jpg', '韦尔奇二群翁', '0', '2019-11-22 10:10:18', '0', '100', '0');
 
 -- ----------------------------
 -- Table structure for p_goods_class
@@ -134,11 +167,13 @@ CREATE TABLE `p_goods_exchange` (
   `number` int(4) NOT NULL DEFAULT '0' COMMENT '数量',
   PRIMARY KEY (`id`),
   UNIQUE KEY `goodsVoucherIndexes` (`goodsId`,`voucherId`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='兑换商品配置表';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='兑换商品配置表';
 
 -- ----------------------------
 -- Records of p_goods_exchange
 -- ----------------------------
+INSERT INTO `p_goods_exchange` VALUES ('1', '2', '1', '1');
+INSERT INTO `p_goods_exchange` VALUES ('2', '2', '2', '1');
 
 -- ----------------------------
 -- Table structure for p_goods_img
@@ -167,11 +202,16 @@ CREATE TABLE `p_goods_suit` (
   `createTime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `suitGoodsIndexes` (`goodsId`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品套装配置表';
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='商品套装配置表';
 
 -- ----------------------------
 -- Records of p_goods_suit
 -- ----------------------------
+INSERT INTO `p_goods_suit` VALUES ('1', '1', '黑白配', '2019-11-25 14:10:04');
+INSERT INTO `p_goods_suit` VALUES ('2', '1', '红蓝配', '2019-11-25 14:10:22');
+INSERT INTO `p_goods_suit` VALUES ('3', '1', '红黑配', '2019-11-25 14:10:46');
+INSERT INTO `p_goods_suit` VALUES ('4', '2', '加绒', '2019-11-25 14:13:16');
+INSERT INTO `p_goods_suit` VALUES ('5', '2', '特加绒', '2019-11-25 14:13:29');
 
 -- ----------------------------
 -- Table structure for p_knot_config
@@ -223,7 +263,7 @@ CREATE TABLE `p_menu` (
   `menuType` varchar(50) DEFAULT NULL COMMENT '类型说明',
   `menuApiPath` varchar(50) DEFAULT NULL COMMENT '接口地址',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=200 DEFAULT CHARSET=utf8 COMMENT='后台管理菜单表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='后台管理菜单表';
 
 -- ----------------------------
 -- Records of p_menu
@@ -263,11 +303,14 @@ CREATE TABLE `p_order` (
   PRIMARY KEY (`id`),
   KEY `orderUserIndexes` (`uid`) USING BTREE,
   KEY `orderGoodsIndexes` (`goodsId`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单表';
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='订单表';
 
 -- ----------------------------
 -- Records of p_order
 -- ----------------------------
+INSERT INTO `p_order` VALUES ('3', '11574749682268', '1', '2', '2', '1', '0', '七匹狼男士冬季羽绒服', '3046.00', '0.00', '2', '0', '萨达', '18087760500', '云南省昆明市官渡区世纪城15号', null, '0', '2019-11-26 14:28:02', null, null, '0.00', null, null, null, null, null);
+INSERT INTO `p_order` VALUES ('5', '11574752758820', '1', '1', '0', '0', '0', '毛里男士外套', '1200.00', '0.00', '1', '0', '萨达', '18087760500', '云南省昆明市官渡区世纪城15号', null, '0', '2019-11-26 15:19:18', null, null, '0.00', null, null, null, null, null);
+INSERT INTO `p_order` VALUES ('6', '11574753442318', '1', '1', '0', '0', '0', '毛里男士外套', '2400.00', '0.00', '2', '0', '萨达', '18087760500', '云南省昆明市官渡区世纪城15号', null, '0', '2019-11-26 15:30:42', null, null, '0.00', null, null, null, null, null);
 
 -- ----------------------------
 -- Table structure for p_order_voucher
@@ -298,7 +341,7 @@ CREATE TABLE `p_role` (
   `roleStatus` int(4) unsigned DEFAULT '0' COMMENT '状态  ',
   `roleType` enum('1','2') DEFAULT '1' COMMENT '角色类型1： 管理员  2: 门店角色',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='后台管理角色表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='后台管理角色表';
 
 -- ----------------------------
 -- Records of p_role
@@ -313,7 +356,7 @@ CREATE TABLE `p_role_menu` (
   `rid` int(11) unsigned NOT NULL COMMENT '权限id',
   `mid` int(11) unsigned NOT NULL COMMENT '目录id',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=32348 DEFAULT CHARSET=utf8 COMMENT='角色菜单关联表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色菜单关联表';
 
 -- ----------------------------
 -- Records of p_role_menu
@@ -451,7 +494,7 @@ CREATE TABLE `p_user_voucher` (
   `startTime` datetime DEFAULT NULL COMMENT '开始时间',
   `endTime` datetime DEFAULT NULL COMMENT '结束时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='用户券表';
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='用户券表';
 
 -- ----------------------------
 -- Records of p_user_voucher
@@ -459,6 +502,7 @@ CREATE TABLE `p_user_voucher` (
 INSERT INTO `p_user_voucher` VALUES ('1', '1', '1', '0', '0', null, null);
 INSERT INTO `p_user_voucher` VALUES ('2', '1', '2', '0', '0', null, null);
 INSERT INTO `p_user_voucher` VALUES ('3', '1', '2', '0', '0', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
+INSERT INTO `p_user_voucher` VALUES ('4', '1', '1', '0', '0', null, null);
 
 -- ----------------------------
 -- Table structure for p_voucher
@@ -481,7 +525,7 @@ CREATE TABLE `p_voucher` (
   `createTime` datetime DEFAULT NULL COMMENT '创建时间',
   `useExplain` varchar(200) DEFAULT NULL COMMENT '使用说明',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='券表';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='券表';
 
 -- ----------------------------
 -- Records of p_voucher

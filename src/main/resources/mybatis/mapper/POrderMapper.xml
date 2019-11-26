@@ -68,7 +68,7 @@
       #{logisticsNo,jdbcType=VARCHAR}, #{seendTime,jdbcType=TIMESTAMP}, #{userNote,jdbcType=VARCHAR}, 
       #{backNote,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.tdpro.entity.POrder" >
+  <insert id="insertSelective" parameterType="com.tdpro.entity.POrder" useGeneratedKeys="true" keyProperty="id">
     <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>

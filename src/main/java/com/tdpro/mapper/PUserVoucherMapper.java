@@ -21,4 +21,6 @@ public interface PUserVoucherMapper {
     int updateByPrimaryKey(PUserVoucher record);
 
     List<UserVoucherETD> selectListByUid(UserVoucherETD voucherETD);
+
+    List<PUserVoucher> countByUidAndVoucherId(UserVoucherETD voucherETD);
 }

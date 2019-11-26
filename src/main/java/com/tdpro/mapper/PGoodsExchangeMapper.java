@@ -3,6 +3,7 @@ package com.tdpro.mapper;
 import com.tdpro.entity.PGoodsExchange;
 import com.tdpro.entity.extend.GoodsExchangeETD;
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -21,4 +22,6 @@ public interface PGoodsExchangeMapper {
     int updateByPrimaryKey(PGoodsExchange record);
 
     List<GoodsExchangeETD> selectListByGoodsId(Long goodsId);
+
+    GoodsExchangeETD selectByGoodsIdAndVoucherId(@Param("goodsId") Long goodsId,@Param("voucherId") Long voucherId);
 }

@@ -29,6 +29,10 @@ public class PGoods implements Serializable {
 
     private Date createTime;
 
+    private Integer repertory;
+
+    private Integer soldNum;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -125,6 +129,22 @@ public class PGoods implements Serializable {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public Integer getRepertory() {
+        return repertory;
+    }
+
+    public void setRepertory(Integer repertory) {
+        this.repertory = repertory;
+    }
+
+    public Integer getSoldNum() {
+        return soldNum;
+    }
+
+    public void setSoldNum(Integer soldNum) {
+        this.soldNum = soldNum;
     }
 
     @Override

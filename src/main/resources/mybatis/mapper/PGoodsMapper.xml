@@ -14,10 +14,12 @@
     <result column="details" property="details" jdbcType="VARCHAR" />
     <result column="isDel" property="isDel" jdbcType="INTEGER" />
     <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="repertory" property="repertory" jdbcType="INTEGER" />
+    <result column="soldNum" property="soldNum" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, classId, goodsName, zoneType, isSuit, price, title, specification, hostImg, details, 
-    isDel, createTime
+    isDel, createTime,repertory,soldNum
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -81,6 +83,12 @@
       <if test="createTime != null" >
         createTime,
       </if>
+      <if test="repertory != null" >
+        repertory,
+      </if>
+      <if test="soldNum != null" >
+        soldNum,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="classId != null" >
@@ -115,6 +123,12 @@
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="repertory != null" >
+        #{repertory,jdbcType=INTEGER},
+      </if>
+      <if test="soldNum != null" >
+        #{soldNum,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -154,6 +168,12 @@
       <if test="createTime != null" >
         createTime = #{createTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="repertory != null" >
+        repertory = #{repertory,jdbcType=INTEGER},
+      </if>
+      <if test="soldNum != null" >
+        soldNum = #{soldNum,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -190,7 +210,7 @@
     order by sort asc,createTime desc
   </select>
   <select id="selectInfo" resultType="com.tdpro.entity.extend.GoodsETD" parameterType="com.tdpro.entity.extend.GoodsETD">
-    select id,classId,goodsName,zoneType,isSuit,price,title,specification,hostImg,details,createTime
+    select id,classId,goodsName,zoneType,isSuit,price,title,specification,hostImg,details,createTime,repertory,soldNum
     from p_goods
     where id=#{id}
     and isDel = 0

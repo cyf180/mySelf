@@ -122,4 +122,14 @@
     where uv.uid=#{uid}
     group by uv.voucherId
   </select>
+  <select id="countByUidAndVoucherId" resultMap="BaseResultMap" parameterType="com.tdpro.entity.extend.UserVoucherETD">
+    select
+    <include refid="Base_Column_List" />
+    from p_user_voucher
+    where `state` = 0
+    and useState = 0
+    and uid=#{uid}
+    and voucherId=#{voucherId}
+    limit #{number}
+  </select>
 </mapper>
