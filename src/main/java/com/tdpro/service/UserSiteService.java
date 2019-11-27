@@ -1,6 +1,7 @@
 package com.tdpro.service;
 
 import com.tdpro.common.utils.Response;
+import com.tdpro.entity.PUserSite;
 import com.tdpro.entity.extend.UserSiteETD;
 
 public interface UserSiteService {
@@ -24,4 +25,11 @@ public interface UserSiteService {
      * @return
      */
     Response setUserSiteDefault(UserSiteETD siteETD);
+
+    /**
+     * 查询收货地址详情
+     * @param id
+     * @return
+     */
+    PUserSite findById(Long id);
 }

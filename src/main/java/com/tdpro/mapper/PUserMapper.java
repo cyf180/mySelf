@@ -1,6 +1,7 @@
 package com.tdpro.mapper;
 
 import com.tdpro.entity.PUser;
+import com.tdpro.entity.extend.UserBalanceUpdateETD;
 import com.tdpro.entity.extend.UserETD;
 import com.tdpro.entity.extend.UserTeamETD;
 import org.apache.ibatis.annotations.Mapper;
@@ -26,4 +27,6 @@ public interface PUserMapper {
     int getTeamPeopleNum(Long id);
 
     List<UserTeamETD> userTeamList(Long id);
+
+    int updateBalance(UserBalanceUpdateETD userBalanceUpdateETD);
 }

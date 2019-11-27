@@ -6,6 +6,7 @@ spring:
       charset: utf-8
       enabled: true
       force: true
+      location: /tdpro/uploadcache
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8

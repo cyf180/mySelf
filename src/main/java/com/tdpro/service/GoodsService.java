@@ -26,4 +26,11 @@ public interface GoodsService {
      * @return
      */
     Response goodsAffirm(Long id,Long uid);
+
+    /**
+     * 查询商品
+     * @param id
+     * @return
+     */
+    GoodsETD selectInfo(Long id);
 }

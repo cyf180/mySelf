@@ -3,7 +3,7 @@ package com.tdpro.mapper;
 import com.tdpro.entity.PGoodsExchange;
 import com.tdpro.entity.extend.GoodsExchangeETD;
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.data.repository.query.Param;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -23,5 +23,5 @@ public interface PGoodsExchangeMapper {
 
     List<GoodsExchangeETD> selectListByGoodsId(Long goodsId);
 
-    GoodsExchangeETD selectByGoodsIdAndVoucherId(@Param("goodsId") Long goodsId,@Param("voucherId") Long voucherId);
+    GoodsExchangeETD selectByGoodsIdAndVoucherId(@Param("goodsId") Long goodsId, @Param("voucherId") Long voucherId);
 }

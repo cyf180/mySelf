@@ -1,11 +1,12 @@
 package com.tdpro.service.impl;
 
+import com.tdpro.common.constant.PayType;
 import com.tdpro.common.utils.Response;
 import com.tdpro.common.utils.ResponseUtils;
 import com.tdpro.entity.*;
 import com.tdpro.entity.extend.*;
 import com.tdpro.mapper.*;
-import com.tdpro.service.OrderService;
+import com.tdpro.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -18,21 +19,21 @@ import java.util.List;
 @Service
 public class OrderServiceImpl implements OrderService {
     @Autowired
-    private PCartMapper cartMapper;
-    @Autowired
     private POrderMapper orderMapper;
     @Autowired
-    private PGoodsMapper goodsMapper;
+    private CartService cartService;
     @Autowired
-    private PUserSiteMapper userSiteMapper;
+    private GoodsService goodsService;
     @Autowired
-    private PGoodsExchangeMapper exchangeMapper;
+    private UserSiteService userSiteService;
     @Autowired
-    private PUserVoucherMapper userVoucherMapper;
+    private GoodsExchangeService exchangeService;
     @Autowired
-    private PGoodsSuitMapper goodsSuitMapper;
+    private UserVoucherService userVoucherService;
     @Autowired
-    private POrderVoucherMapper orderVoucherMapper;
+    private GoodsSuitService goodsSuitService;
+    @Autowired
+    private OrderVoucherService orderVoucherService;
     @Override
     @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
     public Response insertOrder(OrderCartETD orderCartETD) {
@@ -41,9 +42,7 @@ public class OrderServiceImpl implements OrderService {
         }
         Long uid = orderCartETD.getUid();
         Long goodsId = orderCartETD.getGoodsId();
-        GoodsETD goodsWhere = new GoodsETD();
-        goodsWhere.setId(goodsId);
-        GoodsETD goodsInfo = goodsMapper.selectInfo(goodsWhere);
+        GoodsETD goodsInfo = goodsService.selectInfo(goodsId);
         if(null == goodsInfo){
             return  ResponseUtils.errorRes("产品已下架");
         }
@@ -53,7 +52,7 @@ public class OrderServiceImpl implements OrderService {
         if(null == orderCartETD.getSiteId()){
             return ResponseUtils.errorRes("请选择收货地址");
         }
-        PUserSite site = userSiteMapper.selectByPrimaryKey(orderCartETD.getSiteId());
+        PUserSite site = userSiteService.findById(orderCartETD.getSiteId());
         if(null == site || !site.getUid().equals(orderCartETD.getUid())){
             return ResponseUtils.errorRes("收货地址异常");
         }
@@ -72,16 +71,12 @@ public class OrderServiceImpl implements OrderService {
         switch (goodsInfo.getZoneType().intValue()){
             case 0:
                 if(null != orderCartETD.getVoucherId()){
-                    GoodsExchangeETD goodsVoucher = exchangeMapper.selectByGoodsIdAndVoucherId(goodsId,orderCartETD.getVoucherId());
+                    GoodsExchangeETD goodsVoucher = exchangeService.selectByGoodsIdAndVoucherId(goodsId,orderCartETD.getVoucherId());
                     if(null == goodsVoucher){
                         return ResponseUtils.errorRes("该商品不能使用当前券");
                     }
                     if(goodsVoucher.getNumber().compareTo(new Integer(0)) > 0){
-                        UserVoucherETD voucherETD = new UserVoucherETD();
-                        voucherETD.setUid(uid);
-                        voucherETD.setVoucherId(goodsVoucher.getId());
-                        voucherETD.setNumber(goodsVoucher.getNumber());
-                        voucherList = userVoucherMapper.countByUidAndVoucherId(voucherETD);
+                        voucherList = userVoucherService.selectByUidAndVoucherId(uid,goodsVoucher.getVoucherId(),goodsVoucher.getNumber());
                         if(null == voucherList || voucherList.size() < goodsVoucher.getNumber().intValue()){
                             return ResponseUtils.errorRes("您的"+goodsVoucher.getVoucherName()+"数量不足");
                         }
@@ -92,7 +87,7 @@ public class OrderServiceImpl implements OrderService {
                 }
                 break;
             case 2:
-                List<GoodsExchangeETD> goodsExchangeList = exchangeMapper.selectListByGoodsId(goodsId);
+                List<GoodsExchangeETD> goodsExchangeList = exchangeService.selectListByGoodsId(goodsId);
                 if(null == goodsExchangeList || goodsExchangeList.size() <= 0){
                     return ResponseUtils.errorRes("商品配置异常");
                 }
@@ -102,11 +97,7 @@ public class OrderServiceImpl implements OrderService {
                     }
                     Long voucherId = exchange.getVoucherId();
                     int needNum = exchange.getNumber()*orderNumber;
-                    UserVoucherETD voucherETD = new UserVoucherETD();
-                    voucherETD.setUid(uid);
-                    voucherETD.setVoucherId(voucherId);
-                    voucherETD.setNumber(needNum);
-                    voucherList = userVoucherMapper.countByUidAndVoucherId(voucherETD);
+                    voucherList = userVoucherService.selectByUidAndVoucherId(uid,voucherId,needNum);
                     if(null == voucherList || voucherList.size() < needNum){
                         return ResponseUtils.errorRes("您的"+exchange.getVoucherName()+"数量不足");
                     }
@@ -129,29 +120,30 @@ public class OrderServiceImpl implements OrderService {
                     if(null == suit.getId()) {
                         throw new RuntimeException("规格选择错误");
                     }
-                    PGoodsSuit suitInfo = goodsSuitMapper.selectByPrimaryKey(suit.getId());
+                    PGoodsSuit suitInfo = goodsSuitService.findById(suit.getId());
                     if (null == suitInfo || !suitInfo.getGoodsId().equals(goodsId)) {
                         throw new RuntimeException("规格选择错误");
                     }
-                    addCard(uid,goodsInfo, orderId, num, suitInfo);
+                    if(!cartService.insertCart(uid,goodsInfo, orderId, num, suitInfo)){
+                        throw new RuntimeException("添加购物车失败");
+                    }
                     totalPrice = totalPrice.add(goodsInfo.getPrice().multiply(new BigDecimal(num)).setScale(2,BigDecimal.ROUND_DOWN));
                 }
                 break;
             default:
-                addCard(uid,goodsInfo, orderId, orderNumber, null);
+                if(!cartService.insertCart(uid,goodsInfo, orderId, orderNumber, null)){
+                    throw new RuntimeException("添加购物车失败");
+                }
                 totalPrice = totalPrice.add(goodsInfo.getPrice().multiply(new BigDecimal(orderNumber)).setScale(2,BigDecimal.ROUND_DOWN));
                 break;
         }
         if(null != voucherList && voucherList.size() > 0){
             for (PUserVoucher userVoucher:voucherList){
-                POrderVoucher orderVoucherADD = new POrderVoucher();
-                orderVoucherADD.setOrderId(orderId);
-                orderVoucherADD.setUid(uid);
-                orderVoucherADD.setUserVoucherId(userVoucher.getId());
-                if(orderVoucherMapper.insertSelective(orderVoucherADD) == 0){
+                if(!orderVoucherService.insertVoucher(orderId,uid,userVoucher.getId())){
                     throw new RuntimeException("券绑定失败");
                 }
             }
+            userVoucherService.updateUserVoucherIsLock(voucherList);
         }
         BigDecimal realPrice = totalPrice.subtract(discountAmount);
         if(realPrice.compareTo(new BigDecimal("0")) < 0){
@@ -167,22 +159,9 @@ public class OrderServiceImpl implements OrderService {
         return ResponseUtils.successRes(orderId);
     }
 
-    private void addCard(Long uid,GoodsETD goodsInfo, Long orderId, int num, PGoodsSuit suitInfo) {
-        PCart cartADD= new PCart();
-        cartADD.setUid(uid);
-        cartADD.setOrderId(orderId);
-        cartADD.setGoodsId(goodsInfo.getId());
-        cartADD.setPrice(goodsInfo.getPrice());
-        cartADD.setNumber(num);
-        cartADD.setGoodsName(goodsInfo.getGoodsName());
-        cartADD.setCreateTime(new Date());
-        if(null != suitInfo) {
-            cartADD.setSuitId(suitInfo.getId());
-            cartADD.setSuitName(suitInfo.getExplain());
-        }
-        if(0 == cartMapper.insertSelective(cartADD)){
-            throw new RuntimeException("添加购物车失败");
-        }
+    @Override
+    public POrder findOrderById(Long id) {
+        return orderMapper.selectByPrimaryKey(id);
     }
 
     private POrder getAddOrder(OrderCartETD orderCartETD, GoodsETD goodsInfo, PUserSite site,int orderNumber) {
@@ -209,6 +188,19 @@ public class OrderServiceImpl implements OrderService {
             throw new RuntimeException("添加订单失败");
         }
         return orderADD;
+    }
+
+    @Override
+    public Boolean updateOrderIsPay(Long id, PayType payType) {
+        POrder orderUPD = new POrder();
+        orderUPD.setId(id);
+        orderUPD.setState(1);
+        orderUPD.setPayTime(new Date());
+        orderUPD.setPayType(payType.getType());
+        if(0 == orderMapper.updateByPrimaryKeySelective(orderUPD)){
+            return false;
+        }
+        return true;
     }
 
     private String createOrderNo(Long uid) {

@@ -81,4 +81,9 @@ public class UserSiteServiceImpl implements UserSiteService {
         }
         return ResponseUtils.successRes(1);
     }
+
+    @Override
+    public PUserSite findById(Long id) {
+        return userSiteMapper.selectByPrimaryKey(id);
+    }
 }

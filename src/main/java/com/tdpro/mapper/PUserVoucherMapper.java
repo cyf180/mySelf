@@ -1,8 +1,10 @@
 package com.tdpro.mapper;
 
+import com.tdpro.entity.POrderVoucher;
 import com.tdpro.entity.PUserVoucher;
 import com.tdpro.entity.extend.UserVoucherETD;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -23,4 +25,8 @@ public interface PUserVoucherMapper {
     List<UserVoucherETD> selectListByUid(UserVoucherETD voucherETD);
 
     List<PUserVoucher> countByUidAndVoucherId(UserVoucherETD voucherETD);
+
+    int updateIsUse(@Param("list") List<POrderVoucher> list);
+
+    int updateIsLock(@Param("list") List<PUserVoucher> list);
 }

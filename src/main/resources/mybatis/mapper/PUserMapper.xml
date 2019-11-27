@@ -325,4 +325,36 @@
     where u.strawUid=#{0}
     order by u.id desc
   </select>
+  <update id="updateBalance" parameterType="com.tdpro.entity.extend.UserBalanceUpdateETD">
+    update p_user
+    <set >
+      <if test="balance != null" >
+        balance = #{balance,jdbcType=DECIMAL},
+      </if>
+      <if test="integral != null" >
+        integral = #{integral,jdbcType=DECIMAL},
+      </if>
+      <if test="totalIntegral != null" >
+        totalIntegral = #{totalIntegral,jdbcType=DECIMAL},
+      </if>
+      <if test="knotAmount != null" >
+        knotAmount = #{knotAmount,jdbcType=DECIMAL},
+      </if>
+    </set>
+    <where>
+      id = #{id}
+      <if test="oldBalance != null">
+        and balance=#{oldBalance}
+      </if>
+      <if test="oldIntegral != null">
+        and integral=#{oldIntegral}
+      </if>
+      <if test="oldTotalIntegral != null ">
+        and totalIntegral=#{oldTotalIntegral}
+      </if>
+      <if test="oldKnotAmount != null">
+        and knotAmount=#{oldKnotAmount}
+      </if>
+    </where>
+  </update>
 </mapper>

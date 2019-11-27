@@ -3,6 +3,8 @@ package com.tdpro.mapper;
 import com.tdpro.entity.POrderVoucher;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 @Mapper
 public interface POrderVoucherMapper {
     int deleteByPrimaryKey(Long id);
@@ -16,4 +18,6 @@ public interface POrderVoucherMapper {
     int updateByPrimaryKeySelective(POrderVoucher record);
 
     int updateByPrimaryKey(POrderVoucher record);
+
+    List<POrderVoucher> findListByOrderId(Long orderId);
 }

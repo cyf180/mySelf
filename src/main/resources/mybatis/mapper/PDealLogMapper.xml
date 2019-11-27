@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tdpro.mapper.PDealLogMapper" >
+  <resultMap id="BaseResultMap" type="com.tdpro.entity.PDealLog" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="dealName" property="dealName" jdbcType="VARCHAR" />
+    <result column="orderId" property="orderId" jdbcType="BIGINT" />
+    <result column="dealAmount" property="dealAmount" jdbcType="DECIMAL" />
+    <result column="balance" property="balance" jdbcType="DECIMAL" />
+    <result column="uid" property="uid" jdbcType="BIGINT" />
+    <result column="bUid" property="bUid" jdbcType="BIGINT" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, dealName, orderId, dealAmount, balance, `uid`, bUid, createTime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from p_deal_log
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from p_deal_log
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tdpro.entity.PDealLog" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into p_deal_log (dealName, orderId, dealAmount, 
+      balance, `uid`, bUid, createTime
+      )
+    values (#{dealName,jdbcType=VARCHAR}, #{orderId,jdbcType=BIGINT}, #{dealAmount,jdbcType=DECIMAL}, 
+      #{balance,jdbcType=DECIMAL}, #{uid,jdbcType=BIGINT}, #{bUid,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tdpro.entity.PDealLog" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into p_deal_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="dealName != null" >
+        dealName,
+      </if>
+      <if test="orderId != null" >
+        orderId,
+      </if>
+      <if test="dealAmount != null" >
+        dealAmount,
+      </if>
+      <if test="balance != null" >
+        balance,
+      </if>
+      <if test="uid != null" >
+        `uid`,
+      </if>
+      <if test="bUid != null" >
+        bUid,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="dealName != null" >
+        #{dealName,jdbcType=VARCHAR},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=BIGINT},
+      </if>
+      <if test="dealAmount != null" >
+        #{dealAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="balance != null" >
+        #{balance,jdbcType=DECIMAL},
+      </if>
+      <if test="uid != null" >
+        #{uid,jdbcType=BIGINT},
+      </if>
+      <if test="bUid != null" >
+        #{bUid,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tdpro.entity.PDealLog" >
+    update p_deal_log
+    <set >
+      <if test="dealName != null" >
+        dealName = #{dealName,jdbcType=VARCHAR},
+      </if>
+      <if test="orderId != null" >
+        orderId = #{orderId,jdbcType=BIGINT},
+      </if>
+      <if test="dealAmount != null" >
+        dealAmount = #{dealAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="balance != null" >
+        balance = #{balance,jdbcType=DECIMAL},
+      </if>
+      <if test="uid != null" >
+        `uid` = #{uid,jdbcType=BIGINT},
+      </if>
+      <if test="bUid != null" >
+        bUid = #{bUid,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tdpro.entity.PDealLog" >
+    update p_deal_log
+    set dealName = #{dealName,jdbcType=VARCHAR},
+      orderId = #{orderId,jdbcType=BIGINT},
+      dealAmount = #{dealAmount,jdbcType=DECIMAL},
+      balance = #{balance,jdbcType=DECIMAL},
+      `uid` = #{uid,jdbcType=BIGINT},
+      bUid = #{bUid,jdbcType=BIGINT},
+      createTime = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

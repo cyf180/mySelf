@@ -132,4 +132,22 @@
     and voucherId=#{voucherId}
     limit #{number}
   </select>
+  <update id="updateIsUse">
+    update p_user_voucher set useState = -1
+    where useState = 1
+    and id in (
+    <foreach collection="list" item="item" index="index" separator=",">
+      #{item.userVoucherId}
+    </foreach>
+    )
+  </update>
+  <update id="updateIsLock">
+    update p_user_voucher set useState = 1
+    where useState = 0
+    and id in (
+    <foreach collection="list" item="item" index="index" separator=",">
+      #{item.id}
+    </foreach>
+    )
+  </update>
 </mapper>

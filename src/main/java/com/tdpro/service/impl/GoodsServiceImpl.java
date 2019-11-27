@@ -100,4 +100,11 @@ public class GoodsServiceImpl implements GoodsService {
         }
         return ResponseUtils.successRes(orderCart);
     }
+
+    @Override
+    public GoodsETD selectInfo(Long id) {
+        GoodsETD goodsWhere = new GoodsETD();
+        goodsWhere.setId(id);
+        return goodsMapper.selectInfo(goodsWhere);
+    }
 }
