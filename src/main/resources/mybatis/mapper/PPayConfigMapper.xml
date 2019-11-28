@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tdpro.mapper.PPayConfigMapper" >
+  <resultMap id="BaseResultMap" type="com.tdpro.entity.PPayConfig" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="desc" property="desc" jdbcType="VARCHAR" />
+    <result column="mchId" property="mchId" jdbcType="VARCHAR" />
+    <result column="appId" property="appId" jdbcType="VARCHAR" />
+    <result column="paySecret" property="paySecret" jdbcType="VARCHAR" />
+    <result column="channel" property="channel" jdbcType="TINYINT" />
+    <result column="payType" property="payType" jdbcType="TINYINT" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="sort" property="sort" jdbcType="TINYINT" />
+    <result column="certPath" property="certPath" jdbcType="VARCHAR" />
+    <result column="backPath" property="backPath" jdbcType="VARCHAR" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, `name`, `desc`, mchId, appId, paySecret, channel, payType, `status`, sort, certPath, 
+    backPath, createTime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from p_pay_config
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from p_pay_config
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tdpro.entity.PPayConfig" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into p_pay_config (`name`, `desc`, mchId, 
+      appId, paySecret, channel, 
+      payType, `status`, sort, 
+      certPath, backPath, createTime
+      )
+    values (#{name,jdbcType=VARCHAR}, #{desc,jdbcType=VARCHAR}, #{mchId,jdbcType=VARCHAR}, 
+      #{appId,jdbcType=VARCHAR}, #{paySecret,jdbcType=VARCHAR}, #{channel,jdbcType=TINYINT}, 
+      #{payType,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, #{sort,jdbcType=TINYINT}, 
+      #{certPath,jdbcType=VARCHAR}, #{backPath,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tdpro.entity.PPayConfig" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into p_pay_config
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="name != null" >
+        `name`,
+      </if>
+      <if test="desc != null" >
+        `desc`,
+      </if>
+      <if test="mchId != null" >
+        mchId,
+      </if>
+      <if test="appId != null" >
+        appId,
+      </if>
+      <if test="paySecret != null" >
+        paySecret,
+      </if>
+      <if test="channel != null" >
+        channel,
+      </if>
+      <if test="payType != null" >
+        payType,
+      </if>
+      <if test="status != null" >
+        `status`,
+      </if>
+      <if test="sort != null" >
+        sort,
+      </if>
+      <if test="certPath != null" >
+        certPath,
+      </if>
+      <if test="backPath != null" >
+        backPath,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="desc != null" >
+        #{desc,jdbcType=VARCHAR},
+      </if>
+      <if test="mchId != null" >
+        #{mchId,jdbcType=VARCHAR},
+      </if>
+      <if test="appId != null" >
+        #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="paySecret != null" >
+        #{paySecret,jdbcType=VARCHAR},
+      </if>
+      <if test="channel != null" >
+        #{channel,jdbcType=TINYINT},
+      </if>
+      <if test="payType != null" >
+        #{payType,jdbcType=TINYINT},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="sort != null" >
+        #{sort,jdbcType=TINYINT},
+      </if>
+      <if test="certPath != null" >
+        #{certPath,jdbcType=VARCHAR},
+      </if>
+      <if test="backPath != null" >
+        #{backPath,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tdpro.entity.PPayConfig" >
+    update p_pay_config
+    <set >
+      <if test="name != null" >
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="desc != null" >
+        `desc` = #{desc,jdbcType=VARCHAR},
+      </if>
+      <if test="mchId != null" >
+        mchId = #{mchId,jdbcType=VARCHAR},
+      </if>
+      <if test="appId != null" >
+        appId = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="paySecret != null" >
+        paySecret = #{paySecret,jdbcType=VARCHAR},
+      </if>
+      <if test="channel != null" >
+        channel = #{channel,jdbcType=TINYINT},
+      </if>
+      <if test="payType != null" >
+        payType = #{payType,jdbcType=TINYINT},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=TINYINT},
+      </if>
+      <if test="certPath != null" >
+        certPath = #{certPath,jdbcType=VARCHAR},
+      </if>
+      <if test="backPath != null" >
+        backPath = #{backPath,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tdpro.entity.PPayConfig" >
+    update p_pay_config
+    set `name` = #{name,jdbcType=VARCHAR},
+      `desc` = #{desc,jdbcType=VARCHAR},
+      mchId = #{mchId,jdbcType=VARCHAR},
+      appId = #{appId,jdbcType=VARCHAR},
+      paySecret = #{paySecret,jdbcType=VARCHAR},
+      channel = #{channel,jdbcType=TINYINT},
+      payType = #{payType,jdbcType=TINYINT},
+      `status` = #{status,jdbcType=TINYINT},
+      sort = #{sort,jdbcType=TINYINT},
+      certPath = #{certPath,jdbcType=VARCHAR},
+      backPath = #{backPath,jdbcType=VARCHAR},
+      createTime = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="findByChannelAndPayType" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from p_pay_config
+    where channel = #{channel}
+    and payType=#{payType}
+    and status = 1
+    order by id asc limit 1
+  </select>
+</mapper>

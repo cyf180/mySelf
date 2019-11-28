@@ -10,5 +10,5 @@ public interface PayService {
      * @param payETD
      * @return
      */
-    Response balancePay(OrderPayETD payETD);
+    Response unifyPay(OrderPayETD payETD);
 }

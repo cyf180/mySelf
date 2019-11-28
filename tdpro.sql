@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50540
 File Encoding         : 65001
 
-Date: 2019-11-27 17:33:07
+Date: 2019-11-28 16:19:40
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -76,13 +76,15 @@ CREATE TABLE `p_cart` (
   KEY `goodsId` (`goodsId`) USING BTREE,
   KEY `uid` (`uid`) USING BTREE,
   KEY `orderId` (`orderId`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='购物车';
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COMMENT='购物车';
 
 -- ----------------------------
 -- Records of p_cart
 -- ----------------------------
 INSERT INTO `p_cart` VALUES ('7', '1', '2', '11', '4', '1523.00', '加绒', '七匹狼男士冬季羽绒服', '1', '0', '2019-11-27 17:30:55');
 INSERT INTO `p_cart` VALUES ('8', '1', '2', '11', '5', '1523.00', '特加绒', '七匹狼男士冬季羽绒服', '1', '0', '2019-11-27 17:30:55');
+INSERT INTO `p_cart` VALUES ('9', '1', '1', '12', '0', '1200.00', null, '毛里男士外套', '1', '0', '2019-11-28 11:07:55');
+INSERT INTO `p_cart` VALUES ('12', '1', '2', '16', '5', '1523.00', '特加绒', '七匹狼男士冬季羽绒服', '1', '0', '2019-11-28 11:58:06');
 
 -- ----------------------------
 -- Table structure for p_collect
@@ -117,11 +119,12 @@ CREATE TABLE `p_deal_log` (
   `bUid` bigint(11) NOT NULL DEFAULT '0' COMMENT '操作人Id',
   `createTime` datetime DEFAULT NULL COMMENT '时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='交易记录表';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='交易记录表';
 
 -- ----------------------------
 -- Records of p_deal_log
 -- ----------------------------
+INSERT INTO `p_deal_log` VALUES ('1', '余额支付', '12', '1137.00', '863.00', '1', '0', '2019-11-28 11:24:09');
 
 -- ----------------------------
 -- Table structure for p_goods
@@ -151,7 +154,7 @@ CREATE TABLE `p_goods` (
 -- Records of p_goods
 -- ----------------------------
 INSERT INTO `p_goods` VALUES ('1', '1', '毛里男士外套', '0', '0', '1200.00', '毛里男士外套', '件', '257.jpg', '撒大大撒多驱蚊器二', '0', '2019-11-22 10:08:43', '0', '2', '0');
-INSERT INTO `p_goods` VALUES ('2', '1', '七匹狼男士冬季羽绒服', '2', '1', '1523.00', '七匹狼男士冬季羽绒服', '件', '3554847.jpg', '韦尔奇二群翁', '0', '2019-11-22 10:10:18', '0', '100', '0');
+INSERT INTO `p_goods` VALUES ('2', '1', '七匹狼男士冬季羽绒服', '2', '1', '1523.00', '七匹狼男士冬季羽绒服', '件', '3554847.jpg', '韦尔奇二群翁', '0', '2019-11-22 10:10:18', '0', '99', '1');
 
 -- ----------------------------
 -- Table structure for p_goods_class
@@ -323,12 +326,14 @@ CREATE TABLE `p_order` (
   PRIMARY KEY (`id`),
   KEY `orderUserIndexes` (`uid`) USING BTREE,
   KEY `orderGoodsIndexes` (`goodsId`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COMMENT='订单表';
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 COMMENT='订单表';
 
 -- ----------------------------
 -- Records of p_order
 -- ----------------------------
-INSERT INTO `p_order` VALUES ('11', '11574847055213', '1', '2', '2', '1', '0', '七匹狼男士冬季羽绒服', '3046.00', '3046.00', '2', '0', '萨达', '18087760500', '云南省昆明市官渡区世纪城15号', null, '0', '2019-11-27 17:30:55', null, null, '0.00', null, null, null, null, null);
+INSERT INTO `p_order` VALUES ('11', '11574847055213', '1', '2', '2', '1', '1', '七匹狼男士冬季羽绒服', '3046.00', '3046.00', '2', '2', '萨达', '18087760500', '云南省昆明市官渡区世纪城15号', null, '0', '2019-11-27 17:30:55', '2019-11-28 10:33:52', null, '0.00', null, null, null, null, null);
+INSERT INTO `p_order` VALUES ('12', '11574910475450', '1', '1', '0', '0', '1', '毛里男士外套', '1200.00', '1137.00', '1', '0', '萨达', '18087760500', '云南省昆明市官渡区世纪城15号', null, '0', '2019-11-28 11:07:55', '2019-11-28 11:24:20', null, '0.00', null, null, null, '给我加辣', null);
+INSERT INTO `p_order` VALUES ('16', '11574913474958', '1', '2', '2', '1', '1', '七匹狼男士冬季羽绒服', '1523.00', '0.00', '1', '2', '萨达', '18087760500', '云南省昆明市官渡区世纪城15号', null, '0', '2019-11-28 11:57:54', '2019-11-28 11:59:16', null, '0.00', null, null, null, '给我加辣', null);
 
 -- ----------------------------
 -- Table structure for p_order_voucher
@@ -341,13 +346,44 @@ CREATE TABLE `p_order_voucher` (
   `userVoucherId` bigint(11) NOT NULL DEFAULT '0' COMMENT '用户券Id',
   PRIMARY KEY (`id`),
   UNIQUE KEY `orderVoucherOrderIndexes` (`orderId`,`uid`,`userVoucherId`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='订单兑换券使用表';
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='订单兑换券使用表';
 
 -- ----------------------------
 -- Records of p_order_voucher
 -- ----------------------------
 INSERT INTO `p_order_voucher` VALUES ('3', '11', '1', '2');
 INSERT INTO `p_order_voucher` VALUES ('4', '11', '1', '3');
+INSERT INTO `p_order_voucher` VALUES ('5', '12', '1', '1');
+INSERT INTO `p_order_voucher` VALUES ('7', '16', '1', '4');
+INSERT INTO `p_order_voucher` VALUES ('8', '16', '1', '5');
+
+-- ----------------------------
+-- Table structure for p_pay_config
+-- ----------------------------
+DROP TABLE IF EXISTS `p_pay_config`;
+CREATE TABLE `p_pay_config` (
+  `id` bigint(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) NOT NULL COMMENT '支付方式名称',
+  `desc` varchar(50) DEFAULT NULL COMMENT '支付方式描述',
+  `mchId` varchar(32) DEFAULT NULL COMMENT '支付商户号',
+  `appId` varchar(32) DEFAULT NULL COMMENT '商户appId',
+  `paySecret` varchar(32) DEFAULT NULL COMMENT '商户密钥',
+  `channel` tinyint(2) NOT NULL DEFAULT '-1' COMMENT '支付渠道(0:小程序,1:app)',
+  `payType` tinyint(4) NOT NULL DEFAULT '0' COMMENT '支付类型(1:微信 2:支付宝)',
+  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '开启状态(0:关闭 1: 开启)',
+  `sort` tinyint(4) NOT NULL DEFAULT '0' COMMENT '排序',
+  `certPath` varchar(200) DEFAULT NULL COMMENT '证书地址',
+  `backPath` varchar(100) NOT NULL COMMENT '回调地址',
+  `createTime` datetime DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `channel` (`channel`,`payType`) USING BTREE,
+  UNIQUE KEY `appId` (`appId`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of p_pay_config
+-- ----------------------------
+INSERT INTO `p_pay_config` VALUES ('4', '小程序微信支付', '小程序微信支付', '1522552431', 'wx487abd95d03f9b6f', 'sJRjgGb2joHW1KcxXOV3zqeOv0Ouf20q', '0', '1', '1', '0', 'certs/1546409393224_apiclient_cert.p12', '', '2019-01-30 15:56:33');
 
 -- ----------------------------
 -- Table structure for p_role
@@ -416,7 +452,7 @@ CREATE TABLE `p_user` (
 -- ----------------------------
 -- Records of p_user
 -- ----------------------------
-INSERT INTO `p_user` VALUES ('1', '1', '18087760500', null, '0', '0', '剃刀', '云飞', '100.00', '350.00', '350.00', '招商银行', '春城支行', '6666666666', '555555555555555', '2019-11-20 18:30:34', null, null, null, '2', '0.00', '10', '15');
+INSERT INTO `p_user` VALUES ('1', '1', '18087760500', null, '0', '0', '剃刀', '云飞', '863.00', '350.00', '350.00', '招商银行', '春城支行', '6666666666', '555555555555555', '2019-11-20 18:30:34', null, null, null, '2', '0.00', '10', '15');
 INSERT INTO `p_user` VALUES ('2', '0', '18087760501', null, '0', '1', 'zz', 'zz', '0.00', '0.00', '0.00', '建设银行', '春城支行', '8965656565656', '6666666', '2019-11-21 16:02:34', null, null, null, '0', '0.00', '0', '0');
 
 -- ----------------------------
@@ -519,11 +555,11 @@ CREATE TABLE `p_user_voucher` (
 -- ----------------------------
 -- Records of p_user_voucher
 -- ----------------------------
-INSERT INTO `p_user_voucher` VALUES ('1', '1', '1', '0', '0', null, null);
-INSERT INTO `p_user_voucher` VALUES ('2', '1', '2', '1', '0', null, null);
-INSERT INTO `p_user_voucher` VALUES ('3', '1', '2', '1', '0', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
-INSERT INTO `p_user_voucher` VALUES ('4', '1', '1', '0', '0', null, null);
-INSERT INTO `p_user_voucher` VALUES ('5', '1', '2', '0', '0', null, null);
+INSERT INTO `p_user_voucher` VALUES ('1', '1', '1', '-1', '0', null, null);
+INSERT INTO `p_user_voucher` VALUES ('2', '1', '2', '-1', '0', null, null);
+INSERT INTO `p_user_voucher` VALUES ('3', '1', '2', '-1', '0', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
+INSERT INTO `p_user_voucher` VALUES ('4', '1', '1', '-1', '0', null, null);
+INSERT INTO `p_user_voucher` VALUES ('5', '1', '2', '-1', '0', null, null);
 
 -- ----------------------------
 -- Table structure for p_voucher

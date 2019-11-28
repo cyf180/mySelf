@@ -221,4 +221,11 @@
     where id=#{0}
     and isDel = 0
   </select>
+  <update id="updateRepertory" parameterType="com.tdpro.entity.extend.GoodsRepertoryUpdateETD">
+    update p_goods
+    set repertory = #{repertory},
+      soldNum = #{soldNum}
+    where id = #{id}
+    and repertory=#{oldRepertory}
+  </update>
 </mapper>

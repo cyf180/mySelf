@@ -1,6 +1,7 @@
 package com.tdpro.service;
 
 import com.tdpro.common.utils.Response;
+import com.tdpro.entity.POrder;
 import com.tdpro.entity.extend.GoodsETD;
 
 import java.util.List;
@@ -33,4 +34,11 @@ public interface GoodsService {
      * @return
      */
     GoodsETD selectInfo(Long id);
+
+    /**
+     * 修改库存
+     * @param order
+     * @return
+     */
+    Boolean updateRepertory(POrder order);
 }

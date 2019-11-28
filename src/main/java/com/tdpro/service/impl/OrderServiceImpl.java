@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -66,7 +67,7 @@ public class OrderServiceImpl implements OrderService {
         }else{
             orderNumber = 1;
         }
-        List<PUserVoucher> voucherList = null;
+        List<PUserVoucher> voucherList = new ArrayList<>();
         BigDecimal discountAmount = new BigDecimal("0");
         switch (goodsInfo.getZoneType().intValue()){
             case 0:
@@ -97,11 +98,13 @@ public class OrderServiceImpl implements OrderService {
                     }
                     Long voucherId = exchange.getVoucherId();
                     int needNum = exchange.getNumber()*orderNumber;
-                    voucherList = userVoucherService.selectByUidAndVoucherId(uid,voucherId,needNum);
-                    if(null == voucherList || voucherList.size() < needNum){
+                    List<PUserVoucher> voucherListOne = userVoucherService.selectByUidAndVoucherId(uid,voucherId,needNum);
+                    if(null == voucherListOne || voucherListOne.size() < needNum){
                         return ResponseUtils.errorRes("您的"+exchange.getVoucherName()+"数量不足");
                     }
+                    voucherList.addAll(voucherListOne);
                 }
+                discountAmount = goodsInfo.getPrice().multiply(new BigDecimal(orderNumber));
                 break;
             default:
                 return ResponseUtils.errorRes("商品配置异常");

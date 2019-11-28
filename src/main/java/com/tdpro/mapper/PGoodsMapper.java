@@ -2,6 +2,7 @@ package com.tdpro.mapper;
 
 import com.tdpro.entity.PGoods;
 import com.tdpro.entity.extend.GoodsETD;
+import com.tdpro.entity.extend.GoodsRepertoryUpdateETD;
 import com.tdpro.entity.extend.OrderCartETD;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -26,4 +27,6 @@ public interface PGoodsMapper {
     GoodsETD selectInfo(GoodsETD goodsETD);
 
     OrderCartETD selectAffirmById(Long id);
+
+    int updateRepertory(GoodsRepertoryUpdateETD repertoryUpdateETD);
 }

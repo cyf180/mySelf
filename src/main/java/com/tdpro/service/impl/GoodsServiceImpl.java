@@ -5,8 +5,10 @@ import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.StringUtil;
 import com.tdpro.common.utils.Response;
 import com.tdpro.common.utils.ResponseUtils;
+import com.tdpro.entity.PGoods;
 import com.tdpro.entity.PGoodsExchange;
 import com.tdpro.entity.PGoodsImg;
+import com.tdpro.entity.POrder;
 import com.tdpro.entity.extend.*;
 import com.tdpro.mapper.*;
 import com.tdpro.service.GoodsService;
@@ -106,5 +108,27 @@ public class GoodsServiceImpl implements GoodsService {
         GoodsETD goodsWhere = new GoodsETD();
         goodsWhere.setId(id);
         return goodsMapper.selectInfo(goodsWhere);
+    }
+
+    @Override
+    public Boolean updateRepertory(POrder order) {
+        PGoods goods = goodsMapper.selectByPrimaryKey(order.getGoodsId());
+        if(null == goods){
+            return false;
+        }
+        int newRepertory = goods.getRepertory()-order.getNumber();
+        int newSoldNum = goods.getSoldNum()+order.getNumber();
+        if(newRepertory < 0){
+            newRepertory = 0;
+        }
+        GoodsRepertoryUpdateETD repertoryUpdateUPD = new GoodsRepertoryUpdateETD();
+        repertoryUpdateUPD.setId(goods.getId());
+        repertoryUpdateUPD.setRepertory(newRepertory);
+        repertoryUpdateUPD.setSoldNum(newSoldNum);
+        repertoryUpdateUPD.setOldRepertory(goods.getRepertory());
+        if(0 == goodsMapper.updateRepertory(repertoryUpdateUPD)){
+            return false;
+        }
+        return true;
     }
 }
