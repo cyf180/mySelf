@@ -10,12 +10,14 @@ import com.tdpro.entity.extend.UserVoucherETD;
 import com.tdpro.mapper.PUserVoucherMapper;
 import com.tdpro.mapper.PVoucherMapper;
 import com.tdpro.service.UserVoucherService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Slf4j
 public class UserVoucherServiceImpl implements UserVoucherService {
     @Autowired
     private PUserVoucherMapper userVoucherMapper;
@@ -42,18 +44,20 @@ public class UserVoucherServiceImpl implements UserVoucherService {
     }
 
     @Override
-    public void updateUserVoucherIsUse(List<POrderVoucher> list) {
+    public Boolean updateUserVoucherIsUse(List<POrderVoucher> list) {
         int update = userVoucherMapper.updateIsUse(list);
         if(update != list.size()){
-            throw new RuntimeException("兑换券处理异常");
+            return false;
         }
+        return true;
     }
 
     @Override
-    public void updateUserVoucherIsLock(List<PUserVoucher> list) {
+    public Boolean updateUserVoucherIsLock(List<PUserVoucher> list) {
         int update = userVoucherMapper.updateIsLock(list);
         if(update != list.size()){
-            throw new RuntimeException("兑换券处理异常");
+            return false;
         }
+        return true;
     }
 }

@@ -338,4 +338,10 @@
       backNote = #{backNote,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="findByOrderNo" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from p_order
+    where orderNo = #{orderNo}
+  </select>
 </mapper>

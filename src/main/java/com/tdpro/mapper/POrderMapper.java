@@ -2,6 +2,7 @@ package com.tdpro.mapper;
 
 import com.tdpro.entity.POrder;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface POrderMapper {
@@ -16,4 +17,6 @@ public interface POrderMapper {
     int updateByPrimaryKeySelective(POrder record);
 
     int updateByPrimaryKey(POrder record);
+
+    POrder findByOrderNo(@Param("orderNo") String orderNo);
 }

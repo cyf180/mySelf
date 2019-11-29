@@ -40,52 +40,57 @@ public class PayServiceImpl implements PayService {
     private PayConfigService payConfigService;
     @Autowired
     private WxPayUtility wxPayUtility = new WxPayUtility();
+
     @Override
     @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
     public Response unifyPay(OrderPayETD payETD) {
-        if(null == payETD.getOrderId() || payETD.getOrderId().equals(new Long(0))){
+        if (null == payETD.getOrderId() || payETD.getOrderId().equals(new Long(0))) {
             return ResponseUtils.errorRes("操作异常");
         }
         POrder orderInfo = orderService.findOrderById(payETD.getOrderId());
-        if(null == orderInfo){
+        if (null == orderInfo) {
             return ResponseUtils.errorRes("订单异常");
         }
-        if(!orderInfo.getState().equals(new Integer(0))){
+        if (!orderInfo.getState().equals(new Integer(0))) {
             return ResponseUtils.errorRes("该订单不属于待支付");
         }
-        if(!orderInfo.getUid().equals(payETD.getUid())){
+        if (!orderInfo.getUid().equals(payETD.getUid())) {
             return ResponseUtils.errorRes("订单异常");
         }
         Response response = ResponseUtils.errorRes("异常");
         PUser userInfo = userService.findById(payETD.getUid());
         List<POrderVoucher> orderVoucherList = orderVoucherService.findListByOrderId(orderInfo.getId());
-        switch (orderInfo.getZoneType().intValue()){
+        switch (orderInfo.getZoneType().intValue()) {
             case 2:
-                if(null != orderVoucherList && orderVoucherList.size() >0){
-                    userVoucherService.updateUserVoucherIsUse(orderVoucherList);
-                    if(!orderService.updateOrderIsPay(orderInfo.getId(),PayType.EXCHANGE_PAY) || !goodsService.updateRepertory(orderInfo)){
+                if (null != orderVoucherList && orderVoucherList.size() > 0) {
+                    if (!userVoucherService.updateUserVoucherIsUse(orderVoucherList)) {
+                        throw new RuntimeException("修改优惠券失败");
+                    }
+                    if (!orderService.updateOrderIsPay(orderInfo.getId(), PayType.EXCHANGE_PAY, null, null) || !goodsService.updateRepertory(orderInfo)) {
                         throw new RuntimeException("订单修改失败");
                     }
                     response = ResponseUtils.successRes(orderInfo.getId());
-                }else{
-                    response =  ResponseUtils.errorRes("兑换券异常");
+                } else {
+                    response = ResponseUtils.errorRes("兑换券异常");
                 }
                 break;
             default:
                 PayType payType = PayType.BALANCE_PAY;
-                if(payType.getType().equals(payETD.getPayType())){
-                    Response updateUser = userService.userBalancePay(orderInfo,userInfo);
-                    if(null != updateUser) return updateUser;
-                    if(null != orderVoucherList && orderVoucherList.size() >0){
-                        userVoucherService.updateUserVoucherIsUse(orderVoucherList);
+                if (payType.getType().equals(payETD.getPayType())) {
+                    Response updateUser = userService.userBalancePay(orderInfo, userInfo);
+                    if (null != updateUser) return updateUser;
+                    if (null != orderVoucherList && orderVoucherList.size() > 0) {
+                        if (!userVoucherService.updateUserVoucherIsUse(orderVoucherList)) {
+                            throw new RuntimeException("修改优惠券失败");
+                        }
                     }
-                    if(!orderService.updateOrderIsPay(orderInfo.getId(),payType) || !goodsService.updateRepertory(orderInfo)){
+                    if (!orderService.updateOrderIsPay(orderInfo.getId(), payType, null, null) || !goodsService.updateRepertory(orderInfo)) {
                         throw new RuntimeException("订单修改失败");
                     }
                     response = ResponseUtils.successRes(orderInfo.getId());
-                }else if(PayType.WX_PAY.getType().equals(payETD.getPayType())){
-                    PPayConfig payConfig = payConfigService.findByChannelAndPayType(new Byte("0"),new Byte("1"));
-                    if(null == payConfig){
+                } else if (PayType.WX_PAY.getType().equals(payETD.getPayType())) {
+                    PPayConfig payConfig = payConfigService.findByChannelAndPayType(new Byte("0"), new Byte("1"));
+                    if (null == payConfig) {
                         return ResponseUtils.errorRes("微信支付为开启");
                     }
                     WxPayET wxPayET = new WxPayET();
@@ -103,7 +108,7 @@ public class PayServiceImpl implements PayService {
                     wxPayET.setAttach("buy");
                     wxPayET.setOpenId("asdada");
                     Map msgBean = wxPayUtility.weiXinPayCommon(wxPayET);
-                    if (StringUtils.isEmpty(msgBean)||StringUtils.isEmpty(msgBean.get("code"))||"0".equals(msgBean.get("code").toString())){
+                    if (StringUtils.isEmpty(msgBean) || StringUtils.isEmpty(msgBean.get("code")) || "0".equals(msgBean.get("code").toString())) {
                         return ResponseUtils.errorRes(msgBean.get("msg").toString());
                     }
                     response = ResponseUtils.successRes(msgBean.get("msg"));

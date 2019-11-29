@@ -28,11 +28,11 @@ public interface UserVoucherService {
      * @param list
      * @return
      */
-    void updateUserVoucherIsUse(List<POrderVoucher> list);
+    Boolean updateUserVoucherIsUse(List<POrderVoucher> list);
 
     /**
      * 修改用户券为绑定
      * @param list
      */
-    void updateUserVoucherIsLock(List<PUserVoucher> list);
+    Boolean updateUserVoucherIsLock(List<PUserVoucher> list);
 }

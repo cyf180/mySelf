@@ -1,5 +1,6 @@
 package com.tdpro.service.impl;
 
+import com.github.pagehelper.StringUtil;
 import com.tdpro.common.constant.PayType;
 import com.tdpro.common.utils.Response;
 import com.tdpro.common.utils.ResponseUtils;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -146,7 +148,9 @@ public class OrderServiceImpl implements OrderService {
                     throw new RuntimeException("券绑定失败");
                 }
             }
-            userVoucherService.updateUserVoucherIsLock(voucherList);
+            if(!userVoucherService.updateUserVoucherIsLock(voucherList)){
+                throw new RuntimeException("优惠券绑定失败");
+            }
         }
         BigDecimal realPrice = totalPrice.subtract(discountAmount);
         if(realPrice.compareTo(new BigDecimal("0")) < 0){
@@ -194,16 +198,27 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Boolean updateOrderIsPay(Long id, PayType payType) {
+    public Boolean updateOrderIsPay(Long id, PayType payType,String wxOrderNo,BigDecimal callbackPrice) {
         POrder orderUPD = new POrder();
         orderUPD.setId(id);
         orderUPD.setState(1);
         orderUPD.setPayTime(new Date());
         orderUPD.setPayType(payType.getType());
+        if(StringUtil.isNotEmpty(wxOrderNo)){
+            orderUPD.setWxOrderNo(wxOrderNo);
+        }
+        if(null != callbackPrice){
+            orderUPD.setCallbackPrice(callbackPrice);
+        }
         if(0 == orderMapper.updateByPrimaryKeySelective(orderUPD)){
             return false;
         }
         return true;
+    }
+
+    @Override
+    public POrder findByOrderNo(String orderNo) {
+        return orderMapper.findByOrderNo(orderNo);
     }
 
     private String createOrderNo(Long uid) {

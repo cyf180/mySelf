@@ -5,6 +5,8 @@ import com.tdpro.common.utils.Response;
 import com.tdpro.entity.POrder;
 import com.tdpro.entity.extend.OrderCartETD;
 
+import java.math.BigDecimal;
+
 public interface OrderService {
     /**
      * 添加订单
@@ -25,5 +27,12 @@ public interface OrderService {
      * @param id
      * @return
      */
-    Boolean updateOrderIsPay(Long id, PayType payType);
+    Boolean updateOrderIsPay(Long id, PayType payType,String wxOrderNo,BigDecimal callbackPrice);
+
+    /**
+     * 根据订单号查询订单
+     * @param orderNo
+     * @return
+     */
+    POrder findByOrderNo(String orderNo);
 }
