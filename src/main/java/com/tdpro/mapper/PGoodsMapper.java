@@ -6,6 +6,7 @@ import com.tdpro.entity.extend.GoodsRepertoryUpdateETD;
 import com.tdpro.entity.extend.OrderCartETD;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Mapper

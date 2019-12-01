@@ -3,6 +3,7 @@ package com.tdpro.service;
 import com.tdpro.common.utils.Response;
 import com.tdpro.entity.POrder;
 import com.tdpro.entity.PUser;
+import com.tdpro.entity.extend.UserBalanceUpdateETD;
 import com.tdpro.entity.extend.UserTeamETD;
 import com.tdpro.entity.extend.UserUPD;
 
@@ -48,4 +49,11 @@ public interface UserService {
      * @return
      */
     Response userBalancePay(POrder order,PUser user);
+
+    /**
+     * 用户余额修改
+     * @param balanceUpdateETD
+     * @return
+     */
+    Boolean updateUserBalance(UserBalanceUpdateETD balanceUpdateETD);
 }

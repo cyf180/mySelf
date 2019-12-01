@@ -50,6 +50,8 @@ public class PUser implements Serializable {
     private Integer teamOneNum;
     @ApiModelProperty(value = "团队套装数")
     private Integer teamSuitNum;
+    private BigDecimal itemBuyAmount;
+    private BigDecimal itemLeftAmount;
 
     private static final long serialVersionUID = 1L;
 
@@ -235,6 +237,22 @@ public class PUser implements Serializable {
 
     public void setTeamSuitNum(Integer teamSuitNum) {
         this.teamSuitNum = teamSuitNum;
+    }
+
+    public BigDecimal getItemBuyAmount() {
+        return itemBuyAmount;
+    }
+
+    public void setItemBuyAmount(BigDecimal itemBuyAmount) {
+        this.itemBuyAmount = itemBuyAmount;
+    }
+
+    public BigDecimal getItemLeftAmount() {
+        return itemLeftAmount;
+    }
+
+    public void setItemLeftAmount(BigDecimal itemLeftAmount) {
+        this.itemLeftAmount = itemLeftAmount;
     }
 
     @Override

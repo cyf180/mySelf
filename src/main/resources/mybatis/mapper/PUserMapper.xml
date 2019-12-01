@@ -25,11 +25,13 @@
     <result column="knotAmount" property="knotAmount" jdbcType="DECIMAL" />
     <result column="teamOneNum" property="teamOneNum" jdbcType="INTEGER" />
     <result column="teamSuitNum" property="teamSuitNum" jdbcType="INTEGER" />
+    <result column="itemBuyAmount" property="itemBuyAmount" jdbcType="DECIMAL" />
+    <result column="itemLeftAmount" property="itemLeftAmount" jdbcType="DECIMAL" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, isUser, phone, payPassword, `state`, strawUid, nickName, `name`, balance, integral, 
     totalIntegral, bankName, bankBranch, bankCard, idCard, createTime, disableTime, uncoilTime, 
-    strawPath, knotId, knotAmount, teamOneNum, teamSuitNum
+    strawPath, knotId, knotAmount, teamOneNum, teamSuitNum,teamSuitNum,itemLeftAmount
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -340,6 +342,12 @@
       <if test="knotAmount != null" >
         knotAmount = #{knotAmount,jdbcType=DECIMAL},
       </if>
+      <if test="itemBuyAmount != null" >
+        itemBuyAmount = #{itemBuyAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="itemLeftAmount != null" >
+        itemLeftAmount = #{itemLeftAmount,jdbcType=DECIMAL},
+      </if>
     </set>
     <where>
       id = #{id}
@@ -354,6 +362,9 @@
       </if>
       <if test="oldKnotAmount != null">
         and knotAmount=#{oldKnotAmount}
+      </if>
+      <if test="oldItemLeftAmount != null">
+        and itemLeftAmount=#{oldItemLeftAmount}
       </if>
     </where>
   </update>

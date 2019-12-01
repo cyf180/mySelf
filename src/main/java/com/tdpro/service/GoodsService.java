@@ -4,6 +4,7 @@ import com.tdpro.common.utils.Response;
 import com.tdpro.entity.POrder;
 import com.tdpro.entity.extend.GoodsETD;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface GoodsService {
@@ -41,4 +42,6 @@ public interface GoodsService {
      * @return
      */
     Boolean updateRepertory(POrder order);
+
+
 }

@@ -221,6 +221,19 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.findByOrderNo(orderNo);
     }
 
+    @Override
+    public BigDecimal sumRealPrice(Long uid,Long id){
+        return orderMapper.sumRealPrice(uid,id);
+    }
+
+    @Override
+    public Boolean updateOrder(POrder order){
+        if(0 == orderMapper.updateByPrimaryKeySelective(order)){
+            return false;
+        }
+        return true;
+    }
+
     private String createOrderNo(Long uid) {
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append(uid).append(System.currentTimeMillis());

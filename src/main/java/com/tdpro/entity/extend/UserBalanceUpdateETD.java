@@ -15,4 +15,7 @@ public class UserBalanceUpdateETD {
     private BigDecimal oldTotalIntegral;
     private BigDecimal knotAmount;
     private BigDecimal oldKnotAmount;
+    private BigDecimal itemBuyAmount;
+    private BigDecimal itemLeftAmount;
+    private BigDecimal oldItemLeftAmount;
 }

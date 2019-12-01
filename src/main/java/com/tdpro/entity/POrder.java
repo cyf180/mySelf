@@ -57,6 +57,8 @@ public class POrder implements Serializable {
 
     private String backNote;
 
+    private Integer isKnot;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -265,6 +267,14 @@ public class POrder implements Serializable {
 
     public void setBackNote(String backNote) {
         this.backNote = backNote == null ? null : backNote.trim();
+    }
+
+    public Integer getIsKnot() {
+        return isKnot;
+    }
+
+    public void setIsKnot(Integer isKnot) {
+        this.isKnot = isKnot;
     }
 
     @Override

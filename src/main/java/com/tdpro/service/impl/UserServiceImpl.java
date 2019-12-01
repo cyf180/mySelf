@@ -114,4 +114,12 @@ public class UserServiceImpl implements UserService {
         }
         return null;
     }
+
+    @Override
+    public Boolean updateUserBalance(UserBalanceUpdateETD balanceUpdateETD){
+        if(0 == userMapper.updateBalance(balanceUpdateETD)){
+            return false;
+        }
+        return true;
+    }
 }

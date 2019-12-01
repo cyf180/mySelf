@@ -28,12 +28,13 @@
     <result column="seendTime" property="seendTime" jdbcType="TIMESTAMP" />
     <result column="userNote" property="userNote" jdbcType="VARCHAR" />
     <result column="backNote" property="backNote" jdbcType="VARCHAR" />
+    <result column="isKnot" property="isKnot" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, orderNo, `uid`, goodsId, zoneType, isSuit, `state`, goodsName, totalPrice, realPrice, 
     `number`, payType, receiptName, receiptPhone, receiptSite, suiteName, isDel, createTime, 
     payTime, wxOrderNo, callbackPrice, logisticsName, logisticsNo, seendTime, userNote, 
-    backNote
+    backNote,isKnot
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -306,6 +307,9 @@
       <if test="backNote != null" >
         backNote = #{backNote,jdbcType=VARCHAR},
       </if>
+      <if test="isKnot != null" >
+        isKnot = #{isKnot},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -343,5 +347,13 @@
     <include refid="Base_Column_List" />
     from p_order
     where orderNo = #{orderNo}
+  </select>
+  <select id="sumRealPrice" resultType="java.math.BigDecimal">
+    select ifnull(sum(realPrice),0.00)
+    from p_order
+    where uid=#{uid}
+    and isSuit=0
+    and id=#{id}
+    <![CDATA[ and state >= 1]]>
   </select>
 </mapper>

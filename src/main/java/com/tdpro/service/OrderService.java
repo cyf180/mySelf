@@ -35,4 +35,18 @@ public interface OrderService {
      * @return
      */
     POrder findByOrderNo(String orderNo);
+
+    /**
+     * 查询用户购买单品金额
+     * @param uid
+     * @return
+     */
+    BigDecimal sumRealPrice(Long uid,Long id);
+
+    /**
+     * 修改订单
+     * @param order
+     * @return
+     */
+    Boolean updateOrder(POrder order);
 }
