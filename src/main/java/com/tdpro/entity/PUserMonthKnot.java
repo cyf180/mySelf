@@ -11,9 +11,13 @@ public class PUserMonthKnot implements Serializable {
 
     private BigDecimal knotPrice;
 
-    private Integer knotOrderNum;
+    private Integer year;
 
-    private Date knotTime;
+    private Integer month;
+
+    private Integer newOrderNum;
+
+    private BigDecimal newOrderPrice;
 
     private Date createTime;
 
@@ -43,20 +47,36 @@ public class PUserMonthKnot implements Serializable {
         this.knotPrice = knotPrice;
     }
 
-    public Integer getKnotOrderNum() {
-        return knotOrderNum;
+    public Integer getYear() {
+        return year;
     }
 
-    public void setKnotOrderNum(Integer knotOrderNum) {
-        this.knotOrderNum = knotOrderNum;
+    public void setYear(Integer year) {
+        this.year = year;
     }
 
-    public Date getKnotTime() {
-        return knotTime;
+    public Integer getMonth() {
+        return month;
     }
 
-    public void setKnotTime(Date knotTime) {
-        this.knotTime = knotTime;
+    public void setMonth(Integer month) {
+        this.month = month;
+    }
+
+    public Integer getNewOrderNum() {
+        return newOrderNum;
+    }
+
+    public void setNewOrderNum(Integer newOrderNum) {
+        this.newOrderNum = newOrderNum;
+    }
+
+    public BigDecimal getNewOrderPrice() {
+        return newOrderPrice;
+    }
+
+    public void setNewOrderPrice(BigDecimal newOrderPrice) {
+        this.newOrderPrice = newOrderPrice;
     }
 
     public Date getCreateTime() {
@@ -76,8 +96,10 @@ public class PUserMonthKnot implements Serializable {
         sb.append(", id=").append(id);
         sb.append(", uid=").append(uid);
         sb.append(", knotPrice=").append(knotPrice);
-        sb.append(", knotOrderNum=").append(knotOrderNum);
-        sb.append(", knotTime=").append(knotTime);
+        sb.append(", year=").append(year);
+        sb.append(", month=").append(month);
+        sb.append(", newOrderNum=").append(newOrderNum);
+        sb.append(", newOrderPrice=").append(newOrderPrice);
         sb.append(", createTime=").append(createTime);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");

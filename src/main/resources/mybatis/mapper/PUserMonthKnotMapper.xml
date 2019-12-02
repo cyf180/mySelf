@@ -5,12 +5,14 @@
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="uid" property="uid" jdbcType="BIGINT" />
     <result column="knotPrice" property="knotPrice" jdbcType="DECIMAL" />
-    <result column="knotOrderNum" property="knotOrderNum" jdbcType="INTEGER" />
-    <result column="knotTime" property="knotTime" jdbcType="TIMESTAMP" />
+    <result column="year" property="year" jdbcType="INTEGER" />
+    <result column="month" property="month" jdbcType="INTEGER" />
+    <result column="newOrderNum" property="newOrderNum" jdbcType="INTEGER" />
+    <result column="newOrderPrice" property="newOrderPrice" jdbcType="DECIMAL" />
     <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, `uid`, knotPrice, knotOrderNum, knotTime, createTime
+    id, `uid`, knotPrice, `year`, `month`, newOrderNum, newOrderPrice, createTime
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -26,10 +28,12 @@
     <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into p_user_month_knot (`uid`, knotPrice, knotOrderNum, 
-      knotTime, createTime)
-    values (#{uid,jdbcType=BIGINT}, #{knotPrice,jdbcType=DECIMAL}, #{knotOrderNum,jdbcType=INTEGER}, 
-      #{knotTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP})
+    insert into p_user_month_knot (`uid`, knotPrice, `year`, 
+      `month`, newOrderNum, newOrderPrice, 
+      createTime)
+    values (#{uid,jdbcType=BIGINT}, #{knotPrice,jdbcType=DECIMAL}, #{year,jdbcType=INTEGER}, 
+      #{month,jdbcType=INTEGER}, #{newOrderNum,jdbcType=INTEGER}, #{newOrderPrice,jdbcType=DECIMAL}, 
+      #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.tdpro.entity.PUserMonthKnot" >
     <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
@@ -43,11 +47,17 @@
       <if test="knotPrice != null" >
         knotPrice,
       </if>
-      <if test="knotOrderNum != null" >
-        knotOrderNum,
+      <if test="year != null" >
+        `year`,
       </if>
-      <if test="knotTime != null" >
-        knotTime,
+      <if test="month != null" >
+        `month`,
+      </if>
+      <if test="newOrderNum != null" >
+        newOrderNum,
+      </if>
+      <if test="newOrderPrice != null" >
+        newOrderPrice,
       </if>
       <if test="createTime != null" >
         createTime,
@@ -60,11 +70,17 @@
       <if test="knotPrice != null" >
         #{knotPrice,jdbcType=DECIMAL},
       </if>
-      <if test="knotOrderNum != null" >
-        #{knotOrderNum,jdbcType=INTEGER},
+      <if test="year != null" >
+        #{year,jdbcType=INTEGER},
       </if>
-      <if test="knotTime != null" >
-        #{knotTime,jdbcType=TIMESTAMP},
+      <if test="month != null" >
+        #{month,jdbcType=INTEGER},
+      </if>
+      <if test="newOrderNum != null" >
+        #{newOrderNum,jdbcType=INTEGER},
+      </if>
+      <if test="newOrderPrice != null" >
+        #{newOrderPrice,jdbcType=DECIMAL},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -80,11 +96,17 @@
       <if test="knotPrice != null" >
         knotPrice = #{knotPrice,jdbcType=DECIMAL},
       </if>
-      <if test="knotOrderNum != null" >
-        knotOrderNum = #{knotOrderNum,jdbcType=INTEGER},
+      <if test="year != null" >
+        `year` = #{year,jdbcType=INTEGER},
       </if>
-      <if test="knotTime != null" >
-        knotTime = #{knotTime,jdbcType=TIMESTAMP},
+      <if test="month != null" >
+        `month` = #{month,jdbcType=INTEGER},
+      </if>
+      <if test="newOrderNum != null" >
+        newOrderNum = #{newOrderNum,jdbcType=INTEGER},
+      </if>
+      <if test="newOrderPrice != null" >
+        newOrderPrice = #{newOrderPrice,jdbcType=DECIMAL},
       </if>
       <if test="createTime != null" >
         createTime = #{createTime,jdbcType=TIMESTAMP},
@@ -96,8 +118,10 @@
     update p_user_month_knot
     set `uid` = #{uid,jdbcType=BIGINT},
       knotPrice = #{knotPrice,jdbcType=DECIMAL},
-      knotOrderNum = #{knotOrderNum,jdbcType=INTEGER},
-      knotTime = #{knotTime,jdbcType=TIMESTAMP},
+      `year` = #{year,jdbcType=INTEGER},
+      `month` = #{month,jdbcType=INTEGER},
+      newOrderNum = #{newOrderNum,jdbcType=INTEGER},
+      newOrderPrice = #{newOrderPrice,jdbcType=DECIMAL},
       createTime = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>

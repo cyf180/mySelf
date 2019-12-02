@@ -2,6 +2,7 @@ package com.tdpro.controller;
 
 import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyResult;
 import com.github.binarywang.wxpay.service.WxPayService;
+import com.github.binarywang.wxpay.service.impl.WxPayServiceImpl;
 import com.tdpro.service.PayNotifyService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -23,8 +24,7 @@ import java.io.PrintWriter;
 public class PayNotifyController {
     @Autowired
     private PayNotifyService payNotifyService;
-    @Autowired
-    private WxPayService wxPayService;
+    private WxPayService wxPayService= new WxPayServiceImpl();
     @PostMapping("wxOrderPayNotify")
     @ApiOperation(value = "微信支付回调")
     public void wxOrderPayNotify(HttpServletRequest request, HttpServletResponse response){

@@ -1,9 +1,7 @@
 package com.tdpro.mapper;
 
 import com.tdpro.entity.PUserMonthKnot;
-import org.apache.ibatis.annotations.Mapper;
 
-@Mapper
 public interface PUserMonthKnotMapper {
     int deleteByPrimaryKey(Long id);
 

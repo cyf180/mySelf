@@ -31,7 +31,7 @@
   <sql id="Base_Column_List" >
     id, isUser, phone, payPassword, `state`, strawUid, nickName, `name`, balance, integral, 
     totalIntegral, bankName, bankBranch, bankCard, idCard, createTime, disableTime, uncoilTime, 
-    strawPath, knotId, knotAmount, teamOneNum, teamSuitNum,teamSuitNum,itemLeftAmount
+    strawPath, knotId, knotAmount, teamOneNum, teamSuitNum,teamSuitNum,itemLeftAmount,itemBuyAmount
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 

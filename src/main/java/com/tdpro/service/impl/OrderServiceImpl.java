@@ -73,7 +73,7 @@ public class OrderServiceImpl implements OrderService {
         BigDecimal discountAmount = new BigDecimal("0");
         switch (goodsInfo.getZoneType().intValue()){
             case 0:
-                if(null != orderCartETD.getVoucherId()){
+                if(null != orderCartETD.getVoucherId() && !orderCartETD.getVoucherId().equals(new Long(0))){
                     GoodsExchangeETD goodsVoucher = exchangeService.selectByGoodsIdAndVoucherId(goodsId,orderCartETD.getVoucherId());
                     if(null == goodsVoucher){
                         return ResponseUtils.errorRes("该商品不能使用当前券");
