@@ -49,4 +49,10 @@ public interface OrderService {
      * @return
      */
     Boolean updateOrder(POrder order);
+
+    /**
+     * 查询已支付套装购买数
+     * @return
+     */
+    int sumSuitOrderByUid(Long uid,Long id);
 }

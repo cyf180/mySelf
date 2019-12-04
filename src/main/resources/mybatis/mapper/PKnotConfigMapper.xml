@@ -79,4 +79,13 @@
       rate = #{rate,jdbcType=DECIMAL}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="findBySmallValueAndBigValueAndNotId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from p_knot_config
+    where id !=#{id}
+    <![CDATA[ and smallValue <= #{suitLevelNum}]]>
+    <![CDATA[ and bigValue >= #{suitLevelNum}]]>
+    order by id asc limit 1
+  </select>
 </mapper>

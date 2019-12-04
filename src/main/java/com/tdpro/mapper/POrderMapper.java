@@ -23,4 +23,6 @@ public interface POrderMapper {
     POrder findByOrderNo(@Param("orderNo") String orderNo);
 
     BigDecimal sumRealPrice(@Param("uid") Long uid,@Param("id") Long id);
+
+    int sumSuitOrderNum(@Param("uid") Long uid,@Param("id") Long id);
 }

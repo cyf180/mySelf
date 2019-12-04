@@ -52,6 +52,7 @@ public class PUser implements Serializable {
     private Integer teamSuitNum;
     private BigDecimal itemBuyAmount;
     private BigDecimal itemLeftAmount;
+    private Integer suitLevelNum;
 
     private static final long serialVersionUID = 1L;
 
@@ -253,6 +254,14 @@ public class PUser implements Serializable {
 
     public void setItemLeftAmount(BigDecimal itemLeftAmount) {
         this.itemLeftAmount = itemLeftAmount;
+    }
+
+    public Integer getSuitLevelNum() {
+        return suitLevelNum;
+    }
+
+    public void setSuitLevelNum(Integer suitLevelNum) {
+        this.suitLevelNum = suitLevelNum;
     }
 
     @Override

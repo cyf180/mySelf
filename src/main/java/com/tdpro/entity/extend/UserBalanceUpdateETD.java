@@ -18,4 +18,8 @@ public class UserBalanceUpdateETD {
     private BigDecimal itemBuyAmount;
     private BigDecimal itemLeftAmount;
     private BigDecimal oldItemLeftAmount;
+    private Integer teamOneNum;
+    private Integer teamSuitNum;
+    private Integer suitLevelNum;
+    private Long knotId;
 }

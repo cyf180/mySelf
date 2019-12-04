@@ -2,6 +2,7 @@ package com.tdpro.mapper;
 
 import com.tdpro.entity.PKnotConfig;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface PKnotConfigMapper {
@@ -16,4 +17,6 @@ public interface PKnotConfigMapper {
     int updateByPrimaryKeySelective(PKnotConfig record);
 
     int updateByPrimaryKey(PKnotConfig record);
+
+    PKnotConfig findBySmallValueAndBigValueAndNotId(@Param("suitLevelNum") Integer suitLevelNum,@Param("id") Long id);
 }

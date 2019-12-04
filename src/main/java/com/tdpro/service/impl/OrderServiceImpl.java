@@ -234,6 +234,11 @@ public class OrderServiceImpl implements OrderService {
         return true;
     }
 
+    @Override
+    public int sumSuitOrderByUid(Long uid,Long id){
+        return orderMapper.sumSuitOrderNum(uid,id);
+    }
+
     private String createOrderNo(Long uid) {
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append(uid).append(System.currentTimeMillis());

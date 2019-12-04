@@ -356,4 +356,12 @@
     and id=#{id}
     <![CDATA[ and state >= 1]]>
   </select>
+  <select id="sumSuitOrderNum" resultType="java.lang.Integer">
+    select ifnull(sum(number),0)
+    from p_order
+    where uid=#{uid}
+    and isSuit=1
+    and id=#{id}
+    <![CDATA[ and state >= 1]]>
+  </select>
 </mapper>
