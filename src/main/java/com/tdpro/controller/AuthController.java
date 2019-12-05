@@ -1,0 +1,31 @@
+package com.tdpro.controller;
+
+import com.tdpro.common.model.LoginRequest;
+import com.tdpro.common.utils.Response;
+import com.tdpro.common.utils.ResponseUtils;
+import com.tdpro.service.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
+@RestController
+@RequestMapping("/auth/")
+@Api(tags = "用户端 - 用户授权相关")
+public class AuthController {
+    @Autowired
+    private UserService userService;
+    @PostMapping("login")
+    @ApiOperation(value="小程序端登录授权")
+    public Response login(HttpServletResponse resp, @Valid @RequestBody LoginRequest loginRequest, BindingResult inResult) {
+        Response response = ResponseUtils.handleValidError(inResult);
+        if (response.getIsOK()) {
+            response= userService.wxLogin(loginRequest);
+        }
+        return response;
+    }
+}

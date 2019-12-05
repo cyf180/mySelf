@@ -1,32 +1,55 @@
 package com.tdpro.service.impl;
 
+import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.tdpro.common.OnlineUserInfo;
+import com.tdpro.common.constant.ErrorCodeConstants;
+import com.tdpro.common.model.LoginRequest;
+import com.tdpro.common.model.LoginResult;
 import com.tdpro.common.utils.Response;
 import com.tdpro.common.utils.ResponseUtils;
 import com.tdpro.entity.POrder;
 import com.tdpro.entity.PUser;
+import com.tdpro.entity.PUserLogin;
 import com.tdpro.entity.extend.UserBalanceUpdateETD;
 import com.tdpro.entity.extend.UserETD;
 import com.tdpro.entity.extend.UserTeamETD;
 import com.tdpro.entity.extend.UserUPD;
 import com.tdpro.mapper.PUserMapper;
 import com.tdpro.service.DealLogService;
+import com.tdpro.service.JwtService;
+import com.tdpro.service.PUserLoginService;
 import com.tdpro.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
     @Autowired
     private PUserMapper userMapper;
     @Autowired
     private DealLogService dealLogService;
+    @Autowired
+    private WeiXinManageServiceImpl weiXinManageService;
+    @Autowired
+    private PUserLoginService userLoginService;
+    @Autowired
+    private JwtService jwtService;
+    private Lock lock = new ReentrantLock();
+
     @Override
     public Response userInformation(Long uid) {
         UserETD userETD = userMapper.getUserCentre(uid);
@@ -121,5 +144,78 @@ public class UserServiceImpl implements UserService {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public Response<LoginResult> wxLogin(LoginRequest login) {
+        Response<LoginResult> resultResponse = ResponseUtils.errorResReg(ErrorCodeConstants.ErrorCode.SYSTEM_ERROR);
+        LoginResult loginResult = new LoginResult();
+        loginResult.setIsBindPhone(0);
+        //判断参数的合法性
+        if (login == null || !StringUtils.hasText(login.getCode())) {
+            return ResponseUtils.errorResReg(ErrorCodeConstants.ErrorCode.PARA_NORULE_ERROR);
+        }
+        int result = 0;
+        Long accountId = null;
+        PUserLogin tThirdLogin = null;
+        String openId = "";
+        //调用微信授权获取openid
+        JSONObject cacheData = new JSONObject();
+        try {
+            lock.lock();
+            WxMaJscode2SessionResult session = weiXinManageService.getSessionInfo(login.getCode());
+            if (session != null && session.getOpenid() != null) {
+                openId = session.getOpenid();
+                // 微信sessionkey
+                cacheData.put("sessionkey", session.getSessionKey());
+                //openId="1234567";
+                tThirdLogin = userLoginService.findByOpenId(openId);
+                if (tThirdLogin == null) {
+                    //插入用户登录信息
+                    tThirdLogin = new PUserLogin();
+                    tThirdLogin.setOpenId(openId);
+                    tThirdLogin.setUid(0L);
+                    result = userLoginService.insertUserLog(tThirdLogin);
+                } else {
+                    result = 1;
+                }
+            } else {
+                //用户微信授权失败
+                return ResponseUtils.errorResReg(ErrorCodeConstants.ErrorCode.APPLICATION_OPER_ERROR);
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseUtils.errorResReg(ErrorCodeConstants.ErrorCode.SYSTEM_ERROR);
+        }finally {
+            lock.unlock();
+        }
+        if (result == 1) {
+            //校验用户是否已绑定手机号
+            if (tThirdLogin.getUid() != null && tThirdLogin.getUid() > 0) {
+                PUser user = userMapper.selectByPrimaryKey(tThirdLogin.getUid());
+                if (user != null) {
+                    accountId = user.getId();
+                    //已绑定
+                    loginResult.setIsBindPhone(1);
+                    loginResult.setPhone(user.getPhone());
+                    loginResult.setKey(openId);
+                }
+            }
+            // 验证成功生成token
+            OnlineUserInfo onlineUserInfo = new OnlineUserInfo();
+            onlineUserInfo.setLoginRole("USER_ROLE");
+            onlineUserInfo.setId(tThirdLogin.getId());
+            onlineUserInfo.setAccountId(accountId);
+            // 存入微信sessionkey
+            onlineUserInfo.setObject(cacheData);
+            String accessToken = jwtService.createToken(onlineUserInfo);
+            if (StringUtils.hasText(accessToken)) {
+                //存入缓存
+                onlineUserInfo.setToken(accessToken);
+//                Boolean redis = redisServer.cachAccountInfo(onlineUserInfo, RedisKey.REDIS_ACCOUNT_ONLINE);
+                loginResult.setToken(accessToken);
+            }
+        }
+        return resultResponse;
     }
 }

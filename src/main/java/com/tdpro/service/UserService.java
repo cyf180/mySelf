@@ -1,5 +1,7 @@
 package com.tdpro.service;
 
+import com.tdpro.common.model.LoginRequest;
+import com.tdpro.common.model.LoginResult;
 import com.tdpro.common.utils.Response;
 import com.tdpro.entity.POrder;
 import com.tdpro.entity.PUser;
@@ -56,4 +58,12 @@ public interface UserService {
      * @return
      */
     Boolean updateUserBalance(UserBalanceUpdateETD balanceUpdateETD);
+
+    /**
+     * 会员小程序授权认证
+     *
+     * @param login
+     * @return
+     */
+    Response<LoginResult> wxLogin(LoginRequest login);
 }

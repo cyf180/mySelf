@@ -18,4 +18,6 @@ public interface PUserLoginMapper {
     int updateByPrimaryKey(PUserLogin record);
 
     PUserLogin selectInfoByUid(Long uid);
+
+    PUserLogin findByOpenId(PUserLogin userLogin);
 }

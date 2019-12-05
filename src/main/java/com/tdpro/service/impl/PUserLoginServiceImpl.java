@@ -8,6 +8,8 @@ import com.tdpro.service.PUserLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 public class PUserLoginServiceImpl implements PUserLoginService {
     @Autowired
@@ -19,5 +21,18 @@ public class PUserLoginServiceImpl implements PUserLoginService {
             return ResponseUtils.errorRes("信息不存在");
         }
         return ResponseUtils.successRes(userLogin);
+    }
+
+    @Override
+    public PUserLogin findByOpenId(String openId) {
+        PUserLogin userLogin = new PUserLogin();
+        userLogin.setOpenId(openId);
+        return userLoginMapper.findByOpenId(userLogin);
+    }
+
+    @Override
+    public int insertUserLog(PUserLogin userLogin) {
+        userLogin.setCreateTime(new Date());
+        return userLoginMapper.insertSelective(userLogin);
     }
 }

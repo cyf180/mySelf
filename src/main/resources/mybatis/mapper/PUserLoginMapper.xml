@@ -107,4 +107,10 @@
     from p_user_login
     where uid = #{uid,jdbcType=BIGINT}
   </select>
+  <select id="findByOpenId" resultMap="BaseResultMap" parameterType="com.tdpro.entity.PUserLogin">
+    select
+    <include refid="Base_Column_List" />
+    from p_user_login
+    where openId = #{openId}
+  </select>
 </mapper>
