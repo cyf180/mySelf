@@ -1,13 +1,6 @@
 package com.tdpro.common.blocker;
 
-import com.netflix.zuul.ZuulFilter;
-import com.netflix.zuul.context.RequestContext;
-import com.tdpro.common.OnlineUserInfo;
-import com.tdpro.common.constant.Scopes;
-import com.tdpro.common.exceptions.JwtExpiredTokenException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;

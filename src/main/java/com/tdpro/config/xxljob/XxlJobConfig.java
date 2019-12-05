@@ -1,6 +1,6 @@
 package com.tdpro.config.xxljob;
 
-import com.xxl.job.core.executor.XxlJobExecutor;
+import com.xxl.job.core.executor.impl.XxlJobSpringExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,19 +40,19 @@ public class XxlJobConfig {
     private int logRetentionDays;
 
 
-    @Bean(initMethod = "start", destroyMethod = "destroy")
-    public XxlJobExecutor xxlJobExecutor() {
+    @Bean
+    public XxlJobSpringExecutor xxlJobExecutor() {
         logger.info(">>>>>>>>>>> xxl-job config init.");
-        XxlJobExecutor xxlJobExecutor = new XxlJobExecutor();
-        xxlJobExecutor.setAdminAddresses(adminAddresses);
-        xxlJobExecutor.setAppName(appName);
-        xxlJobExecutor.setIp(ip);
-        xxlJobExecutor.setPort(port);
-        xxlJobExecutor.setAccessToken(accessToken);
-        xxlJobExecutor.setLogPath(logPath);
-        xxlJobExecutor.setLogRetentionDays(logRetentionDays);
+        XxlJobSpringExecutor xxlJobSpringExecutor = new XxlJobSpringExecutor();
+        xxlJobSpringExecutor.setAdminAddresses(adminAddresses);
+        xxlJobSpringExecutor.setAppName(appName);
+        xxlJobSpringExecutor.setIp(ip);
+        xxlJobSpringExecutor.setPort(port);
+        xxlJobSpringExecutor.setAccessToken(accessToken);
+        xxlJobSpringExecutor.setLogPath(logPath);
+        xxlJobSpringExecutor.setLogRetentionDays(logRetentionDays);
 
-        return xxlJobExecutor;
+        return xxlJobSpringExecutor;
     }
 
 }

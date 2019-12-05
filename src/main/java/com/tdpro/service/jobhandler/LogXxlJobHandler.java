@@ -18,10 +18,11 @@ public class LogXxlJobHandler extends IJobHandler {
     public ReturnT<String> execute(String s) throws Exception {
         XxlJobLogger.log("消息推送定时任务处理开始");
         boolean result =logService.insertLog(1L,"订单任务测试","定时任务测试");
-        if (result){
+        if (!result){
             XxlJobLogger.log("添加日志失败");
+        }else{
+            XxlJobLogger.log("成功");
         }
-        XxlJobLogger.log("成功");
         return SUCCESS;
     }
 }

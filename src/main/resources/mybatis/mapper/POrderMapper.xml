@@ -361,7 +361,8 @@
     from p_order
     where uid=#{uid}
     and isSuit=1
-    and id=#{id}
+    and zoneType != 2
+    and id!=#{id}
     <![CDATA[ and state >= 1]]>
   </select>
 </mapper>

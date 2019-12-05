@@ -42,7 +42,7 @@ public class PayController {
             PayReturn payReturn = payService.unifyPay(orderPayETD);
             if(payReturn.getState()){
                 if(payReturn.getType().equals(new Integer(1))){
-                    Future<Boolean> knot =  knotService.itemKnot(payReturn.getOrderId());
+                    Future<Boolean> knot =  knotService.knot(payReturn.getOrderId());
                     response = ResponseUtils.successRes(payReturn.getOrderId());
                 }else if(payReturn.getType().equals(new Integer(2))){
                     response = ResponseUtils.successRes(payReturn.getSuccessRes());

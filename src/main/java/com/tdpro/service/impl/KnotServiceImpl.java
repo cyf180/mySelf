@@ -39,6 +39,7 @@ public class KnotServiceImpl implements KnotService {
 
     @Override
     @Async
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
     public Future<Boolean> knot(Long orderId) {
         try {
             knotLok.lock();
@@ -79,7 +80,6 @@ public class KnotServiceImpl implements KnotService {
         return new AsyncResult<Boolean>(true);
     }
 
-    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
     private void itemKnot(POrder order,PUser user,PUser strawUserInfo) {
         Long orderId = order.getId();
         BigDecimal realPrice = order.getRealPrice();
@@ -131,8 +131,7 @@ public class KnotServiceImpl implements KnotService {
         }
     }
 
-    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
-    private void suitKnot(POrder order,PUser user,PUser strawUserInfo){
+    public void suitKnot(POrder order,PUser user,PUser strawUserInfo){
         int allNum = orderService.sumSuitOrderByUid(user.getId(),order.getId());
         boolean plural=false;
         if((allNum+1)%2 == 0){
@@ -156,13 +155,14 @@ public class KnotServiceImpl implements KnotService {
             }
             strawIntegral = strawIntegral.add(knotIntegral);
         }
-        BigDecimal knotIntegral = strawIntegral.divide(new BigDecimal("500"),2,BigDecimal.ROUND_DOWN);
+        BigDecimal knotIntegral = strawIntegral.divide(new BigDecimal("500"),0,BigDecimal.ROUND_DOWN);
         BigDecimal strawKnotAmount = knotIntegral.multiply(new BigDecimal("500"));
         BigDecimal strawNewBalance = strawUserInfo.getBalance().add(strawKnotAmount);
         BigDecimal endIntegral = strawIntegral.subtract(strawKnotAmount);
         UserBalanceUpdateETD strawUserUPD = new UserBalanceUpdateETD();
+        strawUserUPD.setId(strawUserInfo.getId());
         strawUserUPD.setIntegral(endIntegral);
-        strawUserUPD.setTotalIntegral(strawIntegral);
+        strawUserUPD.setTotalIntegral(strawUserInfo.getTotalIntegral().add(strawIntegral));
         strawUserUPD.setTeamSuitNum(strawUserInfo.getTeamSuitNum()+order.getNumber());
         strawUserUPD.setOldTotalIntegral(strawUserInfo.getTotalIntegral());
         strawUserUPD.setOldIntegral(strawUserInfo.getIntegral());
