@@ -5,9 +5,7 @@ import com.tdpro.common.model.LoginResult;
 import com.tdpro.common.utils.Response;
 import com.tdpro.entity.POrder;
 import com.tdpro.entity.PUser;
-import com.tdpro.entity.extend.UserBalanceUpdateETD;
-import com.tdpro.entity.extend.UserTeamETD;
-import com.tdpro.entity.extend.UserUPD;
+import com.tdpro.entity.extend.*;
 
 public interface UserService {
     /**
@@ -66,4 +64,11 @@ public interface UserService {
      * @return
      */
     Response<LoginResult> wxLogin(LoginRequest login);
+
+    /**
+     * 用户注册
+     * @param enrollETD
+     * @return
+     */
+    Response insertUser(UserEnrollETD enrollETD);
 }

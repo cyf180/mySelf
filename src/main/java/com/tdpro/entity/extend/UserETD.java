@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 public class UserETD {
     private Long id;
     @ApiModelProperty(value = "手机号")
-    private BigDecimal phone;
+    private String phone;
     @ApiModelProperty(value = "余额")
     private BigDecimal balance;
     @ApiModelProperty(value = "积分")

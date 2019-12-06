@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tdpro.mapper.PSmsMapper" >
+  <resultMap id="BaseResultMap" type="com.tdpro.entity.PSms" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="smsName" property="smsName" jdbcType="VARCHAR" />
+    <result column="smsPassword" property="smsPassword" jdbcType="VARCHAR" />
+    <result column="smsHttpUrl" property="smsHttpUrl" jdbcType="VARCHAR" />
+    <result column="smsSigna" property="smsSigna" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, smsName, smsPassword, smsHttpUrl, smsSigna, `type`
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from p_sms
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from p_sms
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tdpro.entity.PSms" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into p_sms (smsName, smsPassword, smsHttpUrl, 
+      smsSigna, `type`)
+    values (#{smsName,jdbcType=VARCHAR}, #{smsPassword,jdbcType=VARCHAR}, #{smsHttpUrl,jdbcType=VARCHAR}, 
+      #{smsSigna,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tdpro.entity.PSms" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into p_sms
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="smsName != null" >
+        smsName,
+      </if>
+      <if test="smsPassword != null" >
+        smsPassword,
+      </if>
+      <if test="smsHttpUrl != null" >
+        smsHttpUrl,
+      </if>
+      <if test="smsSigna != null" >
+        smsSigna,
+      </if>
+      <if test="type != null" >
+        `type`,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="smsName != null" >
+        #{smsName,jdbcType=VARCHAR},
+      </if>
+      <if test="smsPassword != null" >
+        #{smsPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="smsHttpUrl != null" >
+        #{smsHttpUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="smsSigna != null" >
+        #{smsSigna,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tdpro.entity.PSms" >
+    update p_sms
+    <set >
+      <if test="smsName != null" >
+        smsName = #{smsName,jdbcType=VARCHAR},
+      </if>
+      <if test="smsPassword != null" >
+        smsPassword = #{smsPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="smsHttpUrl != null" >
+        smsHttpUrl = #{smsHttpUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="smsSigna != null" >
+        smsSigna = #{smsSigna,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        `type` = #{type,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tdpro.entity.PSms" >
+    update p_sms
+    set smsName = #{smsName,jdbcType=VARCHAR},
+      smsPassword = #{smsPassword,jdbcType=VARCHAR},
+      smsHttpUrl = #{smsHttpUrl,jdbcType=VARCHAR},
+      smsSigna = #{smsSigna,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="findOne" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from p_sms
+    order by id asc limit 1
+  </select>
+</mapper>

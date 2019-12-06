@@ -24,4 +24,17 @@ public interface PUserLoginService {
      * @return
      */
     int insertUserLog(PUserLogin userLogin);
+
+    /**
+     * 根据id查询
+     * @return
+     */
+    PUserLogin findById(Long id);
+
+    /**
+     * 修改
+     * @param userLogin
+     * @return
+     */
+    Boolean updateUserLogin(PUserLogin userLogin);
 }

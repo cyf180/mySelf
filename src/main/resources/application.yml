@@ -45,14 +45,15 @@ wxconfig:
   secret: b44e8c250f83dacb7d1752f3bea54784
 
 com.tdpro.common.utils.jwt:
-  tokenExpirationTime: 43200 # Number of minutes
-  refreshTokenExpTime: 43200 # Minutes
+  tokenExpirationTime: 432000 # Number of minutes
+  refreshTokenExpTime: 432000 # Minutes
   tokenIssuer: http://zerocat.cn
   tokenSigningKey: FpD5q^8cQ2uhta@voS0vZyEqk@1!KWoS
   headerString: tdProAuthor
 
 blockerPath:
   userPath: /user/
+  userIgnorePath: /user/userEnroll,/user/sms/enrollSend
 
 wechat:
   mainapp:

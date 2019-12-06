@@ -35,4 +35,17 @@ public class PUserLoginServiceImpl implements PUserLoginService {
         userLogin.setCreateTime(new Date());
         return userLoginMapper.insertSelective(userLogin);
     }
+
+    @Override
+    public PUserLogin findById(Long id) {
+        return userLoginMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public Boolean updateUserLogin(PUserLogin userLogin) {
+        if(0 == userLoginMapper.updateByPrimaryKeySelective(userLogin)){
+            return false;
+        }
+        return true;
+    }
 }

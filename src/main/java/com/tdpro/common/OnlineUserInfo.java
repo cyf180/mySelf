@@ -15,12 +15,12 @@ public class OnlineUserInfo implements Serializable {
     /**
      * 会员登录id
      */
-    private Long id;
+    private Long uid;
 
     /**
      * 会员id
      */
-    private Long accountId;
+    private Long userLogId;
 
     /**
      * 认证赋予角色

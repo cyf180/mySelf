@@ -4,6 +4,7 @@ import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.StringUtil;
 import com.tdpro.common.OnlineUserInfo;
 import com.tdpro.common.constant.ErrorCodeConstants;
 import com.tdpro.common.model.LoginRequest;
@@ -13,15 +14,10 @@ import com.tdpro.common.utils.ResponseUtils;
 import com.tdpro.entity.POrder;
 import com.tdpro.entity.PUser;
 import com.tdpro.entity.PUserLogin;
-import com.tdpro.entity.extend.UserBalanceUpdateETD;
-import com.tdpro.entity.extend.UserETD;
-import com.tdpro.entity.extend.UserTeamETD;
-import com.tdpro.entity.extend.UserUPD;
+import com.tdpro.entity.extend.*;
 import com.tdpro.mapper.PUserMapper;
-import com.tdpro.service.DealLogService;
-import com.tdpro.service.JwtService;
-import com.tdpro.service.PUserLoginService;
-import com.tdpro.service.UserService;
+import com.tdpro.service.*;
+import com.xiaoleilu.hutool.crypto.digest.DigestUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +30,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.regex.Pattern;
 
 @Service
 @Slf4j
@@ -48,6 +45,8 @@ public class UserServiceImpl implements UserService {
     private PUserLoginService userLoginService;
     @Autowired
     private JwtService jwtService;
+    @Autowired
+    private SmsCodeService codeService;
     private Lock lock = new ReentrantLock();
 
     @Override
@@ -156,7 +155,7 @@ public class UserServiceImpl implements UserService {
             return ResponseUtils.errorResReg(ErrorCodeConstants.ErrorCode.PARA_NORULE_ERROR);
         }
         int result = 0;
-        Long accountId = null;
+        Long accountId = 0L;
         PUserLogin tThirdLogin = null;
         String openId = "";
         //调用微信授权获取openid
@@ -204,8 +203,8 @@ public class UserServiceImpl implements UserService {
             // 验证成功生成token
             OnlineUserInfo onlineUserInfo = new OnlineUserInfo();
             onlineUserInfo.setLoginRole("USER_ROLE");
-            onlineUserInfo.setId(tThirdLogin.getId());
-            onlineUserInfo.setAccountId(accountId);
+            onlineUserInfo.setUserLogId(tThirdLogin.getId());
+            onlineUserInfo.setUid(accountId);
             // 存入微信sessionkey
             onlineUserInfo.setObject(cacheData);
             String accessToken = jwtService.createToken(onlineUserInfo);
@@ -215,7 +214,75 @@ public class UserServiceImpl implements UserService {
 //                Boolean redis = redisServer.cachAccountInfo(onlineUserInfo, RedisKey.REDIS_ACCOUNT_ONLINE);
                 loginResult.setToken(accessToken);
             }
+            resultResponse=ResponseUtils.successRes(loginResult);
         }
         return resultResponse;
+    }
+
+    @Override
+    public Response insertUser(UserEnrollETD userETD) {
+        Long userLoginId= userETD.getLoginId();
+        LoginResult loginResult = new LoginResult();
+        loginResult.setIsBindPhone(0);
+        if(StringUtil.isEmpty(userETD.getPhone()) || !Pattern.matches("^1[123456789]\\d{9}$", userETD.getPhone())){
+            return ResponseUtils.errorRes("手机号错误");
+        }
+        PUser userFindByPhone = userMapper.findByPhone(userETD.getPhone());
+        if(null != userFindByPhone){
+            return ResponseUtils.errorRes("该手机号已存在");
+        }
+        loginResult.setPhone(userETD.getPhone());
+        if(StringUtil.isEmpty(userETD.getPayPassword()) || !Pattern.matches("^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,12}$", userETD.getPayPassword())){
+            return ResponseUtils.errorRes("支付密码格式错误");
+        }
+
+        if(!codeService.codeVerification(userETD.getPhone(),userETD.getCode())){
+            return ResponseUtils.errorRes("验证码错误或已过期");
+        }
+        String payPwd = DigestUtil.md5Hex(userETD.getPayPassword());
+        PUserLogin userLogin = userLoginService.findById(userLoginId);
+        if(null == userLogin){
+            throw  new RuntimeException("授权异常");
+        }
+        OnlineUserInfo onlineUserInfo = new OnlineUserInfo();
+        if(!userLogin.getUid().equals(new Long(0))){
+            return  ResponseUtils.errorRes("该微信已绑定手机号");
+        }else{
+            PUser userADD = new PUser();
+            userADD.setPhone(userETD.getPhone());
+            userADD.setIsUser(0);
+            userADD.setState(0);
+            userADD.setPayPassword(payPwd);
+            userADD.setCreateTime(new Date());
+            if(null != userETD.getStrawUid()){
+                PUser strawUser = this.findById(userETD.getStrawUid());
+                if(null == strawUser){
+                    return ResponseUtils.errorRes("推荐人不存在");
+                }
+                userADD.setStrawUid(userETD.getStrawUid());
+            }
+            if(0==userMapper.insertSelective(userADD)){
+                throw new RuntimeException("用户添加失败");
+            }
+            PUserLogin userLoginUPD = new PUserLogin();
+            userLoginUPD.setId(userLogin.getId());
+            userLoginUPD.setUid(userADD.getId());
+            if(!userLoginService.updateUserLogin(userLoginUPD)){
+                throw new RuntimeException("绑定用手机失败");
+            }
+            onlineUserInfo.setUid(userADD.getId());
+            onlineUserInfo.setUserLogId(userLogin.getId());
+            onlineUserInfo.setLoginRole("USER_ROLE");
+            loginResult.setIsBindPhone(1);
+            loginResult.setKey(userLogin.getOpenId());
+            String accessToken = jwtService.createToken(onlineUserInfo);
+            if (StringUtils.hasText(accessToken)) {
+                onlineUserInfo.setToken(accessToken);
+                loginResult.setToken(accessToken);
+            }else{
+                return ResponseUtils.errorRes("token生成失败");
+            }
+        }
+        return ResponseUtils.successRes(loginResult);
     }
 }

@@ -65,7 +65,7 @@
       #{knotId,jdbcType=BIGINT}, #{knotAmount,jdbcType=DECIMAL}, #{teamOneNum,jdbcType=INTEGER}, 
       #{teamSuitNum,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.tdpro.entity.PUser" >
+  <insert id="insertSelective" parameterType="com.tdpro.entity.PUser" useGeneratedKeys="true" keyProperty="id">
     <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -381,4 +381,11 @@
       </if>
     </where>
   </update>
+  <select id="findByPhone" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from p_user
+    where phone = #{phone}
+    limit 1
+  </select>
 </mapper>

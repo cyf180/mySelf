@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
  * @Date 2018/6/6 13:55
  */
 @Configuration
-@ConfigurationProperties(prefix = "com.zerocat.security.jwt")
+@ConfigurationProperties(prefix = "com.tdpro.common.utils.jwt")
 @Data
 public class JwtConfig extends JwtSettings {
 

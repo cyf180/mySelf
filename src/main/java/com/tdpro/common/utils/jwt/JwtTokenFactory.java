@@ -5,6 +5,7 @@ import com.tdpro.common.utils.ToolUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import net.sf.json.JSONObject;
 import org.joda.time.DateTime;
 
 /**
@@ -26,11 +27,11 @@ public class JwtTokenFactory {
     }
 
     public AccessJwtToken createAccessJwtToken(OnlineUserInfo onlineUserInfo) {
-        if (null==onlineUserInfo.getId()) {
+        if (null==onlineUserInfo.getUid()) {
             throw new IllegalArgumentException("Cannot create JWT Token without userId");
         }
-        String key= ToolUtil.getRedisKey(onlineUserInfo.getId().toString());
-        Claims claims = Jwts.claims().setSubject(onlineUserInfo.getLoginRole());
+        String key= ToolUtil.getRedisKey(onlineUserInfo.getUid().toString());
+        Claims claims = Jwts.claims().setSubject(JSONObject.fromObject(onlineUserInfo).toString());
         DateTime currentTime = new DateTime();
         String token = Jwts.builder()
                 .setClaims(claims)
@@ -45,12 +46,12 @@ public class JwtTokenFactory {
     }
 
     public JwtToken createRefreshToken(OnlineUserInfo onlineUserInfo) {
-        if (null==onlineUserInfo.getId()) {
+        if (null==onlineUserInfo.getUid()) {
             throw new IllegalArgumentException("Cannot create JWT Token without userId");
         }
 
         DateTime currentTime = new DateTime();
-        String key= ToolUtil.getRedisKey(onlineUserInfo.getId().toString());
+        String key= ToolUtil.getRedisKey(onlineUserInfo.getUid().toString());
         Claims claims = Jwts.claims().setSubject(onlineUserInfo.getLoginRole());
         String token = Jwts.builder()
                 .setClaims(claims)

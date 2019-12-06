@@ -3,6 +3,7 @@ package com.tdpro.controller;
 import com.tdpro.common.utils.Response;
 import com.tdpro.common.utils.ResponseUtils;
 import com.tdpro.entity.PUser;
+import com.tdpro.entity.extend.UserEnrollETD;
 import com.tdpro.entity.extend.UserTeamETD;
 import com.tdpro.entity.extend.UserUPD;
 import com.tdpro.service.UserService;
@@ -26,6 +27,7 @@ public class UserController {
     private UserService userService;
 
     Lock updLock = new ReentrantLock();
+    Lock enrollLock = new ReentrantLock();
 
     @GetMapping("userCentre")
     @ApiOperation(value = "会员中心接口")
@@ -69,6 +71,27 @@ public class UserController {
             response = ResponseUtils.errorRes(e.getMessage());
         }finally {
             updLock.unlock();
+        }
+        return response;
+    }
+
+    @PostMapping("userEnroll")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "phone", value = "手机号", required = true, dataType = "string", paramType = "form"),
+            @ApiImplicitParam(name = "payPassword", value = "支付密码", required = true, dataType = "string", paramType = "form"),
+            @ApiImplicitParam(name = "strawUid", value = "推荐人id", required = false, dataType = "long", paramType = "form")
+    })
+    @ApiOperation(value = "用户注册")
+    public Response userEnroll(@ApiIgnore @RequestAttribute Long loginId,@Valid @RequestBody UserEnrollETD user){
+        Response response;
+        try {
+            enrollLock.lock();
+            user.setLoginId(loginId);
+            response = userService.insertUser(user);
+        }catch (Exception e){
+            response = ResponseUtils.errorRes(e.getMessage());
+        }finally {
+            enrollLock.unlock();
         }
         return response;
     }

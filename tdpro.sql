@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50540
 File Encoding         : 65001
 
-Date: 2019-12-05 13:10:53
+Date: 2019-12-06 17:16:34
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -76,7 +76,7 @@ CREATE TABLE `p_cart` (
   KEY `goodsId` (`goodsId`) USING BTREE,
   KEY `uid` (`uid`) USING BTREE,
   KEY `orderId` (`orderId`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COMMENT='购物车';
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8 COMMENT='购物车';
 
 -- ----------------------------
 -- Records of p_cart
@@ -92,6 +92,11 @@ INSERT INTO `p_cart` VALUES ('16', '1', '3', '20', '6', '1300.00', '白色', '�
 INSERT INTO `p_cart` VALUES ('17', '1', '3', '20', '7', '1300.00', '蓝色', '床单四件套', '1', '0', '2019-12-05 11:20:21');
 INSERT INTO `p_cart` VALUES ('18', '1', '3', '21', '6', '1300.00', '白色', '床单四件套', '1', '0', '2019-12-05 11:40:32');
 INSERT INTO `p_cart` VALUES ('19', '1', '3', '22', '6', '1300.00', '白色', '床单四件套', '1', '0', '2019-12-05 11:57:26');
+INSERT INTO `p_cart` VALUES ('20', '1', '3', '23', '6', '1300.00', '白色', '床单四件套', '1', '0', '2019-12-06 11:06:27');
+INSERT INTO `p_cart` VALUES ('21', '1', '3', '24', '6', '1300.00', '白色', '床单四件套', '1', '0', '2019-12-06 11:27:07');
+INSERT INTO `p_cart` VALUES ('22', '1', '3', '25', '6', '1300.00', '白色', '床单四件套', '1', '0', '2019-12-06 11:52:38');
+INSERT INTO `p_cart` VALUES ('23', '1', '3', '26', '6', '1300.00', '白色', '床单四件套', '1', '0', '2019-12-06 11:56:44');
+INSERT INTO `p_cart` VALUES ('24', '5', '3', '27', '6', '1300.00', '白色', '床单四件套', '1', '0', '2019-12-06 15:20:37');
 
 -- ----------------------------
 -- Table structure for p_collect
@@ -126,7 +131,7 @@ CREATE TABLE `p_deal_log` (
   `bUid` bigint(11) NOT NULL DEFAULT '0' COMMENT '操作人Id',
   `createTime` datetime DEFAULT NULL COMMENT '时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8 COMMENT='交易记录表';
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8 COMMENT='交易记录表';
 
 -- ----------------------------
 -- Records of p_deal_log
@@ -147,6 +152,7 @@ INSERT INTO `p_deal_log` VALUES ('21', '余额支付', '21', '1300.00', '3700.00
 INSERT INTO `p_deal_log` VALUES ('23', '余额支付', '21', '1300.00', '2400.00', '1', '0', '2019-12-05 11:54:02');
 INSERT INTO `p_deal_log` VALUES ('24', '余额支付', '22', '1300.00', '1100.00', '1', '0', '2019-12-05 11:57:32');
 INSERT INTO `p_deal_log` VALUES ('25', '积分转换', '22', '500.00', '2200.00', '2', '1', '2019-12-05 11:58:00');
+INSERT INTO `p_deal_log` VALUES ('26', '余额支付', '27', '1300.00', '3700.00', '5', '0', '2019-12-06 15:29:39');
 
 -- ----------------------------
 -- Table structure for p_goods
@@ -177,7 +183,7 @@ CREATE TABLE `p_goods` (
 -- ----------------------------
 INSERT INTO `p_goods` VALUES ('1', '1', '毛里男士外套', '0', '0', '462.00', '毛里男士外套', '件', '257.jpg', '撒大大撒多驱蚊器二', '0', '2019-11-22 10:08:43', '0', '96', '8');
 INSERT INTO `p_goods` VALUES ('2', '1', '七匹狼男士冬季羽绒服', '2', '1', '1523.00', '七匹狼男士冬季羽绒服', '件', '3554847.jpg', '韦尔奇二群翁', '0', '2019-11-22 10:10:18', '0', '99', '1');
-INSERT INTO `p_goods` VALUES ('3', '1', '床单四件套', '0', '1', '1300.00', '沃尔沃无', '套', '3554847.jpg', '撒大大撒大大多', '0', '2019-12-05 11:17:24', '0', '87', '13');
+INSERT INTO `p_goods` VALUES ('3', '1', '床单四件套', '0', '1', '1300.00', '沃尔沃无', '套', '3554847.jpg', '撒大大撒大大多', '0', '2019-12-05 11:17:24', '0', '86', '14');
 
 -- ----------------------------
 -- Table structure for p_goods_class
@@ -355,7 +361,7 @@ CREATE TABLE `p_order` (
   UNIQUE KEY `orderNoIndexes` (`orderNo`) USING BTREE,
   KEY `orderUserIndexes` (`uid`) USING BTREE,
   KEY `orderGoodsIndexes` (`goodsId`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COMMENT='订单表';
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8 COMMENT='订单表';
 
 -- ----------------------------
 -- Records of p_order
@@ -369,6 +375,11 @@ INSERT INTO `p_order` VALUES ('19', '11575258247109', '1', '1', '0', '0', '1', '
 INSERT INTO `p_order` VALUES ('20', '11575516021753', '1', '3', '0', '1', '1', '床单四件套', '2600.00', '2600.00', '2', '0', '萨达', '18087760500', '云南省昆明市官渡区世纪城15号', null, '0', '2019-12-05 11:20:21', '2019-12-05 11:38:11', null, '0.00', null, null, null, '给我加辣', null, '1');
 INSERT INTO `p_order` VALUES ('21', '11575517232087', '1', '3', '0', '1', '1', '床单四件套', '1300.00', '1300.00', '1', '0', '萨达', '18087760500', '云南省昆明市官渡区世纪城15号', null, '0', '2019-12-05 11:40:32', '2019-12-05 11:54:02', null, '0.00', null, null, null, '给我加辣', null, '1');
 INSERT INTO `p_order` VALUES ('22', '11575518246486', '1', '3', '0', '1', '1', '床单四件套', '1300.00', '1300.00', '1', '0', '萨达', '18087760500', '云南省昆明市官渡区世纪城15号', null, '0', '2019-12-05 11:57:26', '2019-12-05 11:57:32', null, '0.00', null, null, null, '给我加辣', null, '1');
+INSERT INTO `p_order` VALUES ('23', '11575601587657', '1', '3', '0', '1', '0', '床单四件套', '1300.00', '1300.00', '1', '0', '萨达', '18087760500', '云南省昆明市官渡区世纪城15号', null, '0', '2019-12-06 11:06:27', null, null, '0.00', null, null, null, '给我加辣', null, '0');
+INSERT INTO `p_order` VALUES ('24', '11575602827480', '1', '3', '0', '1', '0', '床单四件套', '1300.00', '1300.00', '1', '0', '萨达', '18087760500', '云南省昆明市官渡区世纪城15号', null, '0', '2019-12-06 11:27:07', null, null, '0.00', null, null, null, '给我加辣', null, '0');
+INSERT INTO `p_order` VALUES ('25', '11575604357907', '1', '3', '0', '1', '0', '床单四件套', '1300.00', '1300.00', '1', '0', '萨达', '18087760500', '云南省昆明市官渡区世纪城15号', null, '0', '2019-12-06 11:52:37', null, null, '0.00', null, null, null, '给我加辣', null, '0');
+INSERT INTO `p_order` VALUES ('26', '11575604604789', '1', '3', '0', '1', '0', '床单四件套', '1300.00', '1300.00', '1', '0', '萨达', '18087760500', '云南省昆明市官渡区世纪城15号', null, '0', '2019-12-06 11:56:44', null, null, '0.00', null, null, null, '给我加辣', null, '0');
+INSERT INTO `p_order` VALUES ('27', '51575616837170', '5', '3', '0', '1', '1', '床单四件套', '1300.00', '1300.00', '1', '0', '与非', '18087760500', '云南省昆明市官渡区世纪城156号', null, '0', '2019-12-06 15:20:37', '2019-12-06 15:29:39', null, '0.00', null, null, null, '给我加辣', null, '1');
 
 -- ----------------------------
 -- Table structure for p_order_voucher
@@ -454,6 +465,48 @@ CREATE TABLE `p_role_menu` (
 -- ----------------------------
 
 -- ----------------------------
+-- Table structure for p_sms
+-- ----------------------------
+DROP TABLE IF EXISTS `p_sms`;
+CREATE TABLE `p_sms` (
+  `id` bigint(11) NOT NULL AUTO_INCREMENT,
+  `smsName` varchar(50) NOT NULL COMMENT '短信登陆名',
+  `smsPassword` varchar(50) NOT NULL COMMENT '短信接扣密码',
+  `smsHttpUrl` varchar(100) NOT NULL COMMENT '短信接口请求地址',
+  `smsSigna` varchar(100) DEFAULT NULL COMMENT '短信签名',
+  `type` int(2) NOT NULL DEFAULT '0' COMMENT '短信类型（0：互亿，1：华信）',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `aid` (`type`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COMMENT='商户短信报备表';
+
+-- ----------------------------
+-- Records of p_sms
+-- ----------------------------
+INSERT INTO `p_sms` VALUES ('11', 'C05897078', '89522de5f2b832f5b65f35ea7fa85189', 'http://106.ihuyi.com/webservice/sms.php', '', '0');
+
+-- ----------------------------
+-- Table structure for p_sms_code
+-- ----------------------------
+DROP TABLE IF EXISTS `p_sms_code`;
+CREATE TABLE `p_sms_code` (
+  `id` bigint(4) unsigned NOT NULL AUTO_INCREMENT,
+  `phone` varchar(50) NOT NULL DEFAULT '0' COMMENT '手机号',
+  `uid` bigint(11) NOT NULL DEFAULT '0' COMMENT '会员uid',
+  `code` varchar(50) NOT NULL COMMENT '验证码',
+  `addTime` datetime DEFAULT NULL COMMENT '开始时间',
+  `endTime` datetime DEFAULT NULL COMMENT '结束时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='短信验证码表';
+
+-- ----------------------------
+-- Records of p_sms_code
+-- ----------------------------
+INSERT INTO `p_sms_code` VALUES ('1', '18087760500', '0', '1653', '2019-12-06 16:43:15', '2019-12-06 16:58:15');
+INSERT INTO `p_sms_code` VALUES ('2', '18087760500', '0', '0808', '2019-12-06 16:44:24', '2019-12-06 16:59:24');
+INSERT INTO `p_sms_code` VALUES ('3', '18087760500', '0', '3848', '2019-12-06 16:48:37', '2019-12-06 17:03:37');
+INSERT INTO `p_sms_code` VALUES ('4', '18087760500', '0', '0859', '2019-12-06 17:09:14', '2019-12-06 17:24:14');
+
+-- ----------------------------
 -- Table structure for p_user
 -- ----------------------------
 DROP TABLE IF EXISTS `p_user`;
@@ -484,14 +537,19 @@ CREATE TABLE `p_user` (
   `itemBuyAmount` decimal(10,2) NOT NULL DEFAULT '0.00',
   `itemLeftAmount` decimal(10,2) NOT NULL DEFAULT '0.00',
   `suitLevelNum` int(10) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='用户表';
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `phone` (`phone`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='用户表';
 
 -- ----------------------------
 -- Records of p_user
 -- ----------------------------
-INSERT INTO `p_user` VALUES ('1', '1', '18087760500', null, '0', '2', '剃刀', '云飞', '1100.00', '350.00', '350.00', '招商银行', '春城支行', '6666666666', '555555555555555', '2019-11-20 18:30:34', null, null, null, '2', '0.00', '10', '15', '4000.00', '461.00', '0');
+INSERT INTO `p_user` VALUES ('1', '1', '18087760502', null, '0', '2', '剃刀', '云飞', '1100.00', '350.00', '350.00', '招商银行', '春城支行', '6666666666', '555555555555555', '2019-11-20 18:30:34', null, null, null, '2', '0.00', '10', '15', '4000.00', '461.00', '0');
 INSERT INTO `p_user` VALUES ('2', '0', '18087760501', null, '0', '0', 'zz', 'zz', '2200.00', '0.00', '700.00', '建设银行', '春城支行', '8965656565656', '6666666', '2019-11-21 16:02:34', null, null, null, '2', '1200.00', '0', '4', '0.00', '0.00', '1');
+INSERT INTO `p_user` VALUES ('3', '0', '18087760503', '71b596cb42ee254f7416043d184fc970', '0', '1', null, null, '0.00', '0.00', '0.00', null, null, null, null, '2019-12-06 15:06:42', null, null, null, '0', '0.00', '0', '0', '0.00', '0.00', '0');
+INSERT INTO `p_user` VALUES ('4', '0', '18087760504', '71b596cb42ee254f7416043d184fc970', '0', '1', null, null, '0.00', '200.00', '200.00', null, null, null, null, '2019-12-06 15:11:28', null, null, null, '2', '0.00', '0', '1', '0.00', '0.00', '1');
+INSERT INTO `p_user` VALUES ('5', '0', '18087760505', '71b596cb42ee254f7416043d184fc970', '0', '4', null, null, '3700.00', '0.00', '0.00', null, null, null, null, '2019-12-06 15:14:09', null, null, null, '0', '0.00', '0', '0', '0.00', '0.00', '0');
+INSERT INTO `p_user` VALUES ('6', '0', '18087760500', '71b596cb42ee254f7416043d184fc970', '0', '5', null, null, '0.00', '0.00', '0.00', null, null, null, null, '2019-12-06 17:10:08', null, null, null, '0', '0.00', '0', '0', '0.00', '0.00', '0');
 
 -- ----------------------------
 -- Table structure for p_user_knot
@@ -510,7 +568,7 @@ CREATE TABLE `p_user_knot` (
   PRIMARY KEY (`id`),
   KEY `userKnotUserIndexes` (`uid`) USING BTREE,
   KEY `userKnotPayUidIndexes` (`payUid`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COMMENT='会员结算表';
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COMMENT='会员结算表';
 
 -- ----------------------------
 -- Records of p_user_knot
@@ -522,6 +580,7 @@ INSERT INTO `p_user_knot` VALUES ('9', '2', '1', '20', '0', '500.00', '2600.00',
 INSERT INTO `p_user_knot` VALUES ('16', '2', '1', '21', '0', '200.00', '1300.00', '0', '2019-12-05 11:54:08');
 INSERT INTO `p_user_knot` VALUES ('17', '2', '1', '22', '0', '300.00', '1300.00', '0', '2019-12-05 11:57:41');
 INSERT INTO `p_user_knot` VALUES ('18', '2', '1', '22', '0', '500.00', '1300.00', '2', '2019-12-05 11:58:01');
+INSERT INTO `p_user_knot` VALUES ('19', '4', '5', '27', '0', '200.00', '1300.00', '0', '2019-12-06 15:29:39');
 
 -- ----------------------------
 -- Table structure for p_user_login
@@ -534,14 +593,14 @@ CREATE TABLE `p_user_login` (
   `headPath` varchar(200) DEFAULT NULL COMMENT '头像地址',
   `nickName` varchar(100) DEFAULT NULL COMMENT '昵称',
   `createTime` datetime NOT NULL COMMENT '创建时间',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='用户微信登录表';
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `openId` (`openId`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='用户微信登录表';
 
 -- ----------------------------
 -- Records of p_user_login
 -- ----------------------------
-INSERT INTO `p_user_login` VALUES ('2', '1', 'oT-qp5bUQbu_L3MiR0-ldyYJyrr8', 'https://wx.qlogo.cn/mmopen/vi_32/KtGa6HIf2e69iajCS0XLtOIvH58e05ehdd5rbRntcgcQfIWD2Yk6bAUcE36d3ymHUD0LLdNjBq1errUQ1nFLMsA/132', '剃刀', '2019-11-20 18:31:09');
-INSERT INTO `p_user_login` VALUES ('3', '2', 'qp5cfcwPHoNU4GonXaFW0e9aQ', 'https://wx.qlogo.cn/mmhead/9aajCPUNsPb2CWILmoCniabapJnzxg4rkWBJZ4icFg4ws/132', '丰', '2019-11-21 16:04:01');
+INSERT INTO `p_user_login` VALUES ('5', '6', 'oT-qp5bUQbu_L3MiR0-ldyYJyrr8', null, null, '2019-12-06 16:33:53');
 
 -- ----------------------------
 -- Table structure for p_user_month_knot
@@ -576,13 +635,14 @@ CREATE TABLE `p_user_site` (
   `isDefault` int(1) NOT NULL DEFAULT '0' COMMENT '是否默认(0:否 1:是)',
   `createTime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='用户收货地址表';
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='用户收货地址表';
 
 -- ----------------------------
 -- Records of p_user_site
 -- ----------------------------
 INSERT INTO `p_user_site` VALUES ('1', '1', '萨达', '18087760500', '云南省昆明市官渡区世纪城15号', '0', '2019-11-21 16:36:04');
 INSERT INTO `p_user_site` VALUES ('3', '1', '萨达', '18087760502', '云南省昭通市昭阳区180号', '1', '2019-11-21 17:03:41');
+INSERT INTO `p_user_site` VALUES ('4', '5', '与非', '18087760500', '云南省昆明市官渡区世纪城156号', '1', '2019-12-06 15:20:15');
 
 -- ----------------------------
 -- Table structure for p_user_voucher
