@@ -38,4 +38,29 @@ public class UserKnotServiceImpl implements UserKnotService {
         }
         return true;
     }
+
+    @Override
+    public PUserKnot insertKnot(Long uid, Long payUid, Long orderId, Long monthId, BigDecimal knotPrice, BigDecimal payPrice, KnotType knotType){
+        PUserKnot userKnotADD = new PUserKnot();
+        userKnotADD.setUid(uid);
+        userKnotADD.setCreateTime(new Date());
+        userKnotADD.setKnotPrice(knotPrice);
+        userKnotADD.setKnotType(knotType.getType());
+        if(null != payUid){
+            userKnotADD.setPayUid(payUid);
+        }
+        if(null != orderId){
+            userKnotADD.setOrderId(orderId);
+        }
+        if(null != monthId){
+            userKnotADD.setMonthId(monthId);
+        }
+        if(null != payPrice){
+            userKnotADD.setPayPrice(payPrice);
+        }
+        if(0 == userKnotMapper.insertSelective(userKnotADD)){
+            return null;
+        }
+        return userKnotADD;
+    }
 }

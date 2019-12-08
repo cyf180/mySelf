@@ -6,6 +6,8 @@ import com.tdpro.entity.POrder;
 import com.tdpro.entity.extend.OrderCartETD;
 
 import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 public interface OrderService {
     /**
@@ -55,4 +57,12 @@ public interface OrderService {
      * @return
      */
     int sumSuitOrderByUid(Long uid,Long id);
+
+    /**
+     * 统计会员月业绩
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    List<POrder> findUserMonthResultsByPayTime(Long strawUid, Date startTime, Date endTime);
 }

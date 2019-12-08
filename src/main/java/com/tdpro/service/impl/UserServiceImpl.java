@@ -285,4 +285,10 @@ public class UserServiceImpl implements UserService {
         }
         return ResponseUtils.successRes(loginResult);
     }
+
+    @Override
+    public List<PUser> findIsUserList(Integer pageNo){
+        PageHelper.startPage(pageNo,1000);
+        return userMapper.findListIsUser();
+    }
 }

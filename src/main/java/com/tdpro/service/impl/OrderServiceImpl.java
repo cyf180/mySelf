@@ -239,6 +239,11 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.sumSuitOrderNum(uid,id);
     }
 
+    @Override
+    public List<POrder> findUserMonthResultsByPayTime(Long strawUid,Date startTime,Date endTime){
+        return orderMapper.findOrderRealPriceByStrawUid(strawUid,startTime,endTime);
+    }
+
     private String createOrderNo(Long uid) {
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append(uid).append(System.currentTimeMillis());

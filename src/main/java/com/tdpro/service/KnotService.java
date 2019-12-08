@@ -11,4 +11,10 @@ public interface KnotService {
      * @param orderId
      */
     Future<Boolean> knot(Long orderId);
+
+    /**
+     * 月结算
+     * @return
+     */
+    Future<Boolean> monthKnot();
 }

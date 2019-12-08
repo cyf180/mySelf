@@ -7,6 +7,8 @@ import com.tdpro.entity.extend.UserTeamETD;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 @Mapper
@@ -32,4 +34,6 @@ public interface PUserMapper {
     int updateBalance(UserBalanceUpdateETD userBalanceUpdateETD);
 
     PUser findByPhone(@Param("phone") String phone);
+
+    List<PUser> findListIsUser();
 }

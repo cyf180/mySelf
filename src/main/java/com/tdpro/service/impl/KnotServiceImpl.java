@@ -1,9 +1,7 @@
 package com.tdpro.service.impl;
 
 import com.tdpro.common.constant.KnotType;
-import com.tdpro.entity.PKnotConfig;
-import com.tdpro.entity.POrder;
-import com.tdpro.entity.PUser;
+import com.tdpro.entity.*;
 import com.tdpro.entity.extend.UserBalanceUpdateETD;
 import com.tdpro.service.*;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.swing.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -35,6 +37,8 @@ public class KnotServiceImpl implements KnotService {
     private DealLogService dealLogService;
     @Autowired
     private KnotConfigService configService;
+    @Autowired
+    private UserMonthKnotService monthKnotService;
     private Lock knotLok = new ReentrantLock();
 
     @Override
@@ -48,7 +52,7 @@ public class KnotServiceImpl implements KnotService {
                 PUser user = userService.findById(order.getUid());
                 if (null != user && !user.getStrawUid().equals(0)) {
                     PUser strawUserInfo = userService.findById(user.getStrawUid());
-                    if (null != strawUserInfo) {
+                    if (null != strawUserInfo && !strawUserInfo.getIsUser().equals(new Integer(0))) {
                         switch (order.getIsSuit()){
                             case 0:
                                 //单品结算
@@ -78,6 +82,85 @@ public class KnotServiceImpl implements KnotService {
             knotLok.unlock();
         }
         return new AsyncResult<Boolean>(true);
+    }
+
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
+    public Future<Boolean> monthKnot(){
+        int pageNo = 1;
+        Date startTime = new Date();
+        Calendar rightNow = Calendar.getInstance();
+        int year = rightNow.get(Calendar.YEAR);
+        int month = rightNow.get(Calendar.MONTH)+1;
+        rightNow.setTime(startTime);
+        rightNow.add(Calendar.MONTH, 1);
+        Date endTime = rightNow.getTime();
+        this.monthKnotAll(pageNo,startTime,endTime,year,month);
+        return new AsyncResult<Boolean>(true);
+    }
+
+    private void monthKnotAll(Integer pageNo, Date startTime,Date endTime,Integer year,Integer month){
+        List<PUser> userList = userService.findIsUserList(pageNo);
+        if(null != userList && userList.size() > 0){
+            for (int i=0;i<userList.size();i++){
+                BigDecimal rate = userList.get(i).getRate();
+                Long strawUid = userList.get(i).getId();
+                PUserMonthKnot monthKnotFind = monthKnotService.findByUidAndYearAndMonth(strawUid,year,month);
+                if(null == monthKnotFind) {
+                    List<POrder> orderList = orderService.findUserMonthResultsByPayTime(strawUid, startTime, endTime);
+                    List<PUserKnot> knotList = new ArrayList<>();
+                    int orderNum = orderList.size();
+                    BigDecimal knotMonthAmount = new BigDecimal("0");
+                    BigDecimal newOrderPrice = new BigDecimal("0");
+                    if (null != orderList && orderList.size() > 0) {
+                        for (int o = 0; o < orderList.size(); o++) {
+                            Long orderId = orderList.get(o).getId();
+                            Long orderUid = orderList.get(o).getUid();
+                            BigDecimal realPrice = orderList.get(o).getRealPrice();
+                            BigDecimal knotAmount = realPrice.multiply(rate).setScale(2, BigDecimal.ROUND_DOWN);
+                            PUserKnot addKnotLog = userKnotService.insertKnot(strawUid, orderUid, orderId, null, knotAmount, realPrice, KnotType.SUIT_MONTH_KNOT);
+                            if (null == addKnotLog) {
+                                log.error("月结算失败，添加结算日志失败,订单ID：{},推荐人ID：{}", orderId, strawUid);
+                                throw new RuntimeException("月结算失败，添加结算日志失败");
+                            }
+                            knotMonthAmount = knotMonthAmount.add(knotAmount);
+                            newOrderPrice = newOrderPrice.add(realPrice);
+                            knotList.add(addKnotLog);
+                        }
+                    }
+                    PUserMonthKnot monthKnotAdd = monthKnotService.insertMonthKnot(strawUid, knotMonthAmount, year, month, orderNum, newOrderPrice);
+                    boolean updateUser = this.updateUserMonthBalance(userList.get(i), knotMonthAmount);
+                    if (!updateUser || null == monthKnotAdd) {
+                        log.error("月结算失败，添加月结算日志火修改推荐人余额失败,推荐人ID：{}，修改余额状态：{}，添加月结算日志状态：", strawUid, updateUser, monthKnotAdd);
+                        throw new RuntimeException("月结算失败，添加月结算日志火修改推荐人余额失败");
+                    }
+                }else{
+                    log.error("月结算失败，推荐人ID：{}，当月已结算", strawUid);
+                }
+                monthKnotAll(pageNo+1,startTime,endTime,year,month);
+            }
+        }
+    }
+
+    private boolean updateUserMonthBalance(PUser user,BigDecimal knotMonthAmount){
+        UserBalanceUpdateETD userUPD = new UserBalanceUpdateETD();
+        userUPD.setId(user.getId());
+        userUPD.setBalance(user.getBalance().add(knotMonthAmount));
+        userUPD.setKnotAmount(user.getKnotAmount().add(knotMonthAmount));
+        userUPD.setOldBalance(user.getBalance());
+        userUPD.setOldKnotAmount(user.getKnotAmount());
+        userUPD.setOldItemLeftAmount(user.getItemLeftAmount());
+        if(userService.updateUserBalance(userUPD)){
+            user = userService.findById(user.getId());
+            userUPD.setBalance(user.getBalance().add(knotMonthAmount));
+            userUPD.setKnotAmount(user.getKnotAmount().add(knotMonthAmount));
+            userUPD.setOldBalance(user.getBalance());
+            userUPD.setOldKnotAmount(user.getKnotAmount());
+            userUPD.setOldItemLeftAmount(user.getItemLeftAmount());
+            if(userService.updateUserBalance(userUPD)){
+                return false;
+            }
+        }
+        return true;
     }
 
     private void itemKnot(POrder order,PUser user,PUser strawUserInfo) {
@@ -131,7 +214,7 @@ public class KnotServiceImpl implements KnotService {
         }
     }
 
-    public void suitKnot(POrder order,PUser user,PUser strawUserInfo){
+    private void suitKnot(POrder order,PUser user,PUser strawUserInfo){
         int allNum = orderService.sumSuitOrderByUid(user.getId(),order.getId());
         boolean plural=false;
         if((allNum+1)%2 == 0){

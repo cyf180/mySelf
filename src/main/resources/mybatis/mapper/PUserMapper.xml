@@ -388,4 +388,12 @@
     where phone = #{phone}
     limit 1
   </select>
+  <select id="findListIsUser" resultMap="com.tdpro.entity.PUser">
+    select u.id,u.isUser,u.phone,u.payPassword,u.state,u.strawUid,u.nickName,u.name,u.balance,u.integral,u.totalIntegral,u.bankName,u.bankBranch,u.bankCard,
+    u.idCard,u.createTime,u.disableTime,u.uncoilTime,u.strawPath,u.knotId,u.knotAmount,u.teamOneNum.u.teamSuitNum,u.itemBuyAmount,u.itemLeftAmount,u.suitLevelNum,
+    kc.rate
+    from p_user u
+    left join p_knot_config kc on u.knotId=kc.id
+    where u.isUser = 1
+  </select>
 </mapper>

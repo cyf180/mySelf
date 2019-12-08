@@ -1,6 +1,7 @@
 package com.tdpro.service;
 
 import com.tdpro.common.constant.KnotType;
+import com.tdpro.entity.PUserKnot;
 
 import java.math.BigDecimal;
 
@@ -17,4 +18,6 @@ public interface UserKnotService {
      * @return
      */
     Boolean insertUserKnot(Long uid, Long payUid, Long orderId, Long monthId, BigDecimal knotPrice, BigDecimal payPrice, KnotType knotType);
+
+    PUserKnot insertKnot(Long uid, Long payUid, Long orderId, Long monthId, BigDecimal knotPrice, BigDecimal payPrice, KnotType knotType);
 }

@@ -5,6 +5,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 @Mapper
 public interface POrderMapper {
@@ -25,4 +27,6 @@ public interface POrderMapper {
     BigDecimal sumRealPrice(@Param("uid") Long uid,@Param("id") Long id);
 
     int sumSuitOrderNum(@Param("uid") Long uid,@Param("id") Long id);
+
+    List<POrder> findOrderRealPriceByStrawUid(@Param("strawUid") Long strawUid, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
 }

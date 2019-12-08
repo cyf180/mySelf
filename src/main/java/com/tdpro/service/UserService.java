@@ -6,6 +6,11 @@ import com.tdpro.common.utils.Response;
 import com.tdpro.entity.POrder;
 import com.tdpro.entity.PUser;
 import com.tdpro.entity.extend.*;
+import io.swagger.models.auth.In;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 public interface UserService {
     /**
@@ -71,4 +76,10 @@ public interface UserService {
      * @return
      */
     Response insertUser(UserEnrollETD enrollETD);
+
+    /**
+     *
+     * @return
+     */
+    List<PUser> findIsUserList(Integer pageNo);
 }

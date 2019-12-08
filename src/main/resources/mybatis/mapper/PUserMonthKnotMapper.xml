@@ -125,4 +125,13 @@
       createTime = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="findByUidAndYearAndMonth" resultMap="BaseResultMap" parameterType="com.tdpro.entity.PUserMonthKnot" >
+    select
+    <include refid="Base_Column_List" />
+    from p_user_month_knot
+    where uid = #{uid}
+    and `year`=#{year}
+    and `month`=#{month}
+    limit 1
+  </select>
 </mapper>

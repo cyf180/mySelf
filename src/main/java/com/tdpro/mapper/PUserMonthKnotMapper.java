@@ -14,4 +14,6 @@ public interface PUserMonthKnotMapper {
     int updateByPrimaryKeySelective(PUserMonthKnot record);
 
     int updateByPrimaryKey(PUserMonthKnot record);
+
+    PUserMonthKnot findByUidAndYearAndMonth(PUserMonthKnot record);
 }
