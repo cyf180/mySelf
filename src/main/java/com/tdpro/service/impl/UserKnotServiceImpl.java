@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class UserKnotServiceImpl implements UserKnotService {
@@ -62,5 +63,10 @@ public class UserKnotServiceImpl implements UserKnotService {
             return null;
         }
         return userKnotADD;
+    }
+
+    @Override
+    public int updateMonthKnotByIdList(List<Long> idList,Long monthId){
+        return userKnotMapper.updateMonthId(idList,monthId);
     }
 }

@@ -4,6 +4,7 @@ import com.tdpro.common.constant.KnotType;
 import com.tdpro.entity.PUserKnot;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public interface UserKnotService {
     /**
@@ -20,4 +21,10 @@ public interface UserKnotService {
     Boolean insertUserKnot(Long uid, Long payUid, Long orderId, Long monthId, BigDecimal knotPrice, BigDecimal payPrice, KnotType knotType);
 
     PUserKnot insertKnot(Long uid, Long payUid, Long orderId, Long monthId, BigDecimal knotPrice, BigDecimal payPrice, KnotType knotType);
+
+    /**
+     * 修改月结算日志monthId
+     * @return
+     */
+    int updateMonthKnotByIdList(List<Long> idList,Long monthId);
 }

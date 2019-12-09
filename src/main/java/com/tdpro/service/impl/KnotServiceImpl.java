@@ -107,7 +107,7 @@ public class KnotServiceImpl implements KnotService {
                 PUserMonthKnot monthKnotFind = monthKnotService.findByUidAndYearAndMonth(strawUid,year,month);
                 if(null == monthKnotFind) {
                     List<POrder> orderList = orderService.findUserMonthResultsByPayTime(strawUid, startTime, endTime);
-                    List<PUserKnot> knotList = new ArrayList<>();
+                    List<Long> idList = new ArrayList<>();
                     int orderNum = orderList.size();
                     BigDecimal knotMonthAmount = new BigDecimal("0");
                     BigDecimal newOrderPrice = new BigDecimal("0");
@@ -124,7 +124,7 @@ public class KnotServiceImpl implements KnotService {
                             }
                             knotMonthAmount = knotMonthAmount.add(knotAmount);
                             newOrderPrice = newOrderPrice.add(realPrice);
-                            knotList.add(addKnotLog);
+                            idList.add(addKnotLog.getId());
                         }
                     }
                     PUserMonthKnot monthKnotAdd = monthKnotService.insertMonthKnot(strawUid, knotMonthAmount, year, month, orderNum, newOrderPrice);
@@ -132,6 +132,12 @@ public class KnotServiceImpl implements KnotService {
                     if (!updateUser || null == monthKnotAdd) {
                         log.error("月结算失败，添加月结算日志火修改推荐人余额失败,推荐人ID：{}，修改余额状态：{}，添加月结算日志状态：", strawUid, updateUser, monthKnotAdd);
                         throw new RuntimeException("月结算失败，添加月结算日志火修改推荐人余额失败");
+                    }
+                    if(null != idList && idList.size() > 0) {
+                        if (idList.size() != userKnotService.updateMonthKnotByIdList(idList, monthKnotAdd.getId())) {
+                            log.error("月结算失败，关联月结算表失败,推荐人ID：{}", strawUid);
+                            throw new RuntimeException("月结算失败，关联月结算表失败");
+                        }
                     }
                 }else{
                     log.error("月结算失败，推荐人ID：{}，当月已结算", strawUid);

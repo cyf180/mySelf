@@ -9,6 +9,7 @@ import com.tdpro.entity.extend.*;
 import com.tdpro.mapper.*;
 import com.tdpro.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,8 +17,10 @@ import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Future;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -242,6 +245,19 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<POrder> findUserMonthResultsByPayTime(Long strawUid,Date startTime,Date endTime){
         return orderMapper.findOrderRealPriceByStrawUid(strawUid,startTime,endTime);
+    }
+
+    @Override
+    public Future<Boolean> overdueOrder(){
+        Calendar takeCa = Calendar.getInstance();
+        takeCa.add(Calendar.DATE, -15);
+        Date takeTime = takeCa.getTime();
+        Calendar payCa = Calendar.getInstance();
+        payCa.add(Calendar.MINUTE, -30);
+        Date payTime = payCa.getTime();
+        orderMapper.updateOrderNotTake(takeTime);
+        orderMapper.updateOrderNotPay(payTime);
+        return new AsyncResult<Boolean>(true);
     }
 
     private String createOrderNo(Long uid) {

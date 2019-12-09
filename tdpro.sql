@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50540
 File Encoding         : 65001
 
-Date: 2019-12-06 17:16:34
+Date: 2019-12-09 23:36:58
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -380,6 +380,21 @@ INSERT INTO `p_order` VALUES ('24', '11575602827480', '1', '3', '0', '1', '0', '
 INSERT INTO `p_order` VALUES ('25', '11575604357907', '1', '3', '0', '1', '0', '床单四件套', '1300.00', '1300.00', '1', '0', '萨达', '18087760500', '云南省昆明市官渡区世纪城15号', null, '0', '2019-12-06 11:52:37', null, null, '0.00', null, null, null, '给我加辣', null, '0');
 INSERT INTO `p_order` VALUES ('26', '11575604604789', '1', '3', '0', '1', '0', '床单四件套', '1300.00', '1300.00', '1', '0', '萨达', '18087760500', '云南省昆明市官渡区世纪城15号', null, '0', '2019-12-06 11:56:44', null, null, '0.00', null, null, null, '给我加辣', null, '0');
 INSERT INTO `p_order` VALUES ('27', '51575616837170', '5', '3', '0', '1', '1', '床单四件套', '1300.00', '1300.00', '1', '0', '与非', '18087760500', '云南省昆明市官渡区世纪城156号', null, '0', '2019-12-06 15:20:37', '2019-12-06 15:29:39', null, '0.00', null, null, null, '给我加辣', null, '1');
+
+-- ----------------------------
+-- Table structure for p_order_config
+-- ----------------------------
+DROP TABLE IF EXISTS `p_order_config`;
+CREATE TABLE `p_order_config` (
+  `id` bigint(11) NOT NULL AUTO_INCREMENT,
+  `type` int(2) NOT NULL DEFAULT '0' COMMENT '类型(0:未付款 1:为确认收货)',
+  `time` int(5) NOT NULL DEFAULT '0' COMMENT '时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单配置表';
+
+-- ----------------------------
+-- Records of p_order_config
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for p_order_voucher

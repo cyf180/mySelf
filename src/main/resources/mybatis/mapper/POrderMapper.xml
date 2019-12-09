@@ -378,4 +378,16 @@
     <![CDATA[ and o.payTime >= #{startTime}]]>
     <![CDATA[ and o.payTime <= #{endTime}]]>
   </select>
+  <update id="updateOrderNotTake">
+    update p_order
+    set state = 3
+    where state = 2
+    <![CDATA[ and seendTime <= #{takeTime}]]>
+  </update>
+  <update id="updateOrderNotTake">
+    update p_order
+    set isDel = -1
+    where state = 0
+    <![CDATA[ and createTime <= #{createTime}]]>
+  </update>
 </mapper>

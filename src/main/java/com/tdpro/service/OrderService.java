@@ -8,6 +8,7 @@ import com.tdpro.entity.extend.OrderCartETD;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Future;
 
 public interface OrderService {
     /**
@@ -65,4 +66,10 @@ public interface OrderService {
      * @return
      */
     List<POrder> findUserMonthResultsByPayTime(Long strawUid, Date startTime, Date endTime);
+
+    /**
+     * 过期订单处理
+     * @return
+     */
+    Future<Boolean> overdueOrder();
 }

@@ -2,6 +2,9 @@ package com.tdpro.mapper;
 
 import com.tdpro.entity.PUserKnot;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 @Mapper
 public interface PUserKnotMapper {
@@ -16,4 +19,6 @@ public interface PUserKnotMapper {
     int updateByPrimaryKeySelective(PUserKnot record);
 
     int updateByPrimaryKey(PUserKnot record);
+
+    int updateMonthId(@Param("idList") List<Long> idList,@Param("monthId") Long monthId);
 }
