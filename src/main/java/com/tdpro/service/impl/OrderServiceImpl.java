@@ -8,6 +8,7 @@ import com.tdpro.entity.*;
 import com.tdpro.entity.extend.*;
 import com.tdpro.mapper.*;
 import com.tdpro.service.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -23,6 +25,7 @@ import java.util.List;
 import java.util.concurrent.Future;
 
 @Service
+@Slf4j
 public class OrderServiceImpl implements OrderService {
     @Autowired
     private POrderMapper orderMapper;
@@ -40,6 +43,8 @@ public class OrderServiceImpl implements OrderService {
     private GoodsSuitService goodsSuitService;
     @Autowired
     private OrderVoucherService orderVoucherService;
+    @Autowired
+    private OrderConfigService orderConfigService;
     @Override
     @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
     public Response insertOrder(OrderCartETD orderCartETD) {
@@ -249,14 +254,30 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Future<Boolean> overdueOrder(){
-        Calendar takeCa = Calendar.getInstance();
-        takeCa.add(Calendar.DATE, -15);
-        Date takeTime = takeCa.getTime();
-        Calendar payCa = Calendar.getInstance();
-        payCa.add(Calendar.MINUTE, -30);
-        Date payTime = payCa.getTime();
-        orderMapper.updateOrderNotTake(takeTime);
-        orderMapper.updateOrderNotPay(payTime);
+        POrderConfig takeConfig = orderConfigService.findByType(0);
+        if(null != takeConfig && takeConfig.getTime() > 0){
+            int day = takeConfig.getTime();
+            Calendar takeCa = Calendar.getInstance();
+            takeCa.add(Calendar.DATE, -day);
+            Date takeTime = takeCa.getTime();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String dateString = simpleDateFormat.format(takeTime);
+            orderMapper.updateOrderNotTake(takeTime);
+        }else {
+            log.info("订单未确认收货处理，无确认收货到期时间配置");
+        }
+        POrderConfig payConfig = orderConfigService.findByType(1);
+        if(null != payConfig && payConfig.getTime() > 0){
+            int minute = payConfig.getTime();
+            Calendar payCa = Calendar.getInstance();
+            payCa.add(Calendar.MINUTE, -minute);
+            Date payTime = payCa.getTime();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String dateString = simpleDateFormat.format(payTime);
+            orderMapper.updateOrderNotPay(payTime);
+        }else{
+            log.info("订单未支付处理，无确认收货到期时间配置");
+        }
         return new AsyncResult<Boolean>(true);
     }
 

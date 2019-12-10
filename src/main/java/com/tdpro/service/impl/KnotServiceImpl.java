@@ -26,8 +26,6 @@ import java.util.concurrent.locks.ReentrantLock;
 @Slf4j
 public class KnotServiceImpl implements KnotService {
     @Autowired
-    private GoodsService goodsService;
-    @Autowired
     private OrderService orderService;
     @Autowired
     private UserService userService;
@@ -87,13 +85,13 @@ public class KnotServiceImpl implements KnotService {
     @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
     public Future<Boolean> monthKnot(){
         int pageNo = 1;
-        Date startTime = new Date();
+        Date endTime = new Date();
         Calendar rightNow = Calendar.getInstance();
         int year = rightNow.get(Calendar.YEAR);
         int month = rightNow.get(Calendar.MONTH)+1;
-        rightNow.setTime(startTime);
-        rightNow.add(Calendar.MONTH, 1);
-        Date endTime = rightNow.getTime();
+        rightNow.setTime(endTime);
+        rightNow.add(Calendar.MONTH, -1);
+        Date startTime = rightNow.getTime();
         this.monthKnotAll(pageNo,startTime,endTime,year,month);
         return new AsyncResult<Boolean>(true);
     }
@@ -127,7 +125,7 @@ public class KnotServiceImpl implements KnotService {
                             idList.add(addKnotLog.getId());
                         }
                     }
-                    PUserMonthKnot monthKnotAdd = monthKnotService.insertMonthKnot(strawUid, knotMonthAmount, year, month, orderNum, newOrderPrice);
+                    PUserMonthKnot monthKnotAdd = monthKnotService.insertMonthKnot(strawUid, knotMonthAmount, year, month, orderNum, newOrderPrice,rate);
                     boolean updateUser = this.updateUserMonthBalance(userList.get(i), knotMonthAmount);
                     if (!updateUser || null == monthKnotAdd) {
                         log.error("月结算失败，添加月结算日志火修改推荐人余额失败,推荐人ID：{}，修改余额状态：{}，添加月结算日志状态：", strawUid, updateUser, monthKnotAdd);
@@ -142,8 +140,8 @@ public class KnotServiceImpl implements KnotService {
                 }else{
                     log.error("月结算失败，推荐人ID：{}，当月已结算", strawUid);
                 }
-                monthKnotAll(pageNo+1,startTime,endTime,year,month);
             }
+            monthKnotAll(pageNo+1,startTime,endTime,year,month);
         }
     }
 
@@ -155,14 +153,14 @@ public class KnotServiceImpl implements KnotService {
         userUPD.setOldBalance(user.getBalance());
         userUPD.setOldKnotAmount(user.getKnotAmount());
         userUPD.setOldItemLeftAmount(user.getItemLeftAmount());
-        if(userService.updateUserBalance(userUPD)){
+        if(!userService.updateUserBalance(userUPD)){
             user = userService.findById(user.getId());
             userUPD.setBalance(user.getBalance().add(knotMonthAmount));
             userUPD.setKnotAmount(user.getKnotAmount().add(knotMonthAmount));
             userUPD.setOldBalance(user.getBalance());
             userUPD.setOldKnotAmount(user.getKnotAmount());
             userUPD.setOldItemLeftAmount(user.getItemLeftAmount());
-            if(userService.updateUserBalance(userUPD)){
+            if(!userService.updateUserBalance(userUPD)){
                 return false;
             }
         }

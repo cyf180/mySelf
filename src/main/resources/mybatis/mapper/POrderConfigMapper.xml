@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tdpro.mapper.POrderConfigMapper" >
+  <resultMap id="BaseResultMap" type="com.tdpro.entity.POrderConfig" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="time" property="time" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, `type`, `time`
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from p_order_config
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from p_order_config
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tdpro.entity.POrderConfig" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into p_order_config (`type`, `time`)
+    values (#{type,jdbcType=INTEGER}, #{time,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tdpro.entity.POrderConfig" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into p_order_config
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="type != null" >
+        `type`,
+      </if>
+      <if test="time != null" >
+        `time`,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="time != null" >
+        #{time,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tdpro.entity.POrderConfig" >
+    update p_order_config
+    <set >
+      <if test="type != null" >
+        `type` = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="time != null" >
+        `time` = #{time,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tdpro.entity.POrderConfig" >
+    update p_order_config
+    set `type` = #{type,jdbcType=INTEGER},
+      `time` = #{time,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="findByType" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from p_order_config
+    where `type` = #{type}
+    limit 1
+  </select>
+</mapper>

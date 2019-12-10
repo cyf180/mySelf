@@ -21,6 +21,8 @@ public class PUserMonthKnot implements Serializable {
 
     private Date createTime;
 
+    private BigDecimal rate;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -85,6 +87,14 @@ public class PUserMonthKnot implements Serializable {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public BigDecimal getRate() {
+        return rate;
+    }
+
+    public void setRate(BigDecimal rate) {
+        this.rate = rate;
     }
 
     @Override

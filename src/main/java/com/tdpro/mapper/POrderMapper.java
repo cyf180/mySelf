@@ -30,7 +30,7 @@ public interface POrderMapper {
 
     List<POrder> findOrderRealPriceByStrawUid(@Param("strawUid") Long strawUid, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
 
-    int updateOrderNotTake(@Param("takeTime") Date takeTime);
+    int updateOrderNotTake(@Param("seendTime") Date seendTime);
 
     int updateOrderNotPay(@Param("createTime") Date createTime);
 }

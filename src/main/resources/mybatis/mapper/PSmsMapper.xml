@@ -101,7 +101,7 @@
       `type` = #{type,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="findOne" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+  <select id="findOne" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from p_sms

@@ -15,7 +15,7 @@ public interface UserMonthKnotService {
      * @param newOrderPrice
      * @return
      */
-    PUserMonthKnot insertMonthKnot(Long uid, BigDecimal knotPrice,Integer year,Integer month,Integer newOrderNum,BigDecimal newOrderPrice);
+    PUserMonthKnot insertMonthKnot(Long uid, BigDecimal knotPrice,Integer year,Integer month,Integer newOrderNum,BigDecimal newOrderPrice,BigDecimal rate);
 
     /**
      * 查询用户月结详情

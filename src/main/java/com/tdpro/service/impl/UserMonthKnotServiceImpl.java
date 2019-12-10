@@ -14,7 +14,7 @@ public class UserMonthKnotServiceImpl implements UserMonthKnotService {
     @Autowired
     private PUserMonthKnotMapper userMonthKnotMapper;
     @Override
-    public PUserMonthKnot insertMonthKnot(Long uid, BigDecimal knotPrice, Integer year, Integer month, Integer newOrderNum, BigDecimal newOrderPrice){
+    public PUserMonthKnot insertMonthKnot(Long uid, BigDecimal knotPrice, Integer year, Integer month, Integer newOrderNum, BigDecimal newOrderPrice,BigDecimal rate){
         PUserMonthKnot monthKnotADD = new PUserMonthKnot();
         monthKnotADD.setUid(uid);
         monthKnotADD.setKnotPrice(knotPrice);
@@ -23,6 +23,7 @@ public class UserMonthKnotServiceImpl implements UserMonthKnotService {
         monthKnotADD.setNewOrderNum(newOrderNum);
         monthKnotADD.setNewOrderPrice(newOrderPrice);
         monthKnotADD.setCreateTime(new Date());
+        monthKnotADD.setRate(rate);
         if(0 == userMonthKnotMapper.insertSelective(monthKnotADD)){
             return null;
         }

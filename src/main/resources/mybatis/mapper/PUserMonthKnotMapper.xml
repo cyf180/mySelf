@@ -10,9 +10,10 @@
     <result column="newOrderNum" property="newOrderNum" jdbcType="INTEGER" />
     <result column="newOrderPrice" property="newOrderPrice" jdbcType="DECIMAL" />
     <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="rate" property="rate" jdbcType="DECIMAL" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, `uid`, knotPrice, `year`, `month`, newOrderNum, newOrderPrice, createTime
+    id, `uid`, knotPrice, `year`, `month`, newOrderNum, newOrderPrice, createTime,rate
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -62,6 +63,9 @@
       <if test="createTime != null" >
         createTime,
       </if>
+      <if test="rate != null" >
+        rate,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="uid != null" >
@@ -84,6 +88,9 @@
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rate != null" >
+        #{rate},
       </if>
     </trim>
   </insert>

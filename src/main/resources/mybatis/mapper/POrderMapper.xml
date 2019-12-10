@@ -365,16 +365,15 @@
     and id!=#{id}
     <![CDATA[ and state >= 1]]>
   </select>
-  <select id="findOrderRealPriceByStrawUid" resultMap="BaseResultMap" resultType="java.math.BigDecimal">
-    select
-    <include refid="Base_Column_List" />
-    from p_order
+  <select id="findOrderRealPriceByStrawUid" resultMap="BaseResultMap">
+    select o.*
+    from p_order o
     left join p_user u on o.uid=u.id
     where u.strawUid=#{strawUid}
     and o.isSuit=1
     and o.zoneType=0
     and o.realPrice > 0
-    <![CDATA[ and o.state >= 1]]>
+    <![CDATA[ and o.state >= 1 ]]>
     <![CDATA[ and o.payTime >= #{startTime}]]>
     <![CDATA[ and o.payTime <= #{endTime}]]>
   </select>
@@ -382,9 +381,9 @@
     update p_order
     set state = 3
     where state = 2
-    <![CDATA[ and seendTime <= #{takeTime}]]>
+    <![CDATA[ and seendTime <= #{seendTime}]]>
   </update>
-  <update id="updateOrderNotTake">
+  <update id="updateOrderNotPay">
     update p_order
     set isDel = -1
     where state = 0
