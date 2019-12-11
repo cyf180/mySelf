@@ -2,6 +2,7 @@ package com.tdpro.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.tdpro.entity.PRole;
 import com.tdpro.entity.extend.RoleETD;
 import com.tdpro.entity.extend.RoleMenuETD;
 import com.tdpro.mapper.PRoleMapper;

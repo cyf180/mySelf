@@ -21,4 +21,9 @@ public class AdminServiceImpl implements AdminService {
         admin.setPassword(pwd);
         return adminMapper.findByPhoneAndPassword(admin);
     }
+
+    @Override
+    public PAdmin findById(Long id){
+        return adminMapper.selectByPrimaryKey(id);
+    }
 }

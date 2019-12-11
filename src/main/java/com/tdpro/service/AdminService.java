@@ -9,4 +9,11 @@ public interface AdminService {
      * @return
      */
     PAdmin findByPhone(PAdmin admin);
+
+    /**
+     * Id查询
+     * @param id
+     * @return
+     */
+    PAdmin findById(Long id);
 }

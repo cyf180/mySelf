@@ -42,9 +42,9 @@ public class Swagger2Config {
     private ApiInfo buildApiInfo() {
 
         return new ApiInfoBuilder()
-                .title("洗到家2.0API文档")
+                .title("芙美容API文档")
                 .description("")
-                .version("2.0")
+                .version("1.0")
                 .build();
     }
 }

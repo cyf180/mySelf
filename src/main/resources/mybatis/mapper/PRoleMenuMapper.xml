@@ -67,7 +67,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectList" resultType="com.tdpro.entity.extend.RoleMenuETD">
-    select t.* from t_role_menu t
+    select t.* from p_role_menu t
     <where>
       <if test="id!=null and id!=''">
         and id=#{id}
@@ -81,13 +81,13 @@
     </where>
   </select>
   <delete id="deleteWithMenu" parameterType="java.lang.Long">
-    delete from t_role_menu where mid = #{0}
+    delete from p_role_menu where mid = #{0}
   </delete>
   <delete id="deleteByRid" parameterType="java.lang.Long">
-    delete from t_role_menu where rid = #{0}
+    delete from p_role_menu where rid = #{0}
   </delete>
   <select id="selectByRidAndMid" resultType="com.tdpro.entity.extend.RoleMenuETD">
-    select * from t_role_menu
+    select * from p_role_menu
     where rId=#{rId,jdbcType=INTEGER} and mId=#{mId,jdbcType=INTEGER}
   </select>
 </mapper>

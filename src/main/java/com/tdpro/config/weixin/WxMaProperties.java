@@ -6,11 +6,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-/**
- * @About
- * @Author jy
- * @Date 2017/12/20 15:09
- */
 
 @ConfigurationProperties(prefix = "wechat.mainapp")
 @Data

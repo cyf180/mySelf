@@ -12,7 +12,7 @@
   <sql id="Base_Column_List" >
     id, mid, menuName, menuUrl, menuType, menuApiPath
   </sql>
-  <select id="selectByPrimaryKey" resultMap="com.tdpro.entity.extend.MenuETD" parameterType="java.lang.Long" >
+  <select id="selectByPrimaryKey" resultType="com.tdpro.entity.extend.MenuETD" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
     from p_menu
@@ -102,7 +102,7 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectListByRid" resultType="com.tdpro.entity.extend.MenuETD">
-    select m.* from t_menu m left join t_role_menu p on m.id = p.mid
+    select m.* from p_menu m left join p_role_menu p on m.id = p.mid
     <where>
       <if test="rid!=null and rid!=''">
         and p.rid=#{rid}
@@ -119,7 +119,7 @@
     order by m.id
   </select>
   <select id="selectList" resultType="com.tdpro.entity.extend.MenuETD" parameterType="java.util.Map">
-    SELECT m.* FROM t_menu m left join t_role_menu p on m.id=p.mid
+    SELECT m.* FROM p_menu m left join p_role_menu p on m.id=p.mid
     <where>
       <if test="rid!=null and rid!=''">
         and p.rid=#{rid}
@@ -135,7 +135,7 @@
     order by m.id
   </select>
   <select id="getCount" resultType="java.lang.Integer">
-    SELECT count(*) FROM t_menu m
+    SELECT count(*) FROM p_menu m
     <where>
       <if test="id!=null and id!=''">
         and m.id=#{id}
@@ -146,7 +146,7 @@
     </where>
   </select>
   <select id="selectByRid" parameterType="hashMap" resultType="com.tdpro.entity.PMenu">
-    select m.* from t_menu m left join t_role_menu p on m.id = p.mid where
+    select m.* from p_menu m left join p_role_menu p on m.id = p.mid where
     p.rid=#{rid}
     <if test="id!=null and id!=''">
       and m.id=#{id}

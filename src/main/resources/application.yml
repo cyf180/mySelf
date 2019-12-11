@@ -54,11 +54,13 @@ com.tdpro.common.utils.jwt:
 blockerPath:
   userPath: /user/
   userIgnorePath: /user/userEnroll,/user/sms/enrollSend
+  adminPath: /api/
+  notTokenPath: /api/login
 
 wechat:
   mainapp:
-    appid: wx390faf0b19fe5af2
-    secret: 8b6aabfc15cbfa26e866d542e6a166f9
+    appid: wx1d7c99f7945f0677
+    secret: 46752c7174dc19275f806cc891bc07db
     token: G1X1jiil1iInLzl5iiRRzIjCnC1jiZ2a
     aesKey: KFwlcjWWSD8CsMxVlrS6s6FSws1NfpmFCrCpNsjnxdN
 

@@ -11,7 +11,7 @@
   <sql id="Base_Column_List" >
     id, roleRank, roleName, roleTime, roleStatus
   </sql>
-  <select id="selectByPrimaryKey" resultMap="com.tdpro.entity.extend.RoleETD" parameterType="java.lang.Long" >
+  <select id="selectByPrimaryKey" resultType="com.tdpro.entity.extend.RoleETD" parameterType="java.lang.Long" >
     select *
     from p_role
     where id = #{id,jdbcType=BIGINT}
@@ -92,7 +92,7 @@
   <select id="selectPageList" resultType="com.tdpro.entity.extend.RoleETD" parameterType="com.tdpro.entity.extend.RoleETD">
     select
     <include refid="Base_Column_List" />
-    from t_role
+    from p_role
     <where>
       <if test="roleRank !=null and roleRank!=''">
         and roleRank =#{roleRank}
@@ -103,7 +103,7 @@
   <select id="selectAllRole" resultType="com.tdpro.entity.extend.RoleETD" parameterType="com.tdpro.entity.extend.RoleETD">
     select
     <include refid="Base_Column_List" />
-    from t_role
+    from p_role
     <where>
       <if test="roleRank !=null and roleRank!=''">
         and roleRank =#{roleRank}

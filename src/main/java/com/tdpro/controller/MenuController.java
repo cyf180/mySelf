@@ -157,13 +157,13 @@ public class MenuController extends BaseController<MenuETD> {
     @PostMapping("/deletess")
     @ApiImplicitParam(name = "ids", value = "记录id 多id请用','分割 ",required = true,dataType = "string", paramType = "form")
     @ApiOperation(value = "菜单删除接口", response = Response.class)
-    public Response deletess(@ApiIgnore @RequestAttribute("aid") Integer aid, @RequestBody JSONObject jsonObject) {
+    public Response deletess(@ApiIgnore @RequestAttribute("adminId") Integer adminId, @RequestBody JSONObject jsonObject) {
         Response response = ResponseUtils.successRes(null);
         String ids = jsonObject.getString("ids");
         String deleteParent = jsonObject.getString("deleteParent");
         if(ids != null && !"".equals(ids.trim())) {
             StringBuffer sb = new StringBuffer();
-            logger.info(sb.append("用户：").append(aid).append(" 执行批量删除操作 时间：").append(new Date()).toString());
+            logger.info(sb.append("用户：").append(adminId).append(" 执行批量删除操作 时间：").append(new Date()).toString());
             int a = menuService.deletes(ids,deleteParent);
             if(a==0) {
                 response = ResponseUtils.errorResReg(ErrorCodeConstants.ErrorCode.SYSTEM_DELETE_ERROR);
