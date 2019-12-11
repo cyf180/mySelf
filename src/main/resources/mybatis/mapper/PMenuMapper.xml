@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tdpro.mapper.PMenuMapper" >
+  <resultMap id="BaseResultMap" type="com.tdpro.entity.PMenu" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="mid" property="mid" jdbcType="BIGINT" />
+    <result column="menuName" property="menuName" jdbcType="VARCHAR" />
+    <result column="menuUrl" property="menuUrl" jdbcType="VARCHAR" />
+    <result column="menuType" property="menuType" jdbcType="VARCHAR" />
+    <result column="menuApiPath" property="menuApiPath" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, mid, menuName, menuUrl, menuType, menuApiPath
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="com.tdpro.entity.extend.MenuETD" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from p_menu
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from p_menu
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tdpro.entity.PMenu" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into p_menu (mid, menuName, menuUrl, 
+      menuType, menuApiPath)
+    values (#{mid,jdbcType=BIGINT}, #{menuName,jdbcType=VARCHAR}, #{menuUrl,jdbcType=VARCHAR}, 
+      #{menuType,jdbcType=VARCHAR}, #{menuApiPath,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tdpro.entity.PMenu" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into p_menu
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="mid != null" >
+        mid,
+      </if>
+      <if test="menuName != null" >
+        menuName,
+      </if>
+      <if test="menuUrl != null" >
+        menuUrl,
+      </if>
+      <if test="menuType != null" >
+        menuType,
+      </if>
+      <if test="menuApiPath != null" >
+        menuApiPath,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="mid != null" >
+        #{mid,jdbcType=BIGINT},
+      </if>
+      <if test="menuName != null" >
+        #{menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="menuUrl != null" >
+        #{menuUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="menuType != null" >
+        #{menuType,jdbcType=VARCHAR},
+      </if>
+      <if test="menuApiPath != null" >
+        #{menuApiPath,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tdpro.entity.extend.MenuETD" >
+    update p_menu
+    <set >
+      <if test="mid != null" >
+        mid = #{mid,jdbcType=BIGINT},
+      </if>
+      <if test="menuName != null" >
+        menuName = #{menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="menuUrl != null" >
+        menuUrl = #{menuUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="menuType != null" >
+        menuType = #{menuType,jdbcType=VARCHAR},
+      </if>
+      <if test="menuApiPath != null" >
+        menuApiPath = #{menuApiPath,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tdpro.entity.extend.MenuETD" >
+    update p_menu
+    set mid = #{mid,jdbcType=BIGINT},
+      menuName = #{menuName,jdbcType=VARCHAR},
+      menuUrl = #{menuUrl,jdbcType=VARCHAR},
+      menuType = #{menuType,jdbcType=VARCHAR},
+      menuApiPath = #{menuApiPath,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectListByRid" resultType="com.tdpro.entity.extend.MenuETD">
+    select m.* from t_menu m left join t_role_menu p on m.id = p.mid
+    <where>
+      <if test="rid!=null and rid!=''">
+        and p.rid=#{rid}
+      </if>
+      <if test="id!=null and id!=''">
+        and m.id=#{id}
+      </if>
+      <if test="mid!=null and mid!=''">
+        and m.mid=#{mid}
+      </if>
+      and m.menuType!="other"
+    </where>
+    group by m.id,m.mid,m.menuUrl,m.menuName,m.menuType
+    order by m.id
+  </select>
+  <select id="selectList" resultType="com.tdpro.entity.extend.MenuETD" parameterType="java.util.Map">
+    SELECT m.* FROM t_menu m left join t_role_menu p on m.id=p.mid
+    <where>
+      <if test="rid!=null and rid!=''">
+        and p.rid=#{rid}
+      </if>
+      <if test="id!=null and id!=''">
+        and m.id=#{id}
+      </if>
+      <if test="mid!=null and mid!=''">
+        and m.mid=#{mid}
+      </if>
+    </where>
+    group by m.id,m.mid,m.menuUrl,m.menuName,m.menuType
+    order by m.id
+  </select>
+  <select id="getCount" resultType="java.lang.Integer">
+    SELECT count(*) FROM t_menu m
+    <where>
+      <if test="id!=null and id!=''">
+        and m.id=#{id}
+      </if>
+      <if test="mid!=null and mid!=''">
+        and m.mid=#{mid}
+      </if>
+    </where>
+  </select>
+  <select id="selectByRid" parameterType="hashMap" resultType="com.tdpro.entity.PMenu">
+    select m.* from t_menu m left join t_role_menu p on m.id = p.mid where
+    p.rid=#{rid}
+    <if test="id!=null and id!=''">
+      and m.id=#{id}
+    </if>
+    <if test="pid!=null and pid!=''">
+      and m.pid=#{pid}
+    </if>
+    <if test="url!=null and url!=''">
+      and m.menuApiPath =  #{url}
+    </if>
+    limit 1
+  </select>
+</mapper>

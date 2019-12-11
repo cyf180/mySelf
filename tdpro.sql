@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50540
 File Encoding         : 65001
 
-Date: 2019-12-10 17:20:15
+Date: 2019-12-11 16:38:12
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -461,7 +461,6 @@ CREATE TABLE `p_role` (
   `roleName` varchar(50) DEFAULT NULL COMMENT '权限名',
   `roleTime` datetime DEFAULT NULL COMMENT '添加时间',
   `roleStatus` int(4) unsigned DEFAULT '0' COMMENT '状态  ',
-  `roleType` enum('1','2') DEFAULT '1' COMMENT '角色类型1： 管理员  2: 门店角色',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='后台管理角色表';
 
