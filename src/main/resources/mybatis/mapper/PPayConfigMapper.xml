@@ -14,11 +14,12 @@
     <result column="sort" property="sort" jdbcType="TINYINT" />
     <result column="certPath" property="certPath" jdbcType="VARCHAR" />
     <result column="backPath" property="backPath" jdbcType="VARCHAR" />
+    <result column="userBackPath" property="userBackPath" jdbcType="VARCHAR" />
     <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, `name`, `desc`, mchId, appId, paySecret, channel, payType, `status`, sort, certPath, 
-    backPath, createTime
+    backPath, createTime,userBackPath
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -84,6 +85,9 @@
       <if test="backPath != null" >
         backPath,
       </if>
+      <if test="userBackPath != null" >
+        userBackPath,
+      </if>
       <if test="createTime != null" >
         createTime,
       </if>
@@ -121,6 +125,9 @@
       </if>
       <if test="backPath != null" >
         #{backPath,jdbcType=VARCHAR},
+      </if>
+      <if test="userBackPath != null" >
+        #{userBackPath,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -162,6 +169,9 @@
       </if>
       <if test="backPath != null" >
         backPath = #{backPath,jdbcType=VARCHAR},
+      </if>
+      <if test="userBackPath != null" >
+        userBackPath = #{userBackPath,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
         createTime = #{createTime,jdbcType=TIMESTAMP},

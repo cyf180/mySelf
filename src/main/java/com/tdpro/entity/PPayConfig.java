@@ -28,6 +28,8 @@ public class PPayConfig implements Serializable {
 
     private String backPath;
 
+    private String userBackPath;
+
     private Date createTime;
 
     private static final long serialVersionUID = 1L;
@@ -126,6 +128,14 @@ public class PPayConfig implements Serializable {
 
     public void setBackPath(String backPath) {
         this.backPath = backPath == null ? null : backPath.trim();
+    }
+
+    public String getUserBackPath() {
+        return userBackPath;
+    }
+
+    public void setUserBackPath(String userBackPath) {
+        this.userBackPath = userBackPath;
     }
 
     public Date getCreateTime() {

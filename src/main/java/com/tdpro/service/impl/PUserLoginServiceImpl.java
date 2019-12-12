@@ -48,4 +48,9 @@ public class PUserLoginServiceImpl implements PUserLoginService {
         }
         return true;
     }
+
+    @Override
+    public PUserLogin findByUid(Long uid) {
+        return userLoginMapper.selectInfoByUid(uid);
+    }
 }

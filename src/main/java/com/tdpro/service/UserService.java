@@ -82,4 +82,11 @@ public interface UserService {
      * @return
      */
     List<PUser> findIsUserList(Integer pageNo);
+
+    /**
+     * 修改用户未会员
+     * @param uid
+     * @return
+     */
+    Boolean updateIsUser(Long uid);
 }

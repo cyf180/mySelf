@@ -37,4 +37,11 @@ public interface PUserLoginService {
      * @return
      */
     Boolean updateUserLogin(PUserLogin userLogin);
+
+    /**
+     * 根据uid查询
+     * @param uid
+     * @return
+     */
+    PUserLogin findByUid(Long uid);
 }

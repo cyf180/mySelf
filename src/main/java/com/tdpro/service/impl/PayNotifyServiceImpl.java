@@ -9,6 +9,7 @@ import com.tdpro.config.SpringContext;
 import com.tdpro.entity.POrder;
 import com.tdpro.entity.POrderVoucher;
 import com.tdpro.entity.PPayConfig;
+import com.tdpro.entity.PUserPay;
 import com.tdpro.service.*;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,10 @@ public class PayNotifyServiceImpl implements PayNotifyService {
     private UserVoucherService userVoucherService;
     @Autowired
     private GoodsService goodsService;
+    @Autowired
+    private UserPayService userPayService;
+    @Autowired
+    private UserService userService;
 
     @Override
     @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
@@ -86,6 +91,52 @@ public class PayNotifyServiceImpl implements PayNotifyService {
         } else {
             log.error("订单支付回调失败: {}", returnMsg);
             throw new RuntimeException("订单支付未成功");
+        }
+        return true;
+    }
+
+    @Override
+    public Boolean userByNotify(WxPayOrderNotifyResult resultDate) {
+        PPayConfig payConfig = payConfigService.findByChannelAndPayType(new Byte("0"), new Byte("1"));
+        // 验签
+        if (resultDate.getSign() != null && !SignUtils.checkSign(resultDate.toMap(), WxPayConstants.TradeType.JSAPI, payConfig.getPaySecret())) {
+            log.error("会员购买支付回调失败 {}", "参数格式校验错误！");
+            return false;
+        }
+        log.info("会员购买回调结果:{}", resultDate);
+        String payNo = resultDate.getOutTradeNo();
+        String tradeNo = resultDate.getTransactionId();
+        BigDecimal totalFee = new BigDecimal(BaseWxPayResult.feeToYuan(resultDate.getTotalFee()));
+        String resultCode = resultDate.getResultCode();
+        String returnCode = resultDate.getReturnCode();
+        String returnMsg = resultDate.getReturnMsg();
+        if ("SUCCESS".equals(resultCode) && "SUCCESS".equals(returnCode)) {
+            PUserPay payOrderInfo = userPayService.findByNo(tradeNo);
+            if (null != payOrderInfo) {
+                if (payOrderInfo.getPayState().equals(0)) {
+                    if (!SpringContext.getActiveProfile().equals("dev")) {
+                        if (!payOrderInfo.getPayPrice().equals(totalFee)) {
+                            log.error("会员购买支付回调失败: {}，支付订单ID: {}", "金额不一致", payOrderInfo.getId());
+                            throw new RuntimeException("会员购买支付回调金额不一致");
+                        }
+                    }
+                    boolean updateOrder = userPayService.updateIsPay(payOrderInfo.getId(),payNo, totalFee);
+                    boolean updateUser = userService.updateIsUser(payOrderInfo.getUid());
+                    if (!updateOrder || !updateUser) {
+                        log.error("会员购买支付回调失败: {}，支付订单ID: {}", "订单修改状态：" + updateOrder + "，用户修改状态：" + updateUser, payOrderInfo.getId());
+                        throw new RuntimeException("订单修改失败");
+                    }
+                } else {
+                    log.info("会员购买支付回调失败 {}，订单ID {}", "已支付", payOrderInfo.getId());
+                    return true;
+                }
+            } else {
+                log.error("会员购买支付回调失败: {}，订单号: {}", "支付订单查询失败", tradeNo);
+                throw new RuntimeException("订单查询失败");
+            }
+        } else {
+            log.error("会员购买支付回调失败: {}", returnMsg);
+            throw new RuntimeException("会员购买支付未成功");
         }
         return true;
     }

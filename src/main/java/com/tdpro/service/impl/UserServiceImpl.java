@@ -14,6 +14,7 @@ import com.tdpro.common.utils.ResponseUtils;
 import com.tdpro.entity.POrder;
 import com.tdpro.entity.PUser;
 import com.tdpro.entity.PUserLogin;
+import com.tdpro.entity.PUserPayConfig;
 import com.tdpro.entity.extend.*;
 import com.tdpro.mapper.PUserMapper;
 import com.tdpro.service.*;
@@ -47,6 +48,8 @@ public class UserServiceImpl implements UserService {
     private JwtService jwtService;
     @Autowired
     private SmsCodeService codeService;
+    @Autowired
+    private UserPayConfigService userPayConfigService;
     private Lock lock = new ReentrantLock();
 
     @Override
@@ -150,9 +153,14 @@ public class UserServiceImpl implements UserService {
         Response<LoginResult> resultResponse = ResponseUtils.errorResReg(ErrorCodeConstants.ErrorCode.SYSTEM_ERROR);
         LoginResult loginResult = new LoginResult();
         loginResult.setIsBindPhone(0);
+        loginResult.setIsUser(0);
         //判断参数的合法性
         if (login == null || !StringUtils.hasText(login.getCode())) {
             return ResponseUtils.errorResReg(ErrorCodeConstants.ErrorCode.PARA_NORULE_ERROR);
+        }
+        PUserPayConfig payConfig = userPayConfigService.findByType(0);
+        if(null != payConfig){
+            loginResult.setBuyUserPrice(payConfig.getPrice());
         }
         int result = 0;
         Long accountId = 0L;
@@ -174,6 +182,12 @@ public class UserServiceImpl implements UserService {
                     tThirdLogin = new PUserLogin();
                     tThirdLogin.setOpenId(openId);
                     tThirdLogin.setUid(0L);
+                    if(StringUtil.isNotEmpty(login.getWxHead())){
+                        tThirdLogin.setHeadPath(login.getWxHead());
+                    }
+                    if(StringUtil.isNotEmpty(login.getWxName())){
+                        tThirdLogin.setNickName(login.getWxName());
+                    }
                     result = userLoginService.insertUserLog(tThirdLogin);
                 } else {
                     result = 1;
@@ -198,6 +212,7 @@ public class UserServiceImpl implements UserService {
                     loginResult.setIsBindPhone(1);
                     loginResult.setPhone(user.getPhone());
                     loginResult.setKey(openId);
+                    loginResult.setIsUser(user.getIsUser());
                 }
             }
             // 验证成功生成token
@@ -290,5 +305,16 @@ public class UserServiceImpl implements UserService {
     public List<PUser> findIsUserList(Integer pageNo){
         PageHelper.startPage(pageNo,1000);
         return userMapper.findListIsUser();
+    }
+
+    @Override
+    public Boolean updateIsUser(Long uid) {
+        PUser userUPD = new PUser();
+        userUPD.setId(uid);
+        userUPD.setIsUser(1);
+        if(0 == userMapper.updateByPrimaryKeySelective(userUPD)){
+            return false;
+        }
+        return true;
     }
 }

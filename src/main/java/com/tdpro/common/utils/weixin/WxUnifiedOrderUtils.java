@@ -21,7 +21,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import static com.tdpro.common.utils.AmountUtils.CURRENCY_FEN_REGEX;
 
 @Slf4j
-public class WxPayUtils {
+public class WxUnifiedOrderUtils {
     private WxPayService wxPayService=new WxPayServiceImpl();
     private Lock lock = new ReentrantLock();
 

@@ -19,7 +19,7 @@ import java.io.PrintWriter;
 
 @RestController
 @RequestMapping("/td/notify/")
-@Api(tags = "用户端 - 回调相关")
+@Api(tags = "回调相关")
 @Slf4j
 public class PayNotifyController {
     @Autowired
@@ -31,9 +31,9 @@ public class PayNotifyController {
         log.info("微信订单支付回调开始");
         try {
             String xmlResult = IOUtils.toString(request.getInputStream(), request.getCharacterEncoding());
-            log.info("回调订单号xmlResult: {}",xmlResult);
+            log.info("微信订单支付回调订单号xmlResult: {}",xmlResult);
             WxPayOrderNotifyResult result = wxPayService.parseOrderNotifyResult(xmlResult);
-            log.info("回调结果result: {}",result);
+            log.info("微信订单支付回调结果result: {}",result);
 
             //处理结果
             boolean notify = payNotifyService.orderPayNotify(result);
@@ -43,7 +43,28 @@ public class PayNotifyController {
             printWriter.close();
         } catch (Exception e) {
             e.printStackTrace();
-            log.error("微信订单回调出错{}",e);
+            log.error("微信订单支付回调出错{}",e);
+        }
+    }
+
+    @PostMapping("buyMemberNotify")
+    @ApiOperation(value = "购买会员微信支付回调")
+    public void buyMemberNotify(HttpServletRequest request, HttpServletResponse response){
+        log.info("微信会员购买支付回调开始");
+        try {
+            String xmlResult = IOUtils.toString(request.getInputStream(), request.getCharacterEncoding());
+            log.info("微信会员购买回调订单号xmlResult: {}",xmlResult);
+            WxPayOrderNotifyResult result = wxPayService.parseOrderNotifyResult(xmlResult);
+            log.info("微信会员购买回调结果result: {}",result);
+            //处理结果
+            boolean notify = payNotifyService.userByNotify(result);
+            PrintWriter printWriter = response.getWriter();
+            returnMsg(result.getOutTradeNo(), notify, printWriter);
+            printWriter.flush();
+            printWriter.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("微信会员购买回调出错{}",e);
         }
     }
 

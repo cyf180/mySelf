@@ -3,6 +3,7 @@ package com.tdpro.controller;
 import com.tdpro.common.utils.PayReturn;
 import com.tdpro.common.utils.Response;
 import com.tdpro.common.utils.ResponseUtils;
+import com.tdpro.entity.PUser;
 import com.tdpro.entity.extend.OrderPayETD;
 import com.tdpro.service.KnotService;
 import com.tdpro.service.PayService;
@@ -28,6 +29,7 @@ public class PayController {
     @Autowired
     private KnotService knotService;
     private Lock payLok = new ReentrantLock();
+    private Lock buyLok = new ReentrantLock();
     @PostMapping("unifyPay")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "orderId", value = "订单id", required = true, dataType = "long", paramType = "form"),
@@ -56,6 +58,23 @@ public class PayController {
             response = ResponseUtils.errorRes(e.getMessage());
         }finally {
             payLok.unlock();
+        }
+        return response;
+    }
+
+    @PostMapping("userBuy")
+    @ApiOperation(value = "会员购买统一下单")
+    public Response getPay(@ApiIgnore @RequestAttribute Long uid){
+        Response response;
+        try {
+            buyLok.lock();
+            PUser user = new PUser();
+            user.setId(uid);
+            response = payService.userPay(user);
+        }catch (Exception e){
+            response = ResponseUtils.errorRes(e.getMessage());
+        }finally {
+            buyLok.unlock();
         }
         return response;
     }

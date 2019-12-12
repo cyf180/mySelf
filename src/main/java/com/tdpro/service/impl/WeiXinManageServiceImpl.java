@@ -5,7 +5,6 @@ import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import com.tdpro.config.weixin.WxMaProperties;
 import com.tdpro.service.WeiXinManageService;
 import lombok.extern.slf4j.Slf4j;
-import me.chanjar.weixin.common.error.WxErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +25,7 @@ public class WeiXinManageServiceImpl implements WeiXinManageService {
         try {
             WxMaJscode2SessionResult session = wxMaService.getUserService().getSessionInfo(code);
             return session;
-        } catch (WxErrorException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;

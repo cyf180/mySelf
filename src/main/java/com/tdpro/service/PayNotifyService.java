@@ -9,4 +9,11 @@ public interface PayNotifyService {
      * @return
      */
     Boolean orderPayNotify(WxPayOrderNotifyResult resultDate);
+
+    /**
+     * 会员购买支付回调
+     * @param resultDate
+     * @return
+     */
+    Boolean userByNotify(WxPayOrderNotifyResult resultDate);
 }
