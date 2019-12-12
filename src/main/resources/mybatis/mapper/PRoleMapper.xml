@@ -97,7 +97,6 @@
       <if test="roleRank !=null and roleRank!=''">
         and roleRank =#{roleRank}
       </if>
-      and roleType =1
     </where>
   </select>
   <select id="selectAllRole" resultType="com.tdpro.entity.extend.RoleETD" parameterType="com.tdpro.entity.extend.RoleETD">
