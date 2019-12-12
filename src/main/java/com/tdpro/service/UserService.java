@@ -89,4 +89,18 @@ public interface UserService {
      * @return
      */
     Boolean updateIsUser(Long uid);
+
+    /**
+     * 会员列表
+     * @param userPage
+     * @return
+     */
+    Response userPageList(UserPageETD userPage);
+
+    /**
+     * 用户详情
+     * @param userInfo
+     * @return
+     */
+    Response userInfo(UserInfoETD userInfo);
 }

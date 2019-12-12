@@ -1,9 +1,7 @@
 package com.tdpro.mapper;
 
 import com.tdpro.entity.PUser;
-import com.tdpro.entity.extend.UserBalanceUpdateETD;
-import com.tdpro.entity.extend.UserETD;
-import com.tdpro.entity.extend.UserTeamETD;
+import com.tdpro.entity.extend.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -36,4 +34,8 @@ public interface PUserMapper {
     PUser findByPhone(@Param("phone") String phone);
 
     List<PUser> findListIsUser();
+
+    List<UserPageETD> selectPageList(UserPageETD userPage);
+
+    UserInfoETD findInfoById(Long id);
 }

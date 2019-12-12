@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50540
 File Encoding         : 65001
 
-Date: 2019-12-11 16:38:12
+Date: 2019-12-12 17:33:54
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -31,11 +31,12 @@ CREATE TABLE `p_admin` (
   `liftingTime` datetime DEFAULT NULL COMMENT '解禁时间',
   `createTime` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of p_admin
 -- ----------------------------
+INSERT INTO `p_admin` VALUES ('1', '18087760500', '尚未', '0', 'e10adc3949ba59abbe56e057f20f883e', '1', '0', null, null, '2019-12-12 09:53:59');
 
 -- ----------------------------
 -- Table structure for p_advert
@@ -76,7 +77,7 @@ CREATE TABLE `p_cart` (
   KEY `goodsId` (`goodsId`) USING BTREE,
   KEY `uid` (`uid`) USING BTREE,
   KEY `orderId` (`orderId`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8 COMMENT='购物车';
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8 COMMENT='购物车';
 
 -- ----------------------------
 -- Records of p_cart
@@ -97,6 +98,7 @@ INSERT INTO `p_cart` VALUES ('21', '1', '3', '24', '6', '1300.00', '白色', '�
 INSERT INTO `p_cart` VALUES ('22', '1', '3', '25', '6', '1300.00', '白色', '床单四件套', '1', '0', '2019-12-06 11:52:38');
 INSERT INTO `p_cart` VALUES ('23', '1', '3', '26', '6', '1300.00', '白色', '床单四件套', '1', '0', '2019-12-06 11:56:44');
 INSERT INTO `p_cart` VALUES ('24', '5', '3', '27', '6', '1300.00', '白色', '床单四件套', '1', '0', '2019-12-06 15:20:37');
+INSERT INTO `p_cart` VALUES ('25', '5', '3', '28', '6', '1300.00', '白色', '床单四件套', '1', '0', '2019-12-12 13:42:47');
 
 -- ----------------------------
 -- Table structure for p_collect
@@ -321,11 +323,22 @@ CREATE TABLE `p_menu` (
   `menuType` varchar(50) DEFAULT NULL COMMENT '类型说明',
   `menuApiPath` varchar(50) DEFAULT NULL COMMENT '接口地址',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='后台管理菜单表';
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 COMMENT='后台管理菜单表';
 
 -- ----------------------------
 -- Records of p_menu
 -- ----------------------------
+INSERT INTO `p_menu` VALUES ('1', '0', '系统管理', '', 'module', '');
+INSERT INTO `p_menu` VALUES ('2', '1', '菜单设置', '/operate/menu', 'module', '/api/menu/selectList');
+INSERT INTO `p_menu` VALUES ('3', '2', '更新菜单', '/manage/menu/update', 'button', '/api/menu/addOrUpdate');
+INSERT INTO `p_menu` VALUES ('4', '2', '查询所有菜单', '/toAddOrUpdate', 'button', '/api/menu/getMenusByMid');
+INSERT INTO `p_menu` VALUES ('5', '2', '查询单个菜单', '', 'button', '/api/menu/selectOne');
+INSERT INTO `p_menu` VALUES ('6', '2', '删除菜单', '/manage/menu/deletess', 'button', '/api/menu/deletess');
+INSERT INTO `p_menu` VALUES ('7', '1', '角色管理', '/operate/role/selectList', 'module', '/api/role/selectList');
+INSERT INTO `p_menu` VALUES ('8', '7', '新增或编辑角色', 'system/role/insert', 'button', '/api/role/save');
+INSERT INTO `p_menu` VALUES ('9', '7', '角色查询', 'system/role/select', 'button', '/api/role/selectOne');
+INSERT INTO `p_menu` VALUES ('20', '0', '用户管理', null, 'module', null);
+INSERT INTO `p_menu` VALUES ('21', '20', '用户列表', '/operate/user/selectList', 'page', '/api/user/pageList');
 
 -- ----------------------------
 -- Table structure for p_order
@@ -363,7 +376,7 @@ CREATE TABLE `p_order` (
   UNIQUE KEY `orderNoIndexes` (`orderNo`) USING BTREE,
   KEY `orderUserIndexes` (`uid`) USING BTREE,
   KEY `orderGoodsIndexes` (`goodsId`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8 COMMENT='订单表';
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8 COMMENT='订单表';
 
 -- ----------------------------
 -- Records of p_order
@@ -382,6 +395,7 @@ INSERT INTO `p_order` VALUES ('24', '11575602827480', '1', '3', '0', '1', '0', '
 INSERT INTO `p_order` VALUES ('25', '11575604357907', '1', '3', '0', '1', '0', '床单四件套', '1300.00', '1300.00', '1', '0', '萨达', '18087760500', '云南省昆明市官渡区世纪城15号', null, '0', '2019-12-10 15:47:37', null, null, '0.00', null, null, null, '给我加辣', null, '0');
 INSERT INTO `p_order` VALUES ('26', '11575604604789', '1', '3', '0', '1', '0', '床单四件套', '1300.00', '1300.00', '1', '0', '萨达', '18087760500', '云南省昆明市官渡区世纪城15号', null, '0', '2019-12-10 15:48:44', null, null, '0.00', null, null, null, '给我加辣', null, '0');
 INSERT INTO `p_order` VALUES ('27', '51575616837170', '4', '3', '0', '1', '1', '床单四件套', '1300.00', '1300.00', '1', '0', '与非', '18087760500', '云南省昆明市官渡区世纪城156号', null, '0', '2019-12-06 15:20:37', '2019-12-06 15:29:39', null, '0.00', null, null, null, '给我加辣', null, '1');
+INSERT INTO `p_order` VALUES ('28', '51576129367382', '5', '3', '0', '1', '0', '床单四件套', '1300.00', '1300.00', '1', '0', '与非', '18087760500', '云南省昆明市官渡区世纪城156号', null, '0', '2019-12-12 13:42:47', null, null, '0.00', null, null, null, '给我加辣', null, '0');
 
 -- ----------------------------
 -- Table structure for p_order_config
@@ -439,7 +453,8 @@ CREATE TABLE `p_pay_config` (
   `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '开启状态(0:关闭 1: 开启)',
   `sort` tinyint(4) NOT NULL DEFAULT '0' COMMENT '排序',
   `certPath` varchar(200) DEFAULT NULL COMMENT '证书地址',
-  `backPath` varchar(100) NOT NULL COMMENT '回调地址',
+  `backPath` varchar(100) NOT NULL COMMENT '订单支付回调地址',
+  `userBackPath` varchar(100) NOT NULL COMMENT '会员购买回调地址',
   `createTime` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `channel` (`channel`,`payType`) USING BTREE,
@@ -449,7 +464,7 @@ CREATE TABLE `p_pay_config` (
 -- ----------------------------
 -- Records of p_pay_config
 -- ----------------------------
-INSERT INTO `p_pay_config` VALUES ('4', '小程序微信支付', '小程序微信支付', '1522552431', 'wx487abd95d03f9b6f', 'sJRjgGb2joHW1KcxXOV3zqeOv0Ouf20q', '0', '1', '1', '0', 'certs/1546409393224_apiclient_cert.p12', '', '2019-01-30 15:56:33');
+INSERT INTO `p_pay_config` VALUES ('4', '小程序微信支付', '小程序微信支付', '1298611901', 'wx390faf0b19fe5af2', '5989878577545487487445644zc85454', '0', '1', '1', '0', 'certs/1546409393224_apiclient_cert.p12', 'https://lanproxy.txw18.com:15007/pay/xdj/notify/wxNotify', 'http://kh.txw18.com/td/notify/buyMemberNotify', '2019-01-30 15:56:33');
 
 -- ----------------------------
 -- Table structure for p_role
@@ -462,11 +477,13 @@ CREATE TABLE `p_role` (
   `roleTime` datetime DEFAULT NULL COMMENT '添加时间',
   `roleStatus` int(4) unsigned DEFAULT '0' COMMENT '状态  ',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='后台管理角色表';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='后台管理角色表';
 
 -- ----------------------------
 -- Records of p_role
 -- ----------------------------
+INSERT INTO `p_role` VALUES ('1', '超级', 'ROLE_ADMIN', '2019-12-12 15:49:39', '0');
+INSERT INTO `p_role` VALUES ('2', '云因', 'ROLE_YUNYIN', '2019-12-12 10:04:15', '0');
 
 -- ----------------------------
 -- Table structure for p_role_menu
@@ -477,11 +494,22 @@ CREATE TABLE `p_role_menu` (
   `rid` int(11) unsigned NOT NULL COMMENT '权限id',
   `mid` int(11) unsigned NOT NULL COMMENT '目录id',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色菜单关联表';
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COMMENT='角色菜单关联表';
 
 -- ----------------------------
 -- Records of p_role_menu
 -- ----------------------------
+INSERT INTO `p_role_menu` VALUES ('10', '1', '1');
+INSERT INTO `p_role_menu` VALUES ('11', '1', '2');
+INSERT INTO `p_role_menu` VALUES ('12', '1', '3');
+INSERT INTO `p_role_menu` VALUES ('13', '1', '4');
+INSERT INTO `p_role_menu` VALUES ('14', '1', '5');
+INSERT INTO `p_role_menu` VALUES ('15', '1', '6');
+INSERT INTO `p_role_menu` VALUES ('16', '1', '7');
+INSERT INTO `p_role_menu` VALUES ('17', '1', '8');
+INSERT INTO `p_role_menu` VALUES ('18', '1', '9');
+INSERT INTO `p_role_menu` VALUES ('19', '1', '20');
+INSERT INTO `p_role_menu` VALUES ('20', '1', '21');
 
 -- ----------------------------
 -- Table structure for p_sms
@@ -623,7 +651,7 @@ CREATE TABLE `p_user_login` (
 -- ----------------------------
 -- Records of p_user_login
 -- ----------------------------
-INSERT INTO `p_user_login` VALUES ('5', '6', 'oT-qp5bUQbu_L3MiR0-ldyYJyrr8', null, null, '2019-12-06 16:33:53');
+INSERT INTO `p_user_login` VALUES ('4', '5', 'oT-qp5bUQbu_L3MiR0-ldyYJyrr8', null, null, '2019-12-06 16:33:53');
 
 -- ----------------------------
 -- Table structure for p_user_month_knot
@@ -647,6 +675,45 @@ CREATE TABLE `p_user_month_knot` (
 -- ----------------------------
 INSERT INTO `p_user_month_knot` VALUES ('4', '1', '78.00', '2019', '12', '2', '2600.00', '2019-12-10 17:17:29', '0.03');
 INSERT INTO `p_user_month_knot` VALUES ('5', '2', '195.00', '2019', '12', '2', '3900.00', '2019-12-10 17:17:46', '0.05');
+
+-- ----------------------------
+-- Table structure for p_user_pay
+-- ----------------------------
+DROP TABLE IF EXISTS `p_user_pay`;
+CREATE TABLE `p_user_pay` (
+  `id` bigint(11) NOT NULL AUTO_INCREMENT,
+  `payNo` varchar(50) NOT NULL COMMENT '订单号',
+  `uid` bigint(11) NOT NULL DEFAULT '0' COMMENT '会员Id',
+  `payPrice` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '支付价格',
+  `payState` int(2) NOT NULL DEFAULT '0' COMMENT '0未支付 1 已支付',
+  `backNo` varchar(50) DEFAULT NULL COMMENT '微信回调订单号',
+  `backPrice` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '回调金额',
+  `createTime` datetime DEFAULT NULL,
+  `backTime` datetime DEFAULT NULL COMMENT '回调时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `payNo` (`payNo`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='会员购买表';
+
+-- ----------------------------
+-- Records of p_user_pay
+-- ----------------------------
+INSERT INTO `p_user_pay` VALUES ('1', '521576134286403', '5', '2800.00', '0', null, '0.00', '2019-12-12 15:04:46', null);
+
+-- ----------------------------
+-- Table structure for p_user_pay_config
+-- ----------------------------
+DROP TABLE IF EXISTS `p_user_pay_config`;
+CREATE TABLE `p_user_pay_config` (
+  `id` bigint(11) NOT NULL AUTO_INCREMENT,
+  `type` int(2) NOT NULL DEFAULT '0' COMMENT '0:会员购买',
+  `price` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '价格',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='会员购买配置表';
+
+-- ----------------------------
+-- Records of p_user_pay_config
+-- ----------------------------
+INSERT INTO `p_user_pay_config` VALUES ('1', '0', '2800.00');
 
 -- ----------------------------
 -- Table structure for p_user_site

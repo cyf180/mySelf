@@ -317,4 +317,23 @@ public class UserServiceImpl implements UserService {
         }
         return true;
     }
+
+    @Override
+    public Response userPageList(UserPageETD userPage) {
+        Integer pageNum = userPage.getPageNo() == null ? 1 : userPage.getPageNo();
+        Integer pageSize = userPage.getPageSize() == null ? 10 : userPage.getPageSize();
+        PageHelper.startPage(pageNum, pageSize);
+        List<UserPageETD> list = userMapper.selectPageList(userPage);
+        PageInfo pageInfo = new PageInfo(list);
+        return ResponseUtils.successRes(pageInfo);
+    }
+
+    @Override
+    public Response userInfo(UserInfoETD userInfo) {
+        UserInfoETD userInfoFind = userMapper.findInfoById(userInfo.getId());
+        if(null == userInfoFind){
+            return ResponseUtils.errorRes("用户不存在");
+        }
+        return ResponseUtils.successRes(userInfoFind);
+    }
 }

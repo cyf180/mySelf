@@ -396,4 +396,32 @@
     left join p_knot_config kc on u.knotId=kc.id
     where u.isUser = 1
   </select>
+  <select id="selectPageList" resultType="com.tdpro.entity.extend.UserPageETD" parameterType="com.tdpro.entity.extend.UserPageETD">
+    select u.id,u.isUser,u.phone,u.payPassword,u.state,u.strawUid,u.nickName,u.name,u.balance,u.integral,u.totalIntegral,u.bankName,u.bankBranch,u.bankCard,
+    u.idCard,u.createTime,u.disableTime,u.uncoilTime,u.strawPath,u.knotId,u.knotAmount,u.teamOneNum,u.teamSuitNum,u.itemBuyAmount,u.itemLeftAmount,u.suitLevelNum,
+    sw.phone as strawPhone,kc.rate
+    from p_user u
+    left join p_user sw on u.strawUid=sw.id
+    left join p_knot_config kc on u.knotId=kc.id
+    <where>
+      <if test="phone != null and phone !=''">
+        and u.phone=#{phone}
+      </if>
+      <if test="startTime != null">
+        <![CDATA[ and createTime >= #{startTime} ]]>
+      </if>
+      <if test="endTime != null">
+        <![CDATA[ and createTime <= #{endTime} ]]>
+      </if>
+    </where>
+  </select>
+  <select id="findInfoById" resultType="com.tdpro.entity.extend.UserInfoETD" parameterType="com.tdpro.entity.extend.UserInfoETD">
+    select u.id,u.isUser,u.phone,u.payPassword,u.state,u.strawUid,u.nickName,u.name,u.balance,u.integral,u.totalIntegral,u.bankName,u.bankBranch,u.bankCard,
+    u.idCard,u.createTime,u.disableTime,u.uncoilTime,u.strawPath,u.knotId,u.knotAmount,u.teamOneNum,u.teamSuitNum,u.itemBuyAmount,u.itemLeftAmount,u.suitLevelNum,
+    sw.phone as strawPhone,kc.rate
+    from p_user u
+    left join p_user sw on u.strawUid=sw.id
+    left join p_knot_config kc on u.knotId=kc.id
+    where u.id=#{0}
+  </select>
 </mapper>
