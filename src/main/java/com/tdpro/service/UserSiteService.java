@@ -3,6 +3,7 @@ package com.tdpro.service;
 import com.tdpro.common.utils.Response;
 import com.tdpro.entity.PUserSite;
 import com.tdpro.entity.extend.UserSiteETD;
+import com.tdpro.entity.extend.UserSitePageETD;
 
 public interface UserSiteService {
     /**
@@ -32,4 +33,11 @@ public interface UserSiteService {
      * @return
      */
     PUserSite findById(Long id);
+
+    /**
+     * 后台列表
+     * @param sitePageETD
+     * @return
+     */
+    Response adminUserSiteList(UserSitePageETD sitePageETD);
 }

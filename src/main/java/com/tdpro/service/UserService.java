@@ -103,4 +103,11 @@ public interface UserService {
      * @return
      */
     Response userInfo(UserInfoETD userInfo);
+
+    /**
+     * 修改
+     * @param userInfoETD
+     * @return
+     */
+    Response adminUpdateUser(UserInfoETD userInfoETD,Long adminId);
 }

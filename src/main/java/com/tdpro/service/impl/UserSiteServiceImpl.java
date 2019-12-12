@@ -6,6 +6,7 @@ import com.tdpro.common.utils.Response;
 import com.tdpro.common.utils.ResponseUtils;
 import com.tdpro.entity.PUserSite;
 import com.tdpro.entity.extend.UserSiteETD;
+import com.tdpro.entity.extend.UserSitePageETD;
 import com.tdpro.mapper.PUserSiteMapper;
 import com.tdpro.service.LogService;
 import com.tdpro.service.UserSiteService;
@@ -46,7 +47,7 @@ public class UserSiteServiceImpl implements UserSiteService {
         if(!siteInfo.getUid().equals(siteETD.getUid())){
             return ResponseUtils.errorRes("操作异常");
         }
-        logService.insertLog(siteETD.getUid(),"会员删除收货地址","会员删除收货地址ID: "+siteInfo.getId());
+        logService.insertLog(siteETD.getUid(),"会员删除收货地址","会员删除收货地址ID: "+siteInfo.getId(),0);
         if(0 == userSiteMapper.deleteByPrimaryKey(siteInfo.getId())){
             throw new RuntimeException("删除失败");
         }
@@ -85,5 +86,15 @@ public class UserSiteServiceImpl implements UserSiteService {
     @Override
     public PUserSite findById(Long id) {
         return userSiteMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public Response adminUserSiteList(UserSitePageETD sitePageETD){
+        Integer pageNum = sitePageETD.getPageNo() == null ? 1 : sitePageETD.getPageNo();
+        Integer pageSize = sitePageETD.getPageSize() == null ? 10 : sitePageETD.getPageSize();
+        PageHelper.startPage(pageNum, pageSize);
+        List<UserSitePageETD> list = userSiteMapper.selectPageList(sitePageETD);
+        PageInfo pageInfo = new PageInfo(list);
+        return ResponseUtils.successRes(pageInfo);
     }
 }

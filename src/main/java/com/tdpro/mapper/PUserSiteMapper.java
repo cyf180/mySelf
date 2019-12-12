@@ -2,6 +2,7 @@ package com.tdpro.mapper;
 
 import com.tdpro.entity.PUserSite;
 import com.tdpro.entity.extend.UserSiteETD;
+import com.tdpro.entity.extend.UserSitePageETD;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -24,4 +25,6 @@ public interface PUserSiteMapper {
     int updateNotIsDefaultByUid(UserSiteETD siteETD);
 
     UserSiteETD selectOneByUid(Long uid);
+
+    List<UserSitePageETD> selectPageList(UserSitePageETD sitePageETD);
 }

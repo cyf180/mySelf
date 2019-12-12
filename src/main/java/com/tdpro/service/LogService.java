@@ -8,5 +8,5 @@ public interface LogService {
      * @param note
      * @return
      */
-    Boolean insertLog(Long uid,String operation,String note);
+    Boolean insertLog(Long uid,String operation,String note,int type);
 }

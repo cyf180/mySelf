@@ -408,17 +408,24 @@
         and u.phone=#{phone}
       </if>
       <if test="startTime != null">
-        <![CDATA[ and createTime >= #{startTime} ]]>
+        <![CDATA[ and u.createTime >= #{startTime} ]]>
       </if>
       <if test="endTime != null">
-        <![CDATA[ and createTime <= #{endTime} ]]>
+        <![CDATA[ and u.createTime <= #{endTime} ]]>
+      </if>
+      <if test="strawUid != null">
+        and u.strawUid=#{strawUid}
       </if>
     </where>
   </select>
   <select id="findInfoById" resultType="com.tdpro.entity.extend.UserInfoETD" parameterType="com.tdpro.entity.extend.UserInfoETD">
     select u.id,u.isUser,u.phone,u.payPassword,u.state,u.strawUid,u.nickName,u.name,u.balance,u.integral,u.totalIntegral,u.bankName,u.bankBranch,u.bankCard,
     u.idCard,u.createTime,u.disableTime,u.uncoilTime,u.strawPath,u.knotId,u.knotAmount,u.teamOneNum,u.teamSuitNum,u.itemBuyAmount,u.itemLeftAmount,u.suitLevelNum,
-    sw.phone as strawPhone,kc.rate
+    sw.phone as strawPhone,kc.rate,
+    (select count(*) from p_user_voucher where voucherId=1 and useState >= 0 and state=0 and uid=u.id) as sixCouponNum,
+    (select count(*) from p_user_voucher where voucherId=2 and useState >= 0 and state=0 and uid=u.id) as threeCouponNum,
+    (select count(*) from p_order where state>0 and uid=u.id) as orderNum,
+    (select count(*) from p_user where strawUid=u.id) as teamUser
     from p_user u
     left join p_user sw on u.strawUid=sw.id
     left join p_knot_config kc on u.knotId=kc.id

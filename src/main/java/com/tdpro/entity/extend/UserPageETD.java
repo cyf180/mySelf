@@ -57,4 +57,6 @@ public class UserPageETD extends QueryModel {
     private Integer suitLevelNum;
     private BigDecimal rate;
     private String strawPhone;
+    private String startTimes;
+    private String endTimes;
 }

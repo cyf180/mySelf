@@ -133,4 +133,14 @@
     where uid=#{0}
     limit 1
   </select>
+  <select id="selectPageList" resultType="com.tdpro.entity.extend.UserSitePageETD" parameterType="com.tdpro.entity.extend.UserSitePageETD">
+    select id,uid,`name`,phone,site,isDefault,createTime
+    from p_user_site
+    <where>
+      <if test="uid != null">
+        and uid=#{uid}
+      </if>
+    </where>
+    order by isDefault desc,id desc
+  </select>
 </mapper>

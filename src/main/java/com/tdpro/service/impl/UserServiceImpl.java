@@ -27,8 +27,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.regex.Pattern;
@@ -50,6 +54,8 @@ public class UserServiceImpl implements UserService {
     private SmsCodeService codeService;
     @Autowired
     private UserPayConfigService userPayConfigService;
+    @Autowired
+    private LogService logService;
     private Lock lock = new ReentrantLock();
 
     @Override
@@ -323,9 +329,27 @@ public class UserServiceImpl implements UserService {
         Integer pageNum = userPage.getPageNo() == null ? 1 : userPage.getPageNo();
         Integer pageSize = userPage.getPageSize() == null ? 10 : userPage.getPageSize();
         PageHelper.startPage(pageNum, pageSize);
+        if(StringUtil.isNotEmpty(userPage.getStartTimes())){
+            try {
+                SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                userPage.setStartTime(ft.parse(userPage.getStartTimes()));
+            } catch (ParseException e) {
+               e.printStackTrace();
+            }
+        }
+        if(StringUtil.isNotEmpty(userPage.getEndTimes())){
+            try {
+                SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                userPage.setEndTime(ft.parse(userPage.getEndTimes()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
         List<UserPageETD> list = userMapper.selectPageList(userPage);
-        PageInfo pageInfo = new PageInfo(list);
-        return ResponseUtils.successRes(pageInfo);
+        Map map = new HashMap();
+        map.put("pageInfo",new PageInfo(list));
+        map.put("queryModel",userPage);
+        return ResponseUtils.successRes(map);
     }
 
     @Override
@@ -335,5 +359,77 @@ public class UserServiceImpl implements UserService {
             return ResponseUtils.errorRes("用户不存在");
         }
         return ResponseUtils.successRes(userInfoFind);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
+    public Response adminUpdateUser(UserInfoETD userInfoETD,Long adminId){
+        if(null == userInfoETD.getId()){
+            return ResponseUtils.errorRes("关键值错误");
+        }
+        PUser userFind = this.findById(userInfoETD.getId());
+        if(null == userFind){
+            return ResponseUtils.errorRes("用户错误");
+        }
+        boolean isUpd = false;
+        PUser userUPD = new PUser();
+        userUPD.setId(userFind.getId());
+
+        if(StringUtil.isNotEmpty(userInfoETD.getName()) && !userInfoETD.getName().equals(userFind.getName())){
+            userUPD.setName(userInfoETD.getName());
+            isUpd = true;
+        }
+        if(StringUtil.isNotEmpty(userInfoETD.getIdCard()) && !userInfoETD.getIdCard().equals(userFind.getIdCard())){
+            userUPD.setIdCard(userInfoETD.getIdCard());
+            isUpd = true;
+        }
+        if(StringUtil.isNotEmpty(userInfoETD.getBankName()) && !userInfoETD.getBankName().equals(userFind.getBankName())){
+            userUPD.setBankName(userInfoETD.getBankName());
+            isUpd = true;
+        }
+        if(StringUtil.isNotEmpty(userInfoETD.getBankBranch()) && !userInfoETD.getBankBranch().equals(userFind.getBankBranch())){
+            userUPD.setBankBranch(userInfoETD.getBankBranch());
+            isUpd = true;
+        }
+        if(StringUtil.isNotEmpty(userInfoETD.getBankCard()) && !userInfoETD.getBankCard().equals(userFind.getBankCard())){
+            userUPD.setBankCard(userInfoETD.getBankCard());
+            isUpd = true;
+        }
+        if(null != userInfoETD.getState() && !userInfoETD.getState().equals(userFind.getState())){
+            userUPD.setState(userInfoETD.getState());
+            isUpd = true;
+        }
+        if(null != userInfoETD.getStrawPhone()){
+            PUser strawUser = userMapper.findByPhone(userInfoETD.getStrawPhone());
+            if(null == strawUser){
+                return ResponseUtils.errorRes("推荐人不存在");
+            }
+            if(!userFind.getStrawUid().equals(strawUser.getId())){
+                userUPD.setStrawUid(strawUser.getId());
+                isUpd = true;
+            }
+        }
+        if(isUpd){
+            logService.insertLog(adminId,"后台修改会员信息","修改信息："+userInfoETD.toString(),1);
+            if(0 == userMapper.updateByPrimaryKeySelective(userUPD)){
+                throw new RuntimeException("修改失败");
+            }
+        }
+        if(null != userInfoETD.getBalance()){
+            if(userInfoETD.getBalance().compareTo(new BigDecimal("0")) < 0){
+                return ResponseUtils.errorRes("金额异常");
+            }
+            StringBuffer note = new StringBuffer();
+            note.append("修改会员：").append(userFind.getPhone()).append(",修改前余额：").append(userFind.getBalance()).append(",修改余额为：").append(userInfoETD.getBalance());
+            logService.insertLog(adminId,"后台修改会员余额",note.toString(),1);
+            UserBalanceUpdateETD userBalanceUPD = new UserBalanceUpdateETD();
+            userBalanceUPD.setId(userFind.getId());
+            userBalanceUPD.setBalance(userInfoETD.getBalance());
+            userBalanceUPD.setOldBalance(userFind.getBalance());
+            if(0 == userMapper.updateBalance(userBalanceUPD)){
+                throw new RuntimeException("余额修改失败");
+            }
+        }
+        return ResponseUtils.successRes(1);
     }
 }

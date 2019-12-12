@@ -56,4 +56,8 @@ public class UserInfoETD {
     private Integer suitLevelNum;
     private BigDecimal rate;
     private String strawPhone;
+    private Integer orderNum;
+    private Integer sixCouponNum;
+    private Integer threeCouponNum;
+    private Integer teamUser;
 }
