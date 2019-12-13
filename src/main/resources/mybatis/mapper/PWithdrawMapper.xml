@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tdpro.mapper.PWithdrawMapper" >
+  <resultMap id="BaseResultMap" type="com.tdpro.entity.PWithdraw" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="uid" property="uid" jdbcType="BIGINT" />
+    <result column="amount" property="amount" jdbcType="DECIMAL" />
+    <result column="arrivalAmount" property="arrivalAmount" jdbcType="DECIMAL" />
+    <result column="poundage" property="poundage" jdbcType="DECIMAL" />
+    <result column="balance" property="balance" jdbcType="DECIMAL" />
+    <result column="rate" property="rate" jdbcType="DECIMAL" />
+    <result column="applyTime" property="applyTime" jdbcType="TIMESTAMP" />
+    <result column="auditTime" property="auditTime" jdbcType="TIMESTAMP" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="idCard" property="idCard" jdbcType="VARCHAR" />
+    <result column="bankCard" property="bankCard" jdbcType="VARCHAR" />
+    <result column="bankName" property="bankName" jdbcType="VARCHAR" />
+    <result column="bankBranch" property="bankBranch" jdbcType="VARCHAR" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, `status`, `uid`, amount, arrivalAmount, poundage, balance, rate, applyTime, auditTime, 
+    `name`, idCard, bankCard, bankName, bankBranch, note
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from p_withdraw
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from p_withdraw
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tdpro.entity.PWithdraw" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into p_withdraw (`status`, `uid`, amount, 
+      arrivalAmount, poundage, balance, 
+      rate, applyTime, auditTime, 
+      `name`, idCard, bankCard, 
+      bankName, bankBranch, note
+      )
+    values (#{status,jdbcType=INTEGER}, #{uid,jdbcType=BIGINT}, #{amount,jdbcType=DECIMAL}, 
+      #{arrivalAmount,jdbcType=DECIMAL}, #{poundage,jdbcType=DECIMAL}, #{balance,jdbcType=DECIMAL}, 
+      #{rate,jdbcType=DECIMAL}, #{applyTime,jdbcType=TIMESTAMP}, #{auditTime,jdbcType=TIMESTAMP}, 
+      #{name,jdbcType=VARCHAR}, #{idCard,jdbcType=VARCHAR}, #{bankCard,jdbcType=VARCHAR}, 
+      #{bankName,jdbcType=VARCHAR}, #{bankBranch,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tdpro.entity.PWithdraw" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into p_withdraw
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="status != null" >
+        `status`,
+      </if>
+      <if test="uid != null" >
+        `uid`,
+      </if>
+      <if test="amount != null" >
+        amount,
+      </if>
+      <if test="arrivalAmount != null" >
+        arrivalAmount,
+      </if>
+      <if test="poundage != null" >
+        poundage,
+      </if>
+      <if test="balance != null" >
+        balance,
+      </if>
+      <if test="rate != null" >
+        rate,
+      </if>
+      <if test="applyTime != null" >
+        applyTime,
+      </if>
+      <if test="auditTime != null" >
+        auditTime,
+      </if>
+      <if test="name != null" >
+        `name`,
+      </if>
+      <if test="idCard != null" >
+        idCard,
+      </if>
+      <if test="bankCard != null" >
+        bankCard,
+      </if>
+      <if test="bankName != null" >
+        bankName,
+      </if>
+      <if test="bankBranch != null" >
+        bankBranch,
+      </if>
+      <if test="note != null" >
+        note,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="uid != null" >
+        #{uid,jdbcType=BIGINT},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="arrivalAmount != null" >
+        #{arrivalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="poundage != null" >
+        #{poundage,jdbcType=DECIMAL},
+      </if>
+      <if test="balance != null" >
+        #{balance,jdbcType=DECIMAL},
+      </if>
+      <if test="rate != null" >
+        #{rate,jdbcType=DECIMAL},
+      </if>
+      <if test="applyTime != null" >
+        #{applyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="auditTime != null" >
+        #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="idCard != null" >
+        #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCard != null" >
+        #{bankCard,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null" >
+        #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankBranch != null" >
+        #{bankBranch,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null" >
+        #{note,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tdpro.entity.PWithdraw" >
+    update p_withdraw
+    <set >
+      <if test="status != null" >
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="uid != null" >
+        `uid` = #{uid,jdbcType=BIGINT},
+      </if>
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="arrivalAmount != null" >
+        arrivalAmount = #{arrivalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="poundage != null" >
+        poundage = #{poundage,jdbcType=DECIMAL},
+      </if>
+      <if test="balance != null" >
+        balance = #{balance,jdbcType=DECIMAL},
+      </if>
+      <if test="rate != null" >
+        rate = #{rate,jdbcType=DECIMAL},
+      </if>
+      <if test="applyTime != null" >
+        applyTime = #{applyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="auditTime != null" >
+        auditTime = #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="name != null" >
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="idCard != null" >
+        idCard = #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCard != null" >
+        bankCard = #{bankCard,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null" >
+        bankName = #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankBranch != null" >
+        bankBranch = #{bankBranch,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null" >
+        note = #{note,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tdpro.entity.PWithdraw" >
+    update p_withdraw
+    set `status` = #{status,jdbcType=INTEGER},
+      `uid` = #{uid,jdbcType=BIGINT},
+      amount = #{amount,jdbcType=DECIMAL},
+      arrivalAmount = #{arrivalAmount,jdbcType=DECIMAL},
+      poundage = #{poundage,jdbcType=DECIMAL},
+      balance = #{balance,jdbcType=DECIMAL},
+      rate = #{rate,jdbcType=DECIMAL},
+      applyTime = #{applyTime,jdbcType=TIMESTAMP},
+      auditTime = #{auditTime,jdbcType=TIMESTAMP},
+      `name` = #{name,jdbcType=VARCHAR},
+      idCard = #{idCard,jdbcType=VARCHAR},
+      bankCard = #{bankCard,jdbcType=VARCHAR},
+      bankName = #{bankName,jdbcType=VARCHAR},
+      bankBranch = #{bankBranch,jdbcType=VARCHAR},
+      note = #{note,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="getUserList" resultType="com.tdpro.entity.extend.WithdrawETD" parameterType="com.tdpro.entity.extend.WithdrawETD">
+    select *
+    from p_withdraw
+    where uid=#{uid}
+  </select>
+  <select id="sumWithdraw" resultType="com.tdpro.entity.extend.WithdrawDO" parameterType="com.tdpro.entity.extend.WithdrawPageETD">
+    select
+    ifnull(sum(w.amount),0.00) as allApplyAmount,
+    ifnull(sum(w.poundage),0.00) as allPoundageAmount,
+    ifnull(sum(w.arrivalAmount),0.00) as allArrivalAmount
+    from p_withdraw w
+    left join p_user co on w.uid=co.id
+    <where>
+      <if test="phone != null">
+        co.phone like concat(concat('%', #{phone}), '%')
+      </if>
+      <if test="status != null">
+        w.`status`=#{status}
+      </if>
+    </where>
+  </select>
+  <select id="selectPageList" resultType="com.tdpro.entity.extend.WithdrawPageETD" parameterType="com.tdpro.entity.extend.WithdrawPageETD">
+    select w.id, w.`status`, w.uid, w.amount, w.arrivalAmount, w.poundage, w.balance,
+    w.rate,w.applyTime, w.auditTime, w.`name`, w.idCard,
+    w.bankCard, w.bankName, w.bankBranch, w.note,co.phone
+    from p_withdraw w
+    left join p_user co on w.uid=co.id
+    <where>
+      <if test="phone != null">
+        co.phone like concat(concat('%', #{phone}), '%')
+      </if>
+      <if test="status != null">
+        w.`status`=#{status}
+      </if>
+    </where>
+  </select>
+</mapper>

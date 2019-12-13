@@ -228,4 +228,22 @@
     where id = #{id}
     and repertory=#{oldRepertory}
   </update>
+  <select id="adminPageList" resultType="com.tdpro.entity.extend.GoodsPageETD" parameterType="com.tdpro.entity.extend.GoodsPageETD">
+    select g.id,g.classId,g.goodsName,g.zoneType,g.isSuit,g.price,g.title,g.specification,g.hostImg,g.details,g.isDel,g.createTime,g.sort,g.repertory,g.soldNum,g.sort,
+    c.className
+    from p_goods g
+    left join p_goods_class c on g.classId=c.id
+    <where>
+      <if test="goodsName != null ">
+        and g.goodsName like concat(concat('%', #{goodsName}), '%')
+      </if>
+      <if test="classId != null ">
+        and g.classId = #{classId}
+      </if>
+      <if test="zoneType != null ">
+        and g.zoneType = #{zoneType}
+      </if>
+    </where>
+    order by g.sort asc,g.createTime desc
+  </select>
 </mapper>

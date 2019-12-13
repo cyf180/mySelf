@@ -17,7 +17,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class GoodsServiceImpl implements GoodsService {
@@ -133,5 +135,24 @@ public class GoodsServiceImpl implements GoodsService {
         return true;
     }
 
-
+    @Override
+    public Response adminPageList(GoodsPageETD goodsPageETD) {
+        int zoneType = goodsPageETD.getZoneType() == null ? 0 : goodsPageETD.getZoneType();
+        goodsPageETD.setZoneType(zoneType);
+        Integer pageNum = goodsPageETD.getPageNo() == null ? 1 : goodsPageETD.getPageNo();
+        Integer pageSize = goodsPageETD.getPageSize() == null ? 10 : goodsPageETD.getPageSize();
+        PageHelper.startPage(pageNum, pageSize);
+        List<GoodsPageETD> list = goodsMapper.adminPageList(goodsPageETD);
+        if(null != list && list.size() >0){
+            for (GoodsPageETD goods:list){
+                if(StringUtil.isNotEmpty(goods.getHostImg())){
+                    goods.setHostImg(imgPath+goods.getHostImg());
+                }
+            }
+        }
+        Map map = new HashMap();
+        map.put("pageInfo",new PageInfo(list));
+        map.put("queryModel",goodsPageETD);
+        return ResponseUtils.successRes(map);
+    }
 }

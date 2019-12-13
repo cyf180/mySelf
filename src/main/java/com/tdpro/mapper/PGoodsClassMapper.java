@@ -1,6 +1,7 @@
 package com.tdpro.mapper;
 
 import com.tdpro.entity.PGoodsClass;
+import com.tdpro.entity.extend.GoodsClassPageETD;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -20,4 +21,6 @@ public interface PGoodsClassMapper {
     int updateByPrimaryKey(PGoodsClass record);
 
     List<PGoodsClass> selectList(Integer num);
+
+    List<GoodsClassPageETD> findGoodsClassPageList(GoodsClassPageETD classPageETD);
 }

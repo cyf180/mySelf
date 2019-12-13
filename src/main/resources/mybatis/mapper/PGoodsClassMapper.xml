@@ -134,4 +134,10 @@
     order by sort asc,createTime desc
     limit 0,#{0}
   </select>
+  <select id="findGoodsClassPageList" resultType="com.tdpro.entity.extend.GoodsClassPageETD" parameterType="com.tdpro.entity.extend.GoodsClassPageETD">
+    select *
+    from p_goods_class
+    where isDel=0
+    order by sort asc,createTime desc
+  </select>
 </mapper>

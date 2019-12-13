@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50540
 File Encoding         : 65001
 
-Date: 2019-12-12 17:33:54
+Date: 2019-12-13 17:31:30
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -133,7 +133,7 @@ CREATE TABLE `p_deal_log` (
   `bUid` bigint(11) NOT NULL DEFAULT '0' COMMENT '操作人Id',
   `createTime` datetime DEFAULT NULL COMMENT '时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8 COMMENT='交易记录表';
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8 COMMENT='交易记录表';
 
 -- ----------------------------
 -- Records of p_deal_log
@@ -155,6 +155,7 @@ INSERT INTO `p_deal_log` VALUES ('23', '余额支付', '21', '1300.00', '2400.00
 INSERT INTO `p_deal_log` VALUES ('24', '余额支付', '22', '1300.00', '1100.00', '1', '0', '2019-12-05 11:57:32');
 INSERT INTO `p_deal_log` VALUES ('25', '积分转换', '22', '500.00', '2200.00', '2', '1', '2019-12-05 11:58:00');
 INSERT INTO `p_deal_log` VALUES ('26', '余额支付', '27', '1300.00', '3700.00', '5', '0', '2019-12-06 15:29:39');
+INSERT INTO `p_deal_log` VALUES ('27', '用户提现', '0', '100.56', '1000.00', '5', '0', '2019-12-13 13:03:31');
 
 -- ----------------------------
 -- Table structure for p_goods
@@ -201,12 +202,13 @@ CREATE TABLE `p_goods_class` (
   `isDel` int(1) NOT NULL DEFAULT '0' COMMENT '是否删除(-1:是 0:否)',
   `createTime` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='商品分类表';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='商品分类表';
 
 -- ----------------------------
 -- Records of p_goods_class
 -- ----------------------------
 INSERT INTO `p_goods_class` VALUES ('1', '男装', '0', '男孩子的衣服', null, '1', '0', '2019-11-22 10:06:43');
+INSERT INTO `p_goods_class` VALUES ('2', '女装', '1', '啊实打实大', null, '1', '0', '2019-12-13 15:58:20');
 
 -- ----------------------------
 -- Table structure for p_goods_exchange
@@ -301,7 +303,7 @@ CREATE TABLE `p_log` (
   `adminId` bigint(11) NOT NULL DEFAULT '0' COMMENT '后台账号Id',
   `createTime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='操作日志表';
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='操作日志表';
 
 -- ----------------------------
 -- Records of p_log
@@ -310,6 +312,8 @@ INSERT INTO `p_log` VALUES ('1', '18087760500', '0', '会员删除收货地址',
 INSERT INTO `p_log` VALUES ('2', '18087760500', '0', '订单任务测试', '定时任务测试', '1', '0', '2019-12-05 11:08:07');
 INSERT INTO `p_log` VALUES ('3', '18087760500', '0', '订单任务测试', '定时任务测试', '1', '0', '2019-12-05 11:15:14');
 INSERT INTO `p_log` VALUES ('4', '18087760502', '0', '订单任务测试', '定时任务测试', '1', '0', '2019-12-10 15:52:06');
+INSERT INTO `p_log` VALUES ('5', '尚未', '1', '后台提现审核', '提现状态由: [ 0 ]修改为 [ -1 ],备注：发过的', '1', '0', '2019-12-13 13:02:56');
+INSERT INTO `p_log` VALUES ('6', '尚未', '1', '后台提现审核', '提现状态由: [ 0 ]修改为 [ 1 ],', '1', '0', '2019-12-13 13:03:31');
 
 -- ----------------------------
 -- Table structure for p_menu
@@ -323,7 +327,7 @@ CREATE TABLE `p_menu` (
   `menuType` varchar(50) DEFAULT NULL COMMENT '类型说明',
   `menuApiPath` varchar(50) DEFAULT NULL COMMENT '接口地址',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 COMMENT='后台管理菜单表';
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8 COMMENT='后台管理菜单表';
 
 -- ----------------------------
 -- Records of p_menu
@@ -339,6 +343,14 @@ INSERT INTO `p_menu` VALUES ('8', '7', '新增或编辑角色', 'system/role/ins
 INSERT INTO `p_menu` VALUES ('9', '7', '角色查询', 'system/role/select', 'button', '/api/role/selectOne');
 INSERT INTO `p_menu` VALUES ('20', '0', '用户管理', null, 'module', null);
 INSERT INTO `p_menu` VALUES ('21', '20', '用户列表', '/operate/user/selectList', 'page', '/api/user/pageList');
+INSERT INTO `p_menu` VALUES ('22', '0', '提现管理', null, 'module', null);
+INSERT INTO `p_menu` VALUES ('23', '22', '提现列表', '/operate/withdraw/selectList', 'page', '/api/withdraw/pageList');
+INSERT INTO `p_menu` VALUES ('24', '22', '提现详情', '/operate/withdraw/info', 'button', '/api/withdraw/selectOne');
+INSERT INTO `p_menu` VALUES ('25', '22', '提现审核', null, 'button', '/api/withdraw/withdrawAudit');
+INSERT INTO `p_menu` VALUES ('27', '0', '商品管理', null, 'module', null);
+INSERT INTO `p_menu` VALUES ('28', '27', '商品列表', '/operate/goods/selectList', 'page', '/api/goods/pageList');
+INSERT INTO `p_menu` VALUES ('29', '27', '商品分类', '/operate/goodsClass/selectList', 'page', '/api/goodsClass/pageList');
+INSERT INTO `p_menu` VALUES ('30', '29', '所有分类列表', null, 'button', '/api/goodsClass/allList');
 
 -- ----------------------------
 -- Table structure for p_order
@@ -482,7 +494,7 @@ CREATE TABLE `p_role` (
 -- ----------------------------
 -- Records of p_role
 -- ----------------------------
-INSERT INTO `p_role` VALUES ('1', '超级', 'ROLE_ADMIN', '2019-12-12 15:49:39', '0');
+INSERT INTO `p_role` VALUES ('1', '超级', 'ROLE_ADMIN', '2019-12-13 15:47:54', '0');
 INSERT INTO `p_role` VALUES ('2', '云因', 'ROLE_YUNYIN', '2019-12-12 10:04:15', '0');
 
 -- ----------------------------
@@ -494,22 +506,30 @@ CREATE TABLE `p_role_menu` (
   `rid` int(11) unsigned NOT NULL COMMENT '权限id',
   `mid` int(11) unsigned NOT NULL COMMENT '目录id',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COMMENT='角色菜单关联表';
+) ENGINE=InnoDB AUTO_INCREMENT=72 DEFAULT CHARSET=utf8 COMMENT='角色菜单关联表';
 
 -- ----------------------------
 -- Records of p_role_menu
 -- ----------------------------
-INSERT INTO `p_role_menu` VALUES ('10', '1', '1');
-INSERT INTO `p_role_menu` VALUES ('11', '1', '2');
-INSERT INTO `p_role_menu` VALUES ('12', '1', '3');
-INSERT INTO `p_role_menu` VALUES ('13', '1', '4');
-INSERT INTO `p_role_menu` VALUES ('14', '1', '5');
-INSERT INTO `p_role_menu` VALUES ('15', '1', '6');
-INSERT INTO `p_role_menu` VALUES ('16', '1', '7');
-INSERT INTO `p_role_menu` VALUES ('17', '1', '8');
-INSERT INTO `p_role_menu` VALUES ('18', '1', '9');
-INSERT INTO `p_role_menu` VALUES ('19', '1', '20');
-INSERT INTO `p_role_menu` VALUES ('20', '1', '21');
+INSERT INTO `p_role_menu` VALUES ('53', '1', '1');
+INSERT INTO `p_role_menu` VALUES ('54', '1', '2');
+INSERT INTO `p_role_menu` VALUES ('55', '1', '3');
+INSERT INTO `p_role_menu` VALUES ('56', '1', '4');
+INSERT INTO `p_role_menu` VALUES ('57', '1', '5');
+INSERT INTO `p_role_menu` VALUES ('58', '1', '6');
+INSERT INTO `p_role_menu` VALUES ('59', '1', '7');
+INSERT INTO `p_role_menu` VALUES ('60', '1', '8');
+INSERT INTO `p_role_menu` VALUES ('61', '1', '9');
+INSERT INTO `p_role_menu` VALUES ('62', '1', '20');
+INSERT INTO `p_role_menu` VALUES ('63', '1', '21');
+INSERT INTO `p_role_menu` VALUES ('64', '1', '22');
+INSERT INTO `p_role_menu` VALUES ('65', '1', '23');
+INSERT INTO `p_role_menu` VALUES ('66', '1', '24');
+INSERT INTO `p_role_menu` VALUES ('67', '1', '25');
+INSERT INTO `p_role_menu` VALUES ('68', '1', '27');
+INSERT INTO `p_role_menu` VALUES ('69', '1', '28');
+INSERT INTO `p_role_menu` VALUES ('70', '1', '29');
+INSERT INTO `p_role_menu` VALUES ('71', '1', '30');
 
 -- ----------------------------
 -- Table structure for p_sms
@@ -595,7 +615,7 @@ INSERT INTO `p_user` VALUES ('1', '1', '18087760502', null, '0', '2', '剃刀', 
 INSERT INTO `p_user` VALUES ('2', '1', '18087760501', null, '0', '0', 'zz', 'zz', '2590.00', '0.00', '700.00', '建设银行', '春城支行', '8965656565656', '6666666', '2019-11-21 16:02:34', null, null, null, '3', '1590.00', '0', '4', '0.00', '0.00', '1');
 INSERT INTO `p_user` VALUES ('3', '0', '18087760503', '71b596cb42ee254f7416043d184fc970', '0', '1', null, null, '0.00', '0.00', '0.00', null, null, null, null, '2019-12-06 15:06:42', null, null, null, '0', '0.00', '0', '0', '0.00', '0.00', '0');
 INSERT INTO `p_user` VALUES ('4', '0', '18087760504', '71b596cb42ee254f7416043d184fc970', '0', '1', null, null, '0.00', '200.00', '200.00', null, null, null, null, '2019-12-06 15:11:28', null, null, null, '2', '0.00', '0', '1', '0.00', '0.00', '1');
-INSERT INTO `p_user` VALUES ('5', '0', '18087760505', '71b596cb42ee254f7416043d184fc970', '0', '4', null, null, '3700.00', '0.00', '0.00', null, null, null, null, '2019-12-06 15:14:09', null, null, null, '0', '0.00', '0', '0', '0.00', '0.00', '0');
+INSERT INTO `p_user` VALUES ('5', '0', '18087760505', '71b596cb42ee254f7416043d184fc970', '0', '4', null, '酒水', '1000.00', '0.00', '0.00', '建设银行', '春城支行', '895656565656', '569898989', '2019-12-06 15:14:09', null, null, null, '0', '0.00', '0', '0', '0.00', '0.00', '0');
 INSERT INTO `p_user` VALUES ('6', '0', '18087760500', '71b596cb42ee254f7416043d184fc970', '0', '5', null, null, '0.00', '0.00', '0.00', null, null, null, null, '2019-12-06 17:10:08', null, null, null, '0', '0.00', '0', '0', '0.00', '0.00', '0');
 
 -- ----------------------------
@@ -646,7 +666,7 @@ CREATE TABLE `p_user_login` (
   `createTime` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `openId` (`openId`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='用户微信登录表';
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='用户微信登录表';
 
 -- ----------------------------
 -- Records of p_user_login
@@ -705,15 +725,17 @@ INSERT INTO `p_user_pay` VALUES ('1', '521576134286403', '5', '2800.00', '0', nu
 DROP TABLE IF EXISTS `p_user_pay_config`;
 CREATE TABLE `p_user_pay_config` (
   `id` bigint(11) NOT NULL AUTO_INCREMENT,
-  `type` int(2) NOT NULL DEFAULT '0' COMMENT '0:会员购买',
+  `type` int(2) NOT NULL DEFAULT '0' COMMENT '0:会员购买,1:提现手续费',
   `price` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '价格',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='会员购买配置表';
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `type` (`type`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='会员购买配置表';
 
 -- ----------------------------
 -- Records of p_user_pay_config
 -- ----------------------------
 INSERT INTO `p_user_pay_config` VALUES ('1', '0', '2800.00');
+INSERT INTO `p_user_pay_config` VALUES ('2', '1', '0.05');
 
 -- ----------------------------
 -- Table structure for p_user_site
@@ -789,3 +811,33 @@ CREATE TABLE `p_voucher` (
 -- ----------------------------
 INSERT INTO `p_voucher` VALUES ('1', '68元抵用券', '63.00', '0.00', '0', '0.00', '0', '0', '0', null, null, '0', '0', '2019-11-21 15:11:04', '范德萨发生的');
 INSERT INTO `p_voucher` VALUES ('2', '34元抵用券', '34.00', '0.00', '0', '0.00', '0', '0', '0', null, null, '0', '0', '2019-11-22 11:00:01', '客户客户客家话');
+
+-- ----------------------------
+-- Table structure for p_withdraw
+-- ----------------------------
+DROP TABLE IF EXISTS `p_withdraw`;
+CREATE TABLE `p_withdraw` (
+  `id` bigint(11) NOT NULL AUTO_INCREMENT,
+  `status` int(2) NOT NULL DEFAULT '0' COMMENT '提现状态(-1失败，0:等待审核，1成功)',
+  `uid` bigint(11) NOT NULL DEFAULT '0' COMMENT '用户id',
+  `amount` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '提现金额',
+  `arrivalAmount` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '实际到账金额',
+  `poundage` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '手续费',
+  `balance` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '用户可提现余额',
+  `rate` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '当前提现利率',
+  `applyTime` datetime DEFAULT NULL COMMENT '申请时间',
+  `auditTime` datetime DEFAULT NULL COMMENT '审核时间',
+  `name` varchar(50) DEFAULT NULL COMMENT '姓名',
+  `idCard` varchar(50) DEFAULT NULL COMMENT '身份证',
+  `bankCard` varchar(50) DEFAULT NULL COMMENT '银行卡号',
+  `bankName` varchar(50) DEFAULT NULL COMMENT '银行名称',
+  `bankBranch` varchar(50) DEFAULT NULL COMMENT '开户行',
+  `note` varchar(100) DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='提现表';
+
+-- ----------------------------
+-- Records of p_withdraw
+-- ----------------------------
+INSERT INTO `p_withdraw` VALUES ('1', '-1', '5', '100.56', '95.54', '5.02', '3599.44', '0.05', '2019-12-13 10:58:53', '2019-12-13 13:02:56', null, null, null, null, null, '发过的');
+INSERT INTO `p_withdraw` VALUES ('2', '1', '5', '100.56', '95.54', '5.02', '899.44', '0.05', '2019-12-13 11:03:04', '2019-12-13 13:03:31', '酒水', '569898989', '895656565656', '建设银行', '春城支行', null);

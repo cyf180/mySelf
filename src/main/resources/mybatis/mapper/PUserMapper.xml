@@ -431,4 +431,10 @@
     left join p_knot_config kc on u.knotId=kc.id
     where u.id=#{0}
   </select>
+  <select id="findOne" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from p_user
+    order by id asc limit 1
+  </select>
 </mapper>

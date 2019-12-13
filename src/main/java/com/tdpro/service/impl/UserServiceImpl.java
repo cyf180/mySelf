@@ -269,6 +269,7 @@ public class UserServiceImpl implements UserService {
         if(!userLogin.getUid().equals(new Long(0))){
             return  ResponseUtils.errorRes("该微信已绑定手机号");
         }else{
+            Long strawUid = null;
             PUser userADD = new PUser();
             userADD.setPhone(userETD.getPhone());
             userADD.setIsUser(0);
@@ -280,8 +281,14 @@ public class UserServiceImpl implements UserService {
                 if(null == strawUser){
                     return ResponseUtils.errorRes("推荐人不存在");
                 }
-                userADD.setStrawUid(userETD.getStrawUid());
+                strawUid=strawUser.getId();
+            }else{
+                PUser strawUser = userMapper.findOne();
+                if(null == strawUser){
+                    return ResponseUtils.errorRes("系统尚未开启");
+                }
             }
+            userADD.setStrawUid(userETD.getStrawUid());
             if(0==userMapper.insertSelective(userADD)){
                 throw new RuntimeException("用户添加失败");
             }

@@ -38,4 +38,6 @@ public interface PUserMapper {
     List<UserPageETD> selectPageList(UserPageETD userPage);
 
     UserInfoETD findInfoById(Long id);
+
+    PUser findOne();
 }
