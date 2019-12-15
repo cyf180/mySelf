@@ -1,5 +1,6 @@
 package com.tdpro.service;
 
+import com.tdpro.common.utils.Response;
 import com.tdpro.entity.PKnotConfig;
 
 public interface KnotConfigService {
@@ -9,4 +10,8 @@ public interface KnotConfigService {
      * @return
      */
     PKnotConfig intervalFind(Integer suitLevelNum,Long id);
+
+    Response adminList();
+
+    Response updateKnotConfig(PKnotConfig knotConfig,Long adminId);
 }

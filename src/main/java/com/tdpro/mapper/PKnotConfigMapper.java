@@ -4,6 +4,8 @@ import com.tdpro.entity.PKnotConfig;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 @Mapper
 public interface PKnotConfigMapper {
     int deleteByPrimaryKey(Long id);
@@ -19,4 +21,10 @@ public interface PKnotConfigMapper {
     int updateByPrimaryKey(PKnotConfig record);
 
     PKnotConfig findBySmallValueAndBigValueAndNotId(@Param("suitLevelNum") Integer suitLevelNum,@Param("id") Long id);
+
+    List<PKnotConfig> findList();
+
+    PKnotConfig findLtId(Long id);
+
+    PKnotConfig findGtId(Long id);
 }

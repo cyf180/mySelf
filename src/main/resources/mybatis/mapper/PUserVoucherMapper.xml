@@ -34,7 +34,7 @@
       #{state,jdbcType=INTEGER}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.tdpro.entity.PUserVoucher" >
+  <insert id="insertSelective" parameterType="com.tdpro.entity.PUserVoucher" useGeneratedKeys="true" keyProperty="id">
     <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -134,7 +134,6 @@
   </select>
   <update id="updateIsUse">
     update p_user_voucher set useState = -1
-    where useState = 1
     and id in (
     <foreach collection="list" item="item" index="index" separator=",">
       #{item.userVoucherId}
@@ -147,6 +146,15 @@
     and id in (
     <foreach collection="list" item="item" index="index" separator=",">
       #{item.id}
+    </foreach>
+    )
+  </update>
+  <update id="updateRelease">
+    update p_user_voucher set useState = 0
+    where useState = 1
+    and id in (
+    <foreach collection="list" item="item" index="index" separator=",">
+      #{item.userVoucherId}
     </foreach>
     )
   </update>

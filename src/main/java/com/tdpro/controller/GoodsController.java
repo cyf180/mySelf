@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
-@RequestMapping("/goods/")
+@RequestMapping("/user/goods/")
 @Api(tags = "用户端 - 商品相关接口")
 public class GoodsController {
     @Autowired

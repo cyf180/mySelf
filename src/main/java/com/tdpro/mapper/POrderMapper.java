@@ -1,6 +1,8 @@
 package com.tdpro.mapper;
 
 import com.tdpro.entity.POrder;
+import com.tdpro.entity.extend.OrderETD;
+import com.tdpro.entity.extend.OrderPageETD;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -32,5 +34,13 @@ public interface POrderMapper {
 
     int updateOrderNotTake(@Param("seendTime") Date seendTime);
 
-    int updateOrderNotPay(@Param("createTime") Date createTime);
+    int updateOrderNotPay(@Param("id") Long id);
+
+    List<POrder> orderNotPayList(@Param("createTime") Date createTime);
+
+    List<OrderPageETD> findPageList(OrderPageETD orderPageETD);
+
+    OrderPageETD findOrderInfoById(Long id);
+
+    List<OrderETD> selectListByUid(OrderETD orderETD);
 }

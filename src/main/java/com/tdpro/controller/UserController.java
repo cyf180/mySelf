@@ -79,7 +79,9 @@ public class UserController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "phone", value = "手机号", required = true, dataType = "string", paramType = "form"),
             @ApiImplicitParam(name = "payPassword", value = "支付密码", required = true, dataType = "string", paramType = "form"),
-            @ApiImplicitParam(name = "strawUid", value = "推荐人id", required = false, dataType = "long", paramType = "form")
+            @ApiImplicitParam(name = "strawUid", value = "推荐人id", required = false, dataType = "long", paramType = "form"),
+            @ApiImplicitParam(name = "headPath", value = "推荐人id", required = false, dataType = "long", paramType = "form"),
+            @ApiImplicitParam(name = "nickName", value = "推荐人id", required = false, dataType = "long", paramType = "form")
     })
     @ApiOperation(value = "用户注册")
     public Response userEnroll(@ApiIgnore @RequestAttribute Long loginId,@Valid @RequestBody UserEnrollETD user){

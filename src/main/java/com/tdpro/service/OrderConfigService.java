@@ -9,4 +9,8 @@ public interface OrderConfigService {
      * @return
      */
     POrderConfig findByType(Integer type);
+
+    boolean insertConfig(POrderConfig orderConfig);
+
+    boolean updateConfig(POrderConfig orderConfig);
 }

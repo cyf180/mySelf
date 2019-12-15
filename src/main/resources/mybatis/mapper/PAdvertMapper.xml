@@ -121,4 +121,10 @@
     where isDel = 0
     order by sort asc,createTime desc
   </select>
+  <select id="findPageList" resultType="com.tdpro.entity.extend.AdvertETD" parameterType="com.tdpro.entity.extend.AdvertETD">
+    select * from p_advert order by sort asc,createTime desc
+  </select>
+  <select id="findInfoById" resultType="com.tdpro.entity.extend.AdvertETD" parameterType="java.lang.Long">
+    select * from p_advert where id=#{0}
+  </select>
 </mapper>

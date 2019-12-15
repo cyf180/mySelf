@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/home/")
+@RequestMapping("/user/home/")
 @Api(tags = "用户端 - 首页相关接口")
 public class HomeController {
     @Autowired

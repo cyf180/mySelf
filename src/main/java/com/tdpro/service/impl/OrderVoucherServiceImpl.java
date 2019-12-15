@@ -1,6 +1,7 @@
 package com.tdpro.service.impl;
 
 import com.tdpro.entity.POrderVoucher;
+import com.tdpro.entity.extend.OrderVoucherETD;
 import com.tdpro.mapper.POrderVoucherMapper;
 import com.tdpro.service.OrderVoucherService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,5 +28,11 @@ public class OrderVoucherServiceImpl implements OrderVoucherService {
     @Override
     public List<POrderVoucher> findListByOrderId(Long orderId) {
         return orderVoucherMapper.findListByOrderId(orderId);
+    }
+
+    @Override
+    public List<OrderVoucherETD> findAdminListByOrderId(Long orderId){
+        List<OrderVoucherETD> voucherList = orderVoucherMapper.findAdminListByOrderId(orderId);
+        return voucherList;
     }
 }

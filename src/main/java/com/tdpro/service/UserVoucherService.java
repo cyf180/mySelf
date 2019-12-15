@@ -1,5 +1,6 @@
 package com.tdpro.service;
 
+import com.tdpro.common.constant.IssueType;
 import com.tdpro.common.utils.Response;
 import com.tdpro.entity.POrderVoucher;
 import com.tdpro.entity.PUserVoucher;
@@ -35,4 +36,8 @@ public interface UserVoucherService {
      * @param list
      */
     Boolean updateUserVoucherIsLock(List<PUserVoucher> list);
+
+    void voucherIssue(Long strawUid,Long payUid,IssueType issueType);
+
+    Boolean releaseUserVoucher(Long orderId);
 }

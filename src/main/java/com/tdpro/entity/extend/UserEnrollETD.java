@@ -10,4 +10,6 @@ public class UserEnrollETD {
     private Long strawUid;
     private String code;
     private Long loginId;
+    private String headPath;
+    private String nickName;
 }

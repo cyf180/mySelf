@@ -14,4 +14,20 @@ public class OrderConfigServiceImpl implements OrderConfigService {
     public POrderConfig findByType(Integer type) {
         return orderConfigMapper.findByType(type);
     }
+
+    @Override
+    public boolean insertConfig(POrderConfig orderConfig){
+        if(0 == orderConfigMapper.insertSelective(orderConfig)){
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean updateConfig(POrderConfig orderConfig){
+        if(0 == orderConfigMapper.updateByPrimaryKeySelective(orderConfig)){
+            return false;
+        }
+        return true;
+    }
 }

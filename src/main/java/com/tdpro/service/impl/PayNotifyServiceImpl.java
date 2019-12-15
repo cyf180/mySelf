@@ -4,12 +4,10 @@ import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyResult;
 import com.github.binarywang.wxpay.bean.result.BaseWxPayResult;
 import com.github.binarywang.wxpay.constant.WxPayConstants;
 import com.github.binarywang.wxpay.util.SignUtils;
+import com.tdpro.common.constant.IssueType;
 import com.tdpro.common.constant.PayType;
 import com.tdpro.config.SpringContext;
-import com.tdpro.entity.POrder;
-import com.tdpro.entity.POrderVoucher;
-import com.tdpro.entity.PPayConfig;
-import com.tdpro.entity.PUserPay;
+import com.tdpro.entity.*;
 import com.tdpro.service.*;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -120,11 +118,20 @@ public class PayNotifyServiceImpl implements PayNotifyService {
                             throw new RuntimeException("会员购买支付回调金额不一致");
                         }
                     }
-                    boolean updateOrder = userPayService.updateIsPay(payOrderInfo.getId(),payNo, totalFee);
-                    boolean updateUser = userService.updateIsUser(payOrderInfo.getUid());
-                    if (!updateOrder || !updateUser) {
-                        log.error("会员购买支付回调失败: {}，支付订单ID: {}", "订单修改状态：" + updateOrder + "，用户修改状态：" + updateUser, payOrderInfo.getId());
-                        throw new RuntimeException("订单修改失败");
+                    PUser user = userService.findById(payOrderInfo.getUid());
+                    if(null != user) {
+                        boolean updateOrder = userPayService.updateIsPay(payOrderInfo.getId(), payNo, totalFee);
+                        boolean updateUser = userService.updateIsUser(payOrderInfo.getUid());
+                        if (!updateOrder || !updateUser) {
+                            log.error("会员购买支付回调失败: {}，支付订单ID: {}", "订单修改状态：" + updateOrder + "，用户修改状态：" + updateUser, payOrderInfo.getId());
+                            throw new RuntimeException("订单修改失败");
+                        }
+                        if(user.getStrawUid().compareTo(new Long(0)) > 0){
+                            userVoucherService.voucherIssue(user.getStrawUid(),user.getId(),IssueType.PAY_MEMBER_TYPE);
+                        }
+                    }else{
+                        log.error("会员购买支付回调失败: {}，支付订单ID: {}", "用户查询异常", payOrderInfo.getId());
+                        throw new RuntimeException("会员购买支付回调金额不一致");
                     }
                 } else {
                     log.info("会员购买支付回调失败 {}，订单ID {}", "已支付", payOrderInfo.getId());

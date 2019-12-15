@@ -44,7 +44,7 @@
       #{specification,jdbcType=VARCHAR}, #{hostImg,jdbcType=VARCHAR}, #{details,jdbcType=VARCHAR}, 
       #{isDel,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.tdpro.entity.PGoods" >
+  <insert id="insertSelective" parameterType="com.tdpro.entity.PGoods" useGeneratedKeys="true" keyProperty="id">
     <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -89,6 +89,9 @@
       <if test="soldNum != null" >
         soldNum,
       </if>
+      <if test="sort != null" >
+        sort,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="classId != null" >
@@ -129,6 +132,9 @@
       </if>
       <if test="soldNum != null" >
         #{soldNum,jdbcType=INTEGER},
+      </if>
+      <if test="sort != null" >
+        #{sort},
       </if>
     </trim>
   </insert>
@@ -173,6 +179,9 @@
       </if>
       <if test="soldNum != null" >
         soldNum = #{soldNum,jdbcType=INTEGER},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}

@@ -1,6 +1,7 @@
 package com.tdpro.service;
 
 import com.tdpro.entity.POrderVoucher;
+import com.tdpro.entity.extend.OrderVoucherETD;
 
 import java.util.List;
 
@@ -20,4 +21,6 @@ public interface OrderVoucherService {
      * @return
      */
     List<POrderVoucher> findListByOrderId(Long orderId);
+
+    List<OrderVoucherETD> findAdminListByOrderId(Long orderId);
 }

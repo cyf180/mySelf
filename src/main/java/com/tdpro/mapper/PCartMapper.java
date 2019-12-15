@@ -1,7 +1,10 @@
 package com.tdpro.mapper;
 
 import com.tdpro.entity.PCart;
+import com.tdpro.entity.extend.CartETD;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 @Mapper
 public interface PCartMapper {
@@ -16,4 +19,6 @@ public interface PCartMapper {
     int updateByPrimaryKeySelective(PCart record);
 
     int updateByPrimaryKey(PCart record);
+
+    List<CartETD> findListByOrderId(Long orderId);
 }

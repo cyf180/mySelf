@@ -1,7 +1,13 @@
 package com.tdpro.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.tdpro.common.constant.KnotType;
+import com.tdpro.common.utils.Response;
+import com.tdpro.common.utils.ResponseUtils;
 import com.tdpro.entity.PUserKnot;
+import com.tdpro.entity.extend.UserKnotETD;
+import com.tdpro.entity.extend.VoucherIssueETD;
 import com.tdpro.mapper.PUserKnotMapper;
 import com.tdpro.service.UserKnotService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,5 +74,15 @@ public class UserKnotServiceImpl implements UserKnotService {
     @Override
     public int updateMonthKnotByIdList(List<Long> idList,Long monthId){
         return userKnotMapper.updateMonthId(idList,monthId);
+    }
+
+    @Override
+    public Response userKnotList(UserKnotETD userKnotETD){
+        Integer pageNo = userKnotETD.getPageNo() == null ? 1 : userKnotETD.getPageNo();
+        Integer pageSize = userKnotETD.getPageSize() == null ? 10: userKnotETD.getPageSize();
+        PageHelper.startPage(pageNo,pageSize);
+        List<UserKnotETD> siteList = userKnotMapper.selectListByUid(userKnotETD);
+        PageInfo pageInfo = new PageInfo(siteList);
+        return ResponseUtils.successRes(pageInfo);
     }
 }

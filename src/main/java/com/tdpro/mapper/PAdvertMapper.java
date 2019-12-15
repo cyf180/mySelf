@@ -1,6 +1,7 @@
 package com.tdpro.mapper;
 
 import com.tdpro.entity.PAdvert;
+import com.tdpro.entity.extend.AdvertETD;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -20,4 +21,8 @@ public interface PAdvertMapper {
     int updateByPrimaryKey(PAdvert record);
 
     List<PAdvert> selectList();
+
+    List<AdvertETD> findPageList(AdvertETD advertETD);
+
+    AdvertETD findInfoById(Long id);
 }

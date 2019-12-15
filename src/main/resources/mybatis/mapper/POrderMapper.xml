@@ -387,6 +387,50 @@
     update p_order
     set isDel = -1
     where state = 0
-    <![CDATA[ and createTime <= #{createTime}]]>
+    and id=#{id}
   </update>
+  <select id="orderNotPayList" resultType="com.tdpro.entity.POrder">
+    select id
+    from p_order
+    where state = 0
+    <![CDATA[ and createTime <= #{createTime}]]>
+  </select>
+  <select id="findPageList" resultType="com.tdpro.entity.extend.OrderPageETD" parameterType="com.tdpro.entity.extend.OrderPageETD">
+    select o.*,u.phone userPhone
+    from p_order o
+    left join p_user u on o.uid=u.id
+    <where>
+      <if test="userPhone != null ">
+        and u.phone like concat(concat('%', #{userPhone}), '%')
+      </if>
+      <if test="payType != null ">
+        and o.payType = #{payType}
+      </if>
+      <if test="state != null ">
+        and o.state = #{state}
+      </if>
+      <if test="startTime != null ">
+        <![CDATA[ and o.createTime >= #{startTime}]]>
+      </if>
+      <if test="endTime != null ">
+        <![CDATA[ and o.createTime <= #{endTime}]]>
+      </if>
+    </where>
+  </select>
+  <select id="findOrderInfoById" resultType="com.tdpro.entity.extend.OrderPageETD" parameterType="java.lang.Long">
+    select o.*,u.phone userPhone
+    from p_order o
+    left join p_user u on o.uid=u.id
+    where o.id=#{0}
+  </select>
+  <select id="selectListByUid" resultType="com.tdpro.entity.extend.OrderETD" parameterType="com.tdpro.entity.extend.OrderETD">
+    select *
+    from p_order
+    where uid=#{uid}
+    and isDel = 0
+    <if test="state != null ">
+      and state = #{state}
+    </if>
+    order by createTime desc
+  </select>
 </mapper>

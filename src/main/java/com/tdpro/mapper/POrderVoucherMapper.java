@@ -1,6 +1,7 @@
 package com.tdpro.mapper;
 
 import com.tdpro.entity.POrderVoucher;
+import com.tdpro.entity.extend.OrderVoucherETD;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -20,4 +21,6 @@ public interface POrderVoucherMapper {
     int updateByPrimaryKey(POrderVoucher record);
 
     List<POrderVoucher> findListByOrderId(Long orderId);
+
+    List<OrderVoucherETD> findAdminListByOrderId(Long orderId);
 }

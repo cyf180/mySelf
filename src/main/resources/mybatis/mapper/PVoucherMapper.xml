@@ -213,4 +213,10 @@
     from p_voucher v
     group by v.id
   </select>
+  <select id="findPageList" resultType="com.tdpro.entity.extend.VoucherPageETD" parameterType="com.tdpro.entity.extend.VoucherPageETD">
+    select v.voucherName,v.faceValue,
+    (select count(*) from p_user_voucher where voucherId=v.id) as circulation,
+    (select count(*) from p_user_voucher where voucherId=v.id and useState=-1) as useNum
+    from p_voucher v
+  </select>
 </mapper>

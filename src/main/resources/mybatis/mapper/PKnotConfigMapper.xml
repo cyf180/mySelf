@@ -88,4 +88,26 @@
     <![CDATA[ and bigValue >= #{suitLevelNum}]]>
     order by id asc limit 1
   </select>
+  <select id="findList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from p_knot_config
+    order by id asc
+  </select>
+  <select id="findLtId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    select
+    <include refid="Base_Column_List" />
+    from p_knot_config
+    where
+    <![CDATA[  id < #{0}]]>
+    order by id desc limit 1
+  </select>
+  <select id="findGtId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    select
+    <include refid="Base_Column_List" />
+    from p_knot_config
+    where
+    <![CDATA[  id > #{0}]]>
+    order by id asc limit 1
+  </select>
 </mapper>

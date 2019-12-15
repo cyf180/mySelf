@@ -145,4 +145,11 @@
     </foreach>
     )
   </update>
+  <select id="selectListByUid" resultType="com.tdpro.entity.extend.UserKnotETD" parameterType="com.tdpro.entity.extend.UserKnotETD">
+    select uk.*,u.phone
+    from p_user_knot uk
+    left join p_user u on uk.payUid=u.id
+    where uk.uid=#{uid}
+    order by id desc
+  </select>
 </mapper>

@@ -33,6 +33,8 @@ public class PGoods implements Serializable {
 
     private Integer soldNum;
 
+    private Integer sort;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -145,6 +147,14 @@ public class PGoods implements Serializable {
 
     public void setSoldNum(Integer soldNum) {
         this.soldNum = soldNum;
+    }
+
+    public Integer getSort() {
+        return sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
     }
 
     @Override

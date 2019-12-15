@@ -138,6 +138,23 @@
     select *
     from p_goods_class
     where isDel=0
+      <if test="className != null ">
+        and className like concat(concat('%', #{className}), '%')
+      </if>
     order by sort asc,createTime desc
+  </select>
+  <select id="findByNameOrNotId" resultMap="BaseResultMap" parameterType="com.tdpro.entity.PGoodsClass" >
+    select
+    <include refid="Base_Column_List" />
+    from p_goods_class
+    <where>
+      <if test="className != null">
+        and className = #{className}
+      </if>
+      <if test="id != null">
+        and id != #{id}
+      </if>
+    </where>
+    limit 1
   </select>
 </mapper>

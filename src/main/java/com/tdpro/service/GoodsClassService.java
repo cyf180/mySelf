@@ -26,4 +26,25 @@ public interface GoodsClassService {
      * @return
      */
     Response adminGoodsClassPageList(GoodsClassPageETD classPageETD);
+
+    /**
+     * 添加或修改分类
+     * @param goodsClass
+     * @return
+     */
+    Response addOrUpdateClass(PGoodsClass goodsClass);
+
+    /**
+     * 修改显示隐藏
+     * @param goodsClass
+     * @return
+     */
+    Response updateIsShow(PGoodsClass goodsClass);
+
+    /**
+     * 详情
+     * @param id
+     * @return
+     */
+    Response classInfo(Long id);
 }

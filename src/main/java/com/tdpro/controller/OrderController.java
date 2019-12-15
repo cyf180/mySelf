@@ -2,7 +2,10 @@ package com.tdpro.controller;
 
 import com.tdpro.common.utils.Response;
 import com.tdpro.common.utils.ResponseUtils;
+import com.tdpro.entity.POrder;
 import com.tdpro.entity.extend.OrderCartETD;
+import com.tdpro.entity.extend.OrderETD;
+import com.tdpro.entity.extend.VoucherIssueETD;
 import com.tdpro.service.GoodsService;
 import com.tdpro.service.OrderService;
 import io.swagger.annotations.Api;
@@ -60,5 +63,37 @@ public class OrderController {
             addOrderLock.unlock();
         }
         return response;
+    }
+
+    @GetMapping("orderList")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNo", value = "当前页码", required = false, dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "pageSize", value = "显示数量", required = false, dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "state", value = "0:未支付 1:已支付 2:已发货 3:完成", required = false, dataType = "int", paramType = "query")
+    })
+    @ApiOperation(value = "用户券收入列表",response = VoucherIssueETD.class)
+    public Response getOrderList(@ApiIgnore @RequestAttribute Long uid, OrderETD orderETD){
+        orderETD.setUid(uid);
+        return orderService.userOrderList(orderETD);
+    }
+
+    @PostMapping("takeOrder")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "订单id", required = true, dataType = "long", paramType = "form"),
+    })
+    @ApiOperation(value = "订单确认收货")
+    public Response takeOrder(@ApiIgnore @RequestAttribute Long uid, @Valid @RequestBody POrder order){
+        order.setUid(uid);
+        return orderService.affirmOrder(order);
+    }
+
+    @PostMapping("cancelOrder")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "订单id", required = true, dataType = "long", paramType = "form"),
+    })
+    @ApiOperation(value = "取消订单")
+    public Response cancelOrder(@ApiIgnore @RequestAttribute Long uid, @Valid @RequestBody POrder order){
+        order.setUid(uid);
+        return orderService.userDelOrder(order);
     }
 }

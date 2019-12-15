@@ -161,4 +161,10 @@
       createTime = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="findListByOrderId" resultType="com.tdpro.entity.extend.CartETD" parameterType="java.lang.Long">
+    select c.id,c.orderId,c.uid,c.goodsId,c.suitId,c.price,c.suitName,c.goodsName,c.number,c.createTime,g.hostImg
+    from p_cart c
+    left join p_goods g on c.goodsId = g.id
+    where orderId = #{0}
+  </select>
 </mapper>

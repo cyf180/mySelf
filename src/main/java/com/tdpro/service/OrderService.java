@@ -4,6 +4,9 @@ import com.tdpro.common.constant.PayType;
 import com.tdpro.common.utils.Response;
 import com.tdpro.entity.POrder;
 import com.tdpro.entity.extend.OrderCartETD;
+import com.tdpro.entity.extend.OrderConfigETD;
+import com.tdpro.entity.extend.OrderETD;
+import com.tdpro.entity.extend.OrderPageETD;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -72,4 +75,44 @@ public interface OrderService {
      * @return
      */
     Future<Boolean> overdueOrder();
+
+    /**
+     * 后台列表
+     * @param OrderPageETD
+     * @return
+     */
+    Response adminPageList(OrderPageETD OrderPageETD);
+
+    /**
+     * 后台订单详情
+     * @param id
+     * @return
+     */
+    Response adminOrderInfo(Long id);
+
+    /**
+     * 修改订单
+     * @param order
+     * @return
+     */
+    Response adminUpdateOrder(POrder order,Long adminId);
+
+    /**
+     * 订单配置获取
+     * @return
+     */
+    Response orderConfig();
+
+    /**
+     * 订单配置修改
+     * @param orderConfig
+     * @return
+     */
+    Response updateOrderConfig(OrderConfigETD orderConfig,Long adminId);
+
+    Response userOrderList(OrderETD orderETD);
+
+    Response userDelOrder(POrder order);
+
+    Response affirmOrder(POrder order);
 }

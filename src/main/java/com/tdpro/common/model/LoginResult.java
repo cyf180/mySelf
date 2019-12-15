@@ -20,4 +20,5 @@ public class LoginResult {
     String key;
     @ApiModelProperty("购买会员价格")
     BigDecimal buyUserPrice;
+    Long uid;
 }

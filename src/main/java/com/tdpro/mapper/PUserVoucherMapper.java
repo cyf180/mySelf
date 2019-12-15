@@ -29,4 +29,6 @@ public interface PUserVoucherMapper {
     int updateIsUse(@Param("list") List<POrderVoucher> list);
 
     int updateIsLock(@Param("list") List<PUserVoucher> list);
+
+    int updateRelease(@Param("list") List<POrderVoucher> list);
 }

@@ -85,4 +85,9 @@
     from p_order_voucher
     where orderId=#{0}
   </select>
+  <select id="findAdminListByOrderId" resultType="com.tdpro.entity.extend.OrderVoucherETD" parameterType="java.lang.Long">
+    select v.id,v.voucherName,v.faceValue price,
+    (select count(ov.id) from p_order_voucher ov left join p_user_voucher uv on ov.userVoucherId=uv.id where ov.orderId = #{0} and voucherId=v.id) as num
+    from p_voucher v
+  </select>
 </mapper>

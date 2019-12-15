@@ -2,6 +2,7 @@ package com.tdpro.mapper;
 
 import com.tdpro.entity.PVoucher;
 import com.tdpro.entity.extend.UserVoucherETD;
+import com.tdpro.entity.extend.VoucherPageETD;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -21,4 +22,6 @@ public interface PVoucherMapper {
     int updateByPrimaryKey(PVoucher record);
 
     List<UserVoucherETD> selectListByUid(UserVoucherETD voucherETD);
+
+    List<VoucherPageETD> findPageList(VoucherPageETD voucherPageETD);
 }

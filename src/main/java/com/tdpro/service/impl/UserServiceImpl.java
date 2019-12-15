@@ -7,6 +7,7 @@ import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.StringUtil;
 import com.tdpro.common.OnlineUserInfo;
 import com.tdpro.common.constant.ErrorCodeConstants;
+import com.tdpro.common.constant.IssueType;
 import com.tdpro.common.model.LoginRequest;
 import com.tdpro.common.model.LoginResult;
 import com.tdpro.common.utils.Response;
@@ -56,6 +57,8 @@ public class UserServiceImpl implements UserService {
     private UserPayConfigService userPayConfigService;
     @Autowired
     private LogService logService;
+    @Autowired
+    private UserVoucherService userVoucherService;
     private Lock lock = new ReentrantLock();
 
     @Override
@@ -270,6 +273,7 @@ public class UserServiceImpl implements UserService {
             return  ResponseUtils.errorRes("该微信已绑定手机号");
         }else{
             Long strawUid = null;
+            boolean issue = false;
             PUser userADD = new PUser();
             userADD.setPhone(userETD.getPhone());
             userADD.setIsUser(0);
@@ -282,26 +286,36 @@ public class UserServiceImpl implements UserService {
                     return ResponseUtils.errorRes("推荐人不存在");
                 }
                 strawUid=strawUser.getId();
+                issue = true;
             }else{
                 PUser strawUser = userMapper.findOne();
                 if(null == strawUser){
                     return ResponseUtils.errorRes("系统尚未开启");
                 }
+                strawUid = strawUser.getId();
             }
-            userADD.setStrawUid(userETD.getStrawUid());
+            userADD.setStrawUid(strawUid);
+            userADD.setNickName(userETD.getNickName());
             if(0==userMapper.insertSelective(userADD)){
                 throw new RuntimeException("用户添加失败");
             }
+
             PUserLogin userLoginUPD = new PUserLogin();
             userLoginUPD.setId(userLogin.getId());
             userLoginUPD.setUid(userADD.getId());
+            userLoginUPD.setHeadPath(userETD.getHeadPath());
+            userLoginUPD.setNickName(userETD.getNickName());
             if(!userLoginService.updateUserLogin(userLoginUPD)){
                 throw new RuntimeException("绑定用手机失败");
+            }
+            if(issue){
+                userVoucherService.voucherIssue(strawUid,userADD.getId(),IssueType.ENROLL_TYPE);
             }
             onlineUserInfo.setUid(userADD.getId());
             onlineUserInfo.setUserLogId(userLogin.getId());
             onlineUserInfo.setLoginRole("USER_ROLE");
             loginResult.setIsBindPhone(1);
+            loginResult.setUid(userADD.getId());
             loginResult.setKey(userLogin.getOpenId());
             String accessToken = jwtService.createToken(onlineUserInfo);
             if (StringUtils.hasText(accessToken)) {

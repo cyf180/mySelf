@@ -23,4 +23,6 @@ public interface PGoodsClassMapper {
     List<PGoodsClass> selectList(Integer num);
 
     List<GoodsClassPageETD> findGoodsClassPageList(GoodsClassPageETD classPageETD);
+
+    PGoodsClass findByNameOrNotId(PGoodsClass goodsClass);
 }

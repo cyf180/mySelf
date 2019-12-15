@@ -3,6 +3,7 @@ package com.tdpro.service;
 import com.tdpro.common.utils.Response;
 import com.tdpro.entity.POrder;
 import com.tdpro.entity.extend.GoodsETD;
+import com.tdpro.entity.extend.GoodsInfoETD;
 import com.tdpro.entity.extend.GoodsPageETD;
 
 import java.math.BigDecimal;
@@ -51,5 +52,25 @@ public interface GoodsService {
      */
     Response adminPageList(GoodsPageETD goodsPageETD);
 
+    /**
+     * 添加修改产品
+     * @param goodsInfoETD
+     * @return
+     */
+    Response updateAndAddGoods(GoodsInfoETD goodsInfoETD);
+
+    /**
+     * 修改产品
+     * @param goodsInfoETD
+     * @return
+     */
+    Response updateGoods(GoodsInfoETD goodsInfoETD);
+
+    /**
+     * 商品上下架
+     * @param id
+     * @return
+     */
+    Response updateGoodsIsDel(Long id);
 
 }
