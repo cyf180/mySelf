@@ -60,7 +60,7 @@ public class UserPayConfigServiceImpl implements UserPayConfigService {
         configUPD.setPrice(ratePrice);
         PUserPayConfig rate = this.findByType(1);
         if (null == rate) {
-            configUPD.setType(0);
+            configUPD.setType(1);
             if (0 == payConfigMapper.insertSelective(configUPD)) {
                 throw new BusinessException("修改失败");
             }
