@@ -1,6 +1,7 @@
 package com.tdpro.service;
 
 import com.tdpro.common.utils.Response;
+import com.tdpro.entity.PCollect;
 import com.tdpro.entity.extend.CollectETD;
 
 public interface CollectService {
@@ -17,4 +18,6 @@ public interface CollectService {
      * @return
      */
     Response delCollect(CollectETD collectETD);
+
+    Response addCollect(PCollect collect);
 }

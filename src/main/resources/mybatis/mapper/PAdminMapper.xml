@@ -156,4 +156,24 @@
     where phone = #{phone}
     and `password`=#{password}
   </select>
+  <select id="findPageList" resultType="com.tdpro.entity.extend.AdminPageETD" parameterType="com.tdpro.entity.extend.AdminPageETD">
+    select a.*,r.roleRank
+    from p_admin a
+    left join p_role r on a.rid=r.id
+  </select>
+  <select id="findByPhone" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from p_admin
+    where phone = #{phone}
+    limit 1
+  </select>
+  <select id="findByPhoneAndNoId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from p_admin
+    where phone = #{phone}
+    and id != #{id}
+    limit 1
+  </select>
 </mapper>

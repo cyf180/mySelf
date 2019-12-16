@@ -2,6 +2,7 @@ package com.tdpro.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.tdpro.common.exception.BusinessException;
 import com.tdpro.common.utils.Response;
 import com.tdpro.common.utils.ResponseUtils;
 import com.tdpro.entity.PCollect;
@@ -13,6 +14,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.sql.BatchUpdateException;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -66,5 +69,24 @@ public class CollectServiceImpl implements CollectService {
             delLock.unlock();
         }
         return response;
+    }
+
+    @Override
+    public Response addCollect(PCollect collect){
+        PCollect collectFind = collectMapper.findByUidAndGoodsId(collect.getUid(),collect.getGoodsId());
+        if(null != collectFind){
+            PCollect collectADD = new PCollect();
+            collect.setUid(collect.getUid());
+            collectADD.setGoodsId(collect.getGoodsId());
+            collectADD.setCreateTime(new Date());
+            if(0 == collectMapper.insertSelective(collectADD)){
+                throw new BusinessException("收藏失败");
+            }
+        }else{
+            if(0 == collectMapper.deleteByPrimaryKey(collect.getId())){
+                throw new RuntimeException("删除失败");
+            }
+        }
+        return ResponseUtils.successRes(1);
     }
 }

@@ -3,6 +3,7 @@ package com.tdpro.controller;
 import com.tdpro.common.utils.Response;
 import com.tdpro.common.utils.ResponseUtils;
 import com.tdpro.entity.PUser;
+import com.tdpro.entity.extend.UserETD;
 import com.tdpro.entity.extend.UserEnrollETD;
 import com.tdpro.entity.extend.UserTeamETD;
 import com.tdpro.entity.extend.UserUPD;
@@ -30,7 +31,7 @@ public class UserController {
     Lock enrollLock = new ReentrantLock();
 
     @GetMapping("userCentre")
-    @ApiOperation(value = "会员中心接口")
+    @ApiOperation(value = "会员中心接口",response = UserETD.class)
     public Response getUserCentre(@ApiIgnore @RequestAttribute Long uid){
         return userService.userInformation(uid);
     }

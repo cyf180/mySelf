@@ -1,6 +1,7 @@
 package com.tdpro.controller;
 
 import com.tdpro.common.utils.Response;
+import com.tdpro.entity.PCollect;
 import com.tdpro.entity.extend.CollectETD;
 import com.tdpro.service.CollectService;
 import io.swagger.annotations.Api;
@@ -38,4 +39,13 @@ public class CollectController {
         collectETD.setUid(uid);
         return collectService.delCollect(collectETD);
     }
+
+    @PostMapping("addCollect")
+    @ApiImplicitParam(name = "goodsId", value = "产品id", required = true, dataType = "long", paramType = "form")
+    @ApiOperation(value = "添加收藏接口")
+    public Response addCollect(@ApiIgnore @RequestAttribute Long uid, @Valid @RequestBody PCollect collect){
+        collect.setUid(uid);
+        return collectService.addCollect(collect);
+    }
+
 }

@@ -170,6 +170,8 @@ public class PayServiceImpl implements PayService {
                     realPrice = new BigDecimal("0");
                 }
             }
+        }else{
+            realPrice = totalPrice;
         }
         if (PayType.BALANCE_PAY.getType().equals(payETD.getPayType())) {
             if(StringUtil.isEmpty(userInfo.getPayPassword())){
@@ -245,6 +247,8 @@ public class PayServiceImpl implements PayService {
             payReturn.setState(true);
             payReturn.setType(2);
             payReturn.setSuccessRes(msgBean.get("msg"));
+        }else{
+            payReturn.setMsg("支付异常");
         }
         return payReturn;
     }

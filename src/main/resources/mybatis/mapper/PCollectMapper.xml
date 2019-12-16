@@ -86,4 +86,12 @@
     where cl.uid=#{0}
     order by cl.createTime desc
   </select>
+  <select id="findByUidAndGoodsId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from p_collect
+    where uid = #{uid}
+    and goodsId = #{goodsId}
+    limit 1
+  </select>
 </mapper>
