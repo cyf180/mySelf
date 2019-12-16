@@ -16,5 +16,6 @@ public class GoodsExchangeETD {
     private String voucherName;
     @ApiModelProperty(value = "会员拥有优惠券数量")
     private Integer userNum;
+    @ApiModelProperty(value = "会员拥有优惠券数量")
     private BigDecimal faceValue;
 }

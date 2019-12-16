@@ -102,6 +102,10 @@ public class UserServiceImpl implements UserService {
             userUPD.setBankBranch(user.getBankBranch());
             userUPD.setBankCard(user.getBankCard());
             userUPD.setIdCard(user.getIdCard());
+            if(StringUtil.isNotEmpty(user.getPayPassword())){
+               String payPwd = DigestUtil.md5Hex(user.getPayPassword());
+                userUPD.setPayPassword(payPwd);
+            }
             if(0 == userMapper.updateByPrimaryKeySelective(userUPD)){
                 throw new RuntimeException("修改失败");
             }else{
@@ -119,8 +123,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Response userBalancePay(POrder order,PUser user) {
-        BigDecimal realPrice = order.getRealPrice();
+    public Response userBalancePay(POrder order,PUser user,BigDecimal realPrice) {
         BigDecimal userOldBalance = user.getBalance();
         BigDecimal userEndBalance = userOldBalance.subtract(realPrice);
         if(userEndBalance.compareTo(new BigDecimal("0")) < 0){

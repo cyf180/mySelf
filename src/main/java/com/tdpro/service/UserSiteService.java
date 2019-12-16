@@ -40,4 +40,11 @@ public interface UserSiteService {
      * @return
      */
     Response adminUserSiteList(UserSitePageETD sitePageETD);
+
+    /**
+     *
+     * @param userSite
+     * @return
+     */
+    Response userInsertSite(PUserSite userSite);
 }

@@ -33,9 +33,9 @@ public class OrderController {
 
     @GetMapping("goodsAffirm")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "商品id", required = true, dataType = "long", paramType = "query"),
+            @ApiImplicitParam(name = "id", value = "订单id", required = true, dataType = "long", paramType = "query"),
     })
-    @ApiOperation(value = "商品确认接口",response = OrderCartETD.class)
+    @ApiOperation(value = "订单确认支付接口",response = OrderCartETD.class)
     public Response getGoodsAffirm(@ApiIgnore @RequestAttribute Long uid, Long id){
         return goodsService.goodsAffirm(id,uid);
     }
@@ -43,9 +43,6 @@ public class OrderController {
     @PostMapping("addOrder")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "goodsId", value = "商品id", required = true, dataType = "long", paramType = "form"),
-            @ApiImplicitParam(name = "siteId", value = "收货地址id", required = true, dataType = "long", paramType = "form"),
-            @ApiImplicitParam(name = "userNote", value = "用户备注", required = false, dataType = "string", paramType = "form"),
-            @ApiImplicitParam(name = "voucherId", value = "选择优惠券id", required = false, dataType = "long", paramType = "form"),
             @ApiImplicitParam(name = "suitList", value = "套装规格列表", required = true, dataType = "list", paramType = "form"),
             @ApiImplicitParam(name = "suitList.number", value = "数量", required = true, dataType = "int", paramType = "form"),
             @ApiImplicitParam(name = "suitList.id", value = "套装id", required = false, dataType = "long", paramType = "form"),

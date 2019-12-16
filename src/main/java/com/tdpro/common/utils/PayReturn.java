@@ -6,9 +6,9 @@ import lombok.Data;
 
 @Data
 public class PayReturn {
-    private Boolean state;
+    private Boolean state = new Boolean(false);
     private String msg;
-    private Integer type = new Integer(0);
+    private int type = 0;
     private Long orderId;
     private Object successRes;
 }

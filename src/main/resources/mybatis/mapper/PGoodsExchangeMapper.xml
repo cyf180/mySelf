@@ -79,11 +79,18 @@
       `number` = #{number,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="selectListByGoodsId" resultType="com.tdpro.entity.extend.GoodsExchangeETD" parameterType="java.lang.Long" >
-    select e.id,e.goodsId,e.voucherId,e.number,v.voucherName
+  <select id="selectListByGoodsId" resultType="com.tdpro.entity.extend.GoodsExchangeETD" parameterType="java.lang.Long">
+    select e.id,e.goodsId,e.voucherId,e.number,v.voucherName,v.faceValue
     from p_goods_exchange e
     left join p_voucher v on e.voucherId=v.id
     where e.goodsId = #{0}
+  </select>
+  <select id="selectListByGoodsIdAndUid" resultType="com.tdpro.entity.extend.GoodsExchangeETD">
+    select e.id,e.goodsId,e.voucherId,e.number,v.voucherName,v.faceValue,
+    (select count(*) from p_user_voucher where useState=0 and state = 0 and voucherId=e.voucherId and uid=#{uid}) as userNum
+    from p_goods_exchange e
+    left join p_voucher v on e.voucherId=v.id
+    where e.goodsId = #{goodsId}
   </select>
   <select id="selectByGoodsIdAndVoucherId" resultType="com.tdpro.entity.extend.GoodsExchangeETD" >
     select e.id,e.goodsId,e.voucherId,e.number,v.voucherName,v.faceValue

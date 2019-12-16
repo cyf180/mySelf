@@ -433,4 +433,17 @@
     </if>
     order by createTime desc
   </select>
+  <select id="countByUidAndZoneTypePayNum" resultType="java.lang.Integer">
+    select count(*) from p_order
+    where uid=#{uid}
+    and zoneType=#{zoneType}
+     <![CDATA[ and state >= 1]]>
+  </select>
+  <select id="selectAffirmById" resultType="com.tdpro.entity.extend.OrderCartETD" parameterType="java.lang.Long">
+    select id as orderId,goodsId,zoneType,totalPrice
+    from p_order
+    where id=#{0}
+    and isDel = 0
+    and state = 0
+  </select>
 </mapper>

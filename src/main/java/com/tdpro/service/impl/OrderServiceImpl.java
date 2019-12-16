@@ -3,6 +3,7 @@ package com.tdpro.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.StringUtil;
+import com.tdpro.common.constant.ErrorCodeConstants;
 import com.tdpro.common.constant.PayType;
 import com.tdpro.common.exception.BusinessException;
 import com.tdpro.common.utils.Response;
@@ -35,8 +36,7 @@ public class OrderServiceImpl implements OrderService {
     private CartService cartService;
     @Autowired
     private GoodsService goodsService;
-    @Autowired
-    private UserSiteService userSiteService;
+
     @Autowired
     private GoodsExchangeService exchangeService;
     @Autowired
@@ -55,128 +55,77 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
     public Response insertOrder(OrderCartETD orderCartETD) {
-        if(null == orderCartETD.getGoodsId() || null ==  orderCartETD.getSuitList() || orderCartETD.getSuitList().size()  <= 0){
-           return ResponseUtils.errorRes("操作异常");
+        if (null == orderCartETD.getGoodsId() || null == orderCartETD.getSuitList() || orderCartETD.getSuitList().size() <= 0) {
+            return ResponseUtils.errorRes("操作异常");
         }
         Long uid = orderCartETD.getUid();
         Long goodsId = orderCartETD.getGoodsId();
         GoodsETD goodsInfo = goodsService.selectInfo(goodsId);
-        if(null == goodsInfo){
-            return  ResponseUtils.errorRes("产品已下架");
+        if (null == goodsInfo) {
+            return ResponseUtils.errorRes("产品已下架");
         }
-        if(goodsInfo.getRepertory().compareTo(new Integer(0)) < 0){
+        if (goodsInfo.getRepertory().compareTo(new Integer(0)) < 0) {
             return ResponseUtils.errorRes("库存不足");
         }
-        if(null == orderCartETD.getSiteId()){
-            return ResponseUtils.errorRes("请选择收货地址");
-        }
-        PUserSite site = userSiteService.findById(orderCartETD.getSiteId());
-        if(null == site || !site.getUid().equals(orderCartETD.getUid())){
-            return ResponseUtils.errorRes("收货地址异常");
-        }
         int orderNumber = 0;
-        if(null != orderCartETD.getSuitList() && orderCartETD.getSuitList().size() > 0) {
+        if (null != orderCartETD.getSuitList() && orderCartETD.getSuitList().size() > 0) {
             List<GoodsSuitETD> suitList = orderCartETD.getSuitList();
             for (GoodsSuitETD suit : suitList) {
                 int num = (null == suit.getNumber() || suit.getNumber() == 0) ? 1 : suit.getNumber();
-                orderNumber = orderNumber+num;
+                orderNumber = orderNumber + num;
             }
-        }else{
+        } else {
             orderNumber = 1;
         }
-        List<PUserVoucher> voucherList = new ArrayList<>();
-        BigDecimal discountAmount = new BigDecimal("0");
-        switch (goodsInfo.getZoneType().intValue()){
-            case 0:
-                if(null != orderCartETD.getVoucherId() && !orderCartETD.getVoucherId().equals(new Long(0))){
-                    GoodsExchangeETD goodsVoucher = exchangeService.selectByGoodsIdAndVoucherId(goodsId,orderCartETD.getVoucherId());
-                    if(null == goodsVoucher){
-                        return ResponseUtils.errorRes("该商品不能使用当前券");
-                    }
-                    if(goodsVoucher.getNumber().compareTo(new Integer(0)) > 0){
-                        voucherList = userVoucherService.selectByUidAndVoucherId(uid,goodsVoucher.getVoucherId(),goodsVoucher.getNumber());
-                        if(null == voucherList || voucherList.size() < goodsVoucher.getNumber().intValue()){
-                            return ResponseUtils.errorRes("您的"+goodsVoucher.getVoucherName()+"数量不足");
-                        }
-                        BigDecimal needNum = new BigDecimal(goodsVoucher.getNumber().toString());
-                        BigDecimal faceValue = goodsVoucher.getFaceValue();
-                        discountAmount =faceValue.multiply(needNum).setScale(2,BigDecimal.ROUND_DOWN);
-                    }
+        switch (goodsInfo.getZoneType().intValue()) {
+            case 1:
+                int num = orderMapper.countByUidAndZoneTypePayNum(uid, 1);
+                if (num > 0) {
+                    return ResponseUtils.errorRes("您已免费领取过会员产品");
+                }
+                if (orderNumber > 1) {
+                    return ResponseUtils.errorRes("会员专区只能免费领取一个");
                 }
                 break;
             case 2:
                 List<GoodsExchangeETD> goodsExchangeList = exchangeService.selectListByGoodsId(goodsId);
-                if(null == goodsExchangeList || goodsExchangeList.size() <= 0){
+                if (null == goodsExchangeList || goodsExchangeList.size() <= 0) {
                     return ResponseUtils.errorRes("商品配置异常");
                 }
-                for (GoodsExchangeETD exchange:goodsExchangeList){
-                    if(exchange.getNumber().compareTo(new Integer(0)) <= 0){
+                for (GoodsExchangeETD exchange : goodsExchangeList) {
+                    if (exchange.getNumber().compareTo(new Integer(0)) <= 0) {
                         return ResponseUtils.errorRes("商品兑换配置异常");
                     }
                     Long voucherId = exchange.getVoucherId();
-                    int needNum = exchange.getNumber()*orderNumber;
-                    List<PUserVoucher> voucherListOne = userVoucherService.selectByUidAndVoucherId(uid,voucherId,needNum);
-                    if(null == voucherListOne || voucherListOne.size() < needNum){
-                        return ResponseUtils.errorRes("您的"+exchange.getVoucherName()+"数量不足");
+                    int needNum = exchange.getNumber() * orderNumber;
+                    List<PUserVoucher> voucherListOne = userVoucherService.selectByUidAndVoucherId(uid, voucherId, needNum);
+                    if (null == voucherListOne || voucherListOne.size() < needNum) {
+                        return ResponseUtils.errorRes("您的" + exchange.getVoucherName() + "数量不足");
                     }
-                    voucherList.addAll(voucherListOne);
                 }
-                discountAmount = goodsInfo.getPrice().multiply(new BigDecimal(orderNumber));
                 break;
-            default:
-                return ResponseUtils.errorRes("商品配置异常");
         }
-        if(goodsInfo.getRepertory().compareTo(new Integer(orderNumber)) < 0){
+        if (goodsInfo.getRepertory().compareTo(new Integer(orderNumber)) < 0) {
             return ResponseUtils.errorRes("库存不足");
         }
-        POrder orderADD = getAddOrder(orderCartETD,goodsInfo, site,orderNumber);
+        POrder orderADD = getAddOrder(goodsInfo, uid, orderNumber);
         Long orderId = orderADD.getId();
-        BigDecimal totalPrice = new BigDecimal("0");
-        switch (goodsInfo.getIsSuit().intValue()){
-            case 1:
-                List<GoodsSuitETD> suitList = orderCartETD.getSuitList();
-                for (GoodsSuitETD suit:suitList){
-                    int num = (null == suit.getNumber() || suit.getNumber() == 0) ? 1 : suit.getNumber();
-                    if(null == suit.getId()) {
-                        throw new RuntimeException("规格选择错误");
-                    }
-                    PGoodsSuit suitInfo = goodsSuitService.findById(suit.getId());
-                    if (null == suitInfo || !suitInfo.getGoodsId().equals(goodsId)) {
-                        throw new RuntimeException("规格选择错误");
-                    }
-                    if(!cartService.insertCart(uid,goodsInfo, orderId, num, suitInfo)){
-                        throw new RuntimeException("添加购物车失败");
-                    }
-                    totalPrice = totalPrice.add(goodsInfo.getPrice().multiply(new BigDecimal(num)).setScale(2,BigDecimal.ROUND_DOWN));
+        List<GoodsSuitETD> suitList = orderCartETD.getSuitList();
+        for (GoodsSuitETD suit : suitList) {
+            int num = (null == suit.getNumber() || suit.getNumber() == 0) ? 1 : suit.getNumber();
+            if (null != suit.getId()) {
+                PGoodsSuit suitInfo = goodsSuitService.findById(suit.getId());
+                if (null == suitInfo || !suitInfo.getGoodsId().equals(goodsId)) {
+                    throw new RuntimeException("规格选择错误");
                 }
-                break;
-            default:
-                if(!cartService.insertCart(uid,goodsInfo, orderId, orderNumber, null)){
+                if (!cartService.insertCart(uid, goodsInfo, orderId, num, suitInfo)) {
                     throw new RuntimeException("添加购物车失败");
                 }
-                totalPrice = totalPrice.add(goodsInfo.getPrice().multiply(new BigDecimal(orderNumber)).setScale(2,BigDecimal.ROUND_DOWN));
-                break;
-        }
-        if(null != voucherList && voucherList.size() > 0){
-            for (PUserVoucher userVoucher:voucherList){
-                if(!orderVoucherService.insertVoucher(orderId,uid,userVoucher.getId())){
-                    throw new RuntimeException("券绑定失败");
+            } else {
+                if (!cartService.insertCart(uid, goodsInfo, orderId, num, null)) {
+                    throw new RuntimeException("添加购物车失败");
                 }
             }
-            if(!userVoucherService.updateUserVoucherIsLock(voucherList)){
-                throw new RuntimeException("优惠券绑定失败");
-            }
-        }
-        BigDecimal realPrice = totalPrice.subtract(discountAmount);
-        if(realPrice.compareTo(new BigDecimal("0")) < 0){
-            realPrice = new BigDecimal("0");
-        }
-        POrder orderUPD = new POrder();
-        orderUPD.setId(orderId);
-        orderUPD.setTotalPrice(totalPrice);
-        orderUPD.setRealPrice(realPrice);
-        if(orderMapper.updateByPrimaryKeySelective(orderUPD) == 0){
-            throw new RuntimeException("修改订单失败");
         }
         return ResponseUtils.successRes(orderId);
     }
@@ -186,9 +135,9 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.selectByPrimaryKey(id);
     }
 
-    private POrder getAddOrder(OrderCartETD orderCartETD, GoodsETD goodsInfo, PUserSite site,int orderNumber) {
+    private POrder getAddOrder(GoodsETD goodsInfo, Long uid, int orderNumber) {
+        BigDecimal totalPrice = goodsInfo.getPrice().multiply(new BigDecimal(orderNumber)).setScale(2, BigDecimal.ROUND_DOWN);
         Long goodsId = goodsInfo.getId();
-        Long uid = site.getUid();
         POrder orderADD = new POrder();
         orderADD.setUid(uid);
         orderADD.setOrderNo(createOrderNo(uid));
@@ -198,34 +147,32 @@ public class OrderServiceImpl implements OrderService {
         orderADD.setIsSuit(goodsInfo.getIsSuit());
         orderADD.setState(0);
         orderADD.setCreateTime(new Date());
-        orderADD.setReceiptName(site.getName());
-        orderADD.setReceiptPhone(site.getPhone());
-        orderADD.setReceiptSite(site.getSite());
         orderADD.setNumber(orderNumber);
-        if(null != orderCartETD.getUserNote()){
-            orderADD.setUserNote(orderCartETD.getUserNote());
-        }
+        orderADD.setTotalPrice(totalPrice);
         int addOrder = orderMapper.insertSelective(orderADD);
-        if(0 == addOrder){
+        if (0 == addOrder) {
             throw new RuntimeException("添加订单失败");
         }
         return orderADD;
     }
 
     @Override
-    public Boolean updateOrderIsPay(Long id, PayType payType,String wxOrderNo,BigDecimal callbackPrice) {
+    public Boolean updateOrderIsPay(Long id, PayType payType, String wxOrderNo, BigDecimal callbackPrice, BigDecimal realPrice) {
         POrder orderUPD = new POrder();
         orderUPD.setId(id);
         orderUPD.setState(1);
         orderUPD.setPayTime(new Date());
         orderUPD.setPayType(payType.getType());
-        if(StringUtil.isNotEmpty(wxOrderNo)){
+        if (null != realPrice) {
+            orderUPD.setRealPrice(realPrice);
+        }
+        if (StringUtil.isNotEmpty(wxOrderNo)) {
             orderUPD.setWxOrderNo(wxOrderNo);
         }
-        if(null != callbackPrice){
+        if (null != callbackPrice) {
             orderUPD.setCallbackPrice(callbackPrice);
         }
-        if(0 == orderMapper.updateByPrimaryKeySelective(orderUPD)){
+        if (0 == orderMapper.updateByPrimaryKeySelective(orderUPD)) {
             return false;
         }
         return true;
@@ -237,32 +184,32 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public BigDecimal sumRealPrice(Long uid,Long id){
-        return orderMapper.sumRealPrice(uid,id);
+    public BigDecimal sumRealPrice(Long uid, Long id) {
+        return orderMapper.sumRealPrice(uid, id);
     }
 
     @Override
-    public Boolean updateOrder(POrder order){
-        if(0 == orderMapper.updateByPrimaryKeySelective(order)){
+    public Boolean updateOrder(POrder order) {
+        if (0 == orderMapper.updateByPrimaryKeySelective(order)) {
             return false;
         }
         return true;
     }
 
     @Override
-    public int sumSuitOrderByUid(Long uid,Long id){
-        return orderMapper.sumSuitOrderNum(uid,id);
+    public int sumSuitOrderByUid(Long uid, Long id) {
+        return orderMapper.sumSuitOrderNum(uid, id);
     }
 
     @Override
-    public List<POrder> findUserMonthResultsByPayTime(Long strawUid,Date startTime,Date endTime){
-        return orderMapper.findOrderRealPriceByStrawUid(strawUid,startTime,endTime);
+    public List<POrder> findUserMonthResultsByPayTime(Long strawUid, Date startTime, Date endTime) {
+        return orderMapper.findOrderRealPriceByStrawUid(strawUid, startTime, endTime);
     }
 
     @Override
-    public Future<Boolean> overdueOrder(){
+    public Future<Boolean> overdueOrder() {
         POrderConfig takeConfig = orderConfigService.findByType(0);
-        if(null != takeConfig && takeConfig.getTime() > 0){
+        if (null != takeConfig && takeConfig.getTime() > 0) {
             int day = takeConfig.getTime();
             Calendar takeCa = Calendar.getInstance();
             takeCa.add(Calendar.DATE, -day);
@@ -270,11 +217,11 @@ public class OrderServiceImpl implements OrderService {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String dateString = simpleDateFormat.format(takeTime);
             orderMapper.updateOrderNotTake(takeTime);
-        }else {
+        } else {
             log.info("订单未确认收货处理，无确认收货到期时间配置");
         }
         POrderConfig payConfig = orderConfigService.findByType(1);
-        if(null != payConfig && payConfig.getTime() > 0){
+        if (null != payConfig && payConfig.getTime() > 0) {
             int minute = payConfig.getTime();
             Calendar payCa = Calendar.getInstance();
             payCa.add(Calendar.MINUTE, -minute);
@@ -282,25 +229,25 @@ public class OrderServiceImpl implements OrderService {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String dateString = simpleDateFormat.format(payTime);
             List<POrder> orderList = orderMapper.orderNotPayList(payTime);
-            if(null != orderList && orderList.size() > 0){
-                for (int i = 0;i<orderList.size();i++){
+            if (null != orderList && orderList.size() > 0) {
+                for (int i = 0; i < orderList.size(); i++) {
                     long id = orderList.get(i).getId();
-                    if(1 == orderMapper.updateOrderNotPay(id)){
+                    if (1 == orderMapper.updateOrderNotPay(id)) {
                         userVoucherService.releaseUserVoucher(id);
                     }
                 }
             }
-        }else{
+        } else {
             log.info("订单未支付处理，无确认收货到期时间配置");
         }
         return new AsyncResult<Boolean>(true);
     }
 
     @Override
-    public Response adminPageList(OrderPageETD orderPageETD){
+    public Response adminPageList(OrderPageETD orderPageETD) {
         Integer pageNum = orderPageETD.getPageNo() == null ? 1 : orderPageETD.getPageNo();
         Integer pageSize = orderPageETD.getPageSize() == null ? 10 : orderPageETD.getPageSize();
-        if(StringUtil.isNotEmpty(orderPageETD.getStartTimes())){
+        if (StringUtil.isNotEmpty(orderPageETD.getStartTimes())) {
             try {
                 SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 orderPageETD.setStartTime(ft.parse(orderPageETD.getStartTimes()));
@@ -308,7 +255,7 @@ public class OrderServiceImpl implements OrderService {
                 e.printStackTrace();
             }
         }
-        if(StringUtil.isNotEmpty(orderPageETD.getEndTimes())){
+        if (StringUtil.isNotEmpty(orderPageETD.getEndTimes())) {
             try {
                 SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 orderPageETD.setEndTime(ft.parse(orderPageETD.getEndTimes()));
@@ -319,20 +266,20 @@ public class OrderServiceImpl implements OrderService {
         PageHelper.startPage(pageNum, pageSize);
         List<OrderPageETD> list = orderMapper.findPageList(orderPageETD);
         Map map = new HashMap();
-        map.put("pageInfo",new PageInfo(list));
-        map.put("queryModel",orderPageETD);
+        map.put("pageInfo", new PageInfo(list));
+        map.put("queryModel", orderPageETD);
         return ResponseUtils.successRes(map);
     }
 
     @Override
-    public Response adminOrderInfo(Long id){
+    public Response adminOrderInfo(Long id) {
         OrderPageETD orderInfo = orderMapper.findOrderInfoById(id);
-        if(null == orderInfo){
-            return  ResponseUtils.errorRes("订单异常");
+        if (null == orderInfo) {
+            return ResponseUtils.errorRes("订单异常");
         }
         orderInfo.setCardList(cartService.findListByOrderId(orderInfo.getId()));
         List<OrderVoucherETD> voucherList = orderVoucherService.findAdminListByOrderId(orderInfo.getId());
-        if(null != voucherList){
+        if (null != voucherList) {
             orderInfo.setVoucherList(voucherList);
         }
         return ResponseUtils.successRes(orderInfo);
@@ -340,20 +287,20 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
-    public Response adminUpdateOrder(POrder order,Long adminId){
+    public Response adminUpdateOrder(POrder order, Long adminId) {
         POrder orderFind = orderMapper.selectByPrimaryKey(order.getId());
-        if(null == orderFind){
+        if (null == orderFind) {
             return ResponseUtils.errorRes("订单不存在");
         }
         StringBuffer note = new StringBuffer();
         boolean isUpd = false;
         POrder orderUPD = new POrder();
         orderUPD.setId(orderFind.getId());
-        if(orderFind.getState().equals(new Integer(1))){
-            if(StringUtil.isEmpty(order.getLogisticsName())){
+        if (orderFind.getState().equals(new Integer(1))) {
+            if (StringUtil.isEmpty(order.getLogisticsName())) {
                 return ResponseUtils.errorRes("请输入物流公司");
             }
-            if(StringUtil.isEmpty(order.getLogisticsNo())){
+            if (StringUtil.isEmpty(order.getLogisticsNo())) {
                 return ResponseUtils.errorRes("请输入物流单号");
             }
             note.append("修改订单物流公司：").append(order.getLogisticsName()).append(",物流单号：").append(order.getLogisticsNo());
@@ -363,14 +310,14 @@ public class OrderServiceImpl implements OrderService {
             orderUPD.setState(2);
             isUpd = true;
         }
-        if(StringUtil.isNotEmpty(order.getBackNote())){
+        if (StringUtil.isNotEmpty(order.getBackNote())) {
             note.append(" 订单备注：").append(order.getBackNote());
             orderUPD.setBackNote(order.getBackNote());
             isUpd = true;
         }
-        if(isUpd){
-            logService.insertLog(adminId,"订单修改",note.toString(),1);
-            if(0 == orderMapper.updateByPrimaryKeySelective(orderUPD)){
+        if (isUpd) {
+            logService.insertLog(adminId, "订单修改", note.toString(), 1);
+            if (0 == orderMapper.updateByPrimaryKeySelective(orderUPD)) {
                 throw new BusinessException("修改失败");
             }
         }
@@ -378,137 +325,138 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Response orderConfig(){
+    public Response orderConfig() {
         OrderConfigETD configETD = new OrderConfigETD();
         POrderConfig orderNotPay = orderConfigService.findByType(0);
-        if(null != orderNotPay){
+        if (null != orderNotPay) {
             configETD.setNotPay(orderNotPay.getTime());
         }
         POrderConfig orderNotOk = orderConfigService.findByType(1);
-        if(null != orderNotOk){
+        if (null != orderNotOk) {
             configETD.setNotOk(orderNotOk.getTime());
         }
         return ResponseUtils.successRes(configETD);
     }
+
     @Override
     @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
-    public Response updateOrderConfig(OrderConfigETD orderConfig,Long adminId){
-        if(null == orderConfig.getNotPay() || orderConfig.getNotPay().equals(new Integer(0))){
+    public Response updateOrderConfig(OrderConfigETD orderConfig, Long adminId) {
+        if (null == orderConfig.getNotPay() || orderConfig.getNotPay().equals(new Integer(0))) {
             return ResponseUtils.errorRes("未支付超时时间错误");
         }
         POrderConfig configNoPayFind = orderConfigService.findByType(0);
         POrderConfig configPayUPD = new POrderConfig();
-        if(null == configNoPayFind){
+        if (null == configNoPayFind) {
             configPayUPD.setType(0);
             configPayUPD.setTime(orderConfig.getNotPay());
-            if(!orderConfigService.insertConfig(configPayUPD)){
+            if (!orderConfigService.insertConfig(configPayUPD)) {
                 throw new BusinessException("添加失败");
             }
-        }else{
+        } else {
             configPayUPD.setId(configNoPayFind.getId());
             configPayUPD.setTime(orderConfig.getNotPay());
-            if(!orderConfigService.updateConfig(configPayUPD)){
+            if (!orderConfigService.updateConfig(configPayUPD)) {
                 throw new BusinessException("修改失败");
             }
         }
-        if(null == orderConfig.getNotOk() || orderConfig.getNotOk().equals(new Integer(0))){
+        if (null == orderConfig.getNotOk() || orderConfig.getNotOk().equals(new Integer(0))) {
             return ResponseUtils.errorRes("未收货超时时间错误");
         }
         POrderConfig configNoOkFind = orderConfigService.findByType(1);
         POrderConfig configOkUPD = new POrderConfig();
-        if(null == configNoOkFind){
+        if (null == configNoOkFind) {
             configOkUPD.setType(1);
             configOkUPD.setTime(orderConfig.getNotOk());
-            if(!orderConfigService.insertConfig(configOkUPD)){
+            if (!orderConfigService.insertConfig(configOkUPD)) {
                 throw new BusinessException("添加失败");
             }
-        }else{
+        } else {
             configOkUPD.setId(configNoOkFind.getId());
             configOkUPD.setTime(orderConfig.getNotOk());
-            if(!orderConfigService.updateConfig(configOkUPD)){
+            if (!orderConfigService.updateConfig(configOkUPD)) {
                 throw new BusinessException("修改失败");
             }
         }
         StringBuffer note = new StringBuffer();
         note.append("修改未支付超时时间：").append(orderConfig.getNotPay()).append(",修改未收货超时时间：").append(orderConfig.getNotOk());
-        logService.insertLog(adminId,"修改订单配置",note.toString(),1);
+        logService.insertLog(adminId, "修改订单配置", note.toString(), 1);
         return ResponseUtils.successRes(1);
     }
 
     @Override
-    public Response userOrderList(OrderETD orderETD){
+    public Response userOrderList(OrderETD orderETD) {
         Integer pageNo = orderETD.getPageNo() == null ? 1 : orderETD.getPageNo();
-        Integer pageSize = orderETD.getPageSize() == null ? 10: orderETD.getPageSize();
-        PageHelper.startPage(pageNo,pageSize);
+        Integer pageSize = orderETD.getPageSize() == null ? 10 : orderETD.getPageSize();
+        PageHelper.startPage(pageNo, pageSize);
         List<OrderETD> siteList = orderMapper.selectListByUid(orderETD);
         PageInfo pageInfo = new PageInfo(siteList);
         return ResponseUtils.successRes(pageInfo);
     }
 
     @Override
-    public Response userDelOrder(POrder order){
+    public Response userDelOrder(POrder order) {
         try {
             delOrderLock.lock();
-            if(null == order.getId()){
+            if (null == order.getId()) {
                 return ResponseUtils.errorRes("订单异常");
             }
             POrder orderFind = orderMapper.selectByPrimaryKey(order.getId());
-            if(null == orderFind){
+            if (null == orderFind) {
                 return ResponseUtils.errorRes("订单不存在");
             }
-            if(!orderFind.getState().equals(new Integer(0))){
+            if (!orderFind.getState().equals(new Integer(0))) {
                 return ResponseUtils.errorRes("订单不存在");
             }
-            if(!orderFind.getIsDel().equals(new Integer(0))){
+            if (!orderFind.getIsDel().equals(new Integer(0))) {
                 return ResponseUtils.errorRes("订单不存在");
             }
-            if(!orderFind.getUid().equals(order.getUid())){
+            if (!orderFind.getUid().equals(order.getUid())) {
                 return ResponseUtils.errorRes("操作异常");
             }
             POrder orderUPD = new POrder();
             orderUPD.setId(orderFind.getId());
             orderUPD.setIsDel(-1);
-            if(0 == orderMapper.updateByPrimaryKeySelective(orderUPD)){
+            if (0 == orderMapper.updateByPrimaryKeySelective(orderUPD)) {
                 throw new BusinessException("删除失败");
             }
             userVoucherService.releaseUserVoucher(orderFind.getId());
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new BusinessException(e.getMessage());
-        }finally {
+        } finally {
             delOrderLock.unlock();
         }
         return ResponseUtils.successRes(1);
     }
 
     @Override
-    public Response affirmOrder(POrder order){
+    public Response affirmOrder(POrder order) {
         try {
             affirmOrderLock.lock();
-            if(null == order.getId()){
+            if (null == order.getId()) {
                 return ResponseUtils.errorRes("订单异常");
             }
             POrder orderFind = orderMapper.selectByPrimaryKey(order.getId());
-            if(null == orderFind){
+            if (null == orderFind) {
                 return ResponseUtils.errorRes("订单不存在");
             }
-            if(!orderFind.getIsDel().equals(new Integer(0))){
+            if (!orderFind.getIsDel().equals(new Integer(0))) {
                 return ResponseUtils.errorRes("订单不存在");
             }
-            if(!orderFind.getState().equals(new Integer(2))){
+            if (!orderFind.getState().equals(new Integer(2))) {
                 return ResponseUtils.errorRes("该订单未发货");
             }
-            if(!orderFind.getUid().equals(order.getUid())){
+            if (!orderFind.getUid().equals(order.getUid())) {
                 return ResponseUtils.errorRes("操作异常");
             }
             POrder orderUPD = new POrder();
             orderUPD.setId(orderFind.getId());
             orderUPD.setState(3);
-            if(0 == orderMapper.updateByPrimaryKeySelective(orderUPD)){
+            if (0 == orderMapper.updateByPrimaryKeySelective(orderUPD)) {
                 throw new BusinessException("收货失败");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new BusinessException(e.getMessage());
-        }finally {
+        } finally {
             affirmOrderLock.unlock();
         }
         return ResponseUtils.successRes(1);

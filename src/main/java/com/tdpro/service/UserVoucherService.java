@@ -29,7 +29,9 @@ public interface UserVoucherService {
      * @param list
      * @return
      */
-    Boolean updateUserVoucherIsUse(List<POrderVoucher> list);
+    Boolean updateUserVoucherIsUse(List<PUserVoucher> list);
+
+    Boolean updateUserVoucherIsUseBy(List<POrderVoucher> list);
 
     /**
      * 修改用户券为绑定

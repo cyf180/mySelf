@@ -18,4 +18,5 @@ public class UserUPD {
     private String bankCard;
     @ApiModelProperty(value = "身份证")
     private String idCard;
+    private String payPassword;
 }

@@ -2,6 +2,7 @@ package com.tdpro.controller;
 
 import com.tdpro.common.utils.Response;
 import com.tdpro.common.utils.ResponseUtils;
+import com.tdpro.entity.PUserSite;
 import com.tdpro.entity.extend.UserSiteETD;
 import com.tdpro.service.UserSiteService;
 import io.swagger.annotations.Api;
@@ -24,6 +25,7 @@ public class UserSiteController {
     private UserSiteService userSiteService;
     Lock delLock = new ReentrantLock();
     Lock defaultLock = new ReentrantLock();
+    Lock addLock = new ReentrantLock();
 
     @GetMapping("siteList")
     @ApiImplicitParams({
@@ -70,6 +72,28 @@ public class UserSiteController {
             response = ResponseUtils.errorRes(e.getMessage());
         }finally {
             defaultLock.unlock();
+        }
+        return response;
+    }
+
+    @PostMapping("addSite")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "name", value = "姓名", required = true, dataType = "string", paramType = "form"),
+            @ApiImplicitParam(name = "phone", value = "手机", required = true, dataType = "string", paramType = "form"),
+            @ApiImplicitParam(name = "site", value = "地址详情", required = true, dataType = "string", paramType = "form"),
+            @ApiImplicitParam(name = "isDefault", value = "1 默认", required = false, dataType = "int", paramType = "form")
+    })
+    @ApiOperation(value = "添加收货地址")
+    public Response addUserSite(@ApiIgnore @RequestAttribute Long uid,@Valid @RequestBody PUserSite userSite){
+        Response response;
+        try {
+            addLock.lock();
+            userSite.setUid(uid);
+            response =  userSiteService.userInsertSite(userSite);
+        }catch (Exception e){
+            response = ResponseUtils.errorRes(e.getMessage());
+        }finally {
+            addLock.unlock();
         }
         return response;
     }

@@ -2,6 +2,8 @@ package com.tdpro.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.StringUtil;
+import com.tdpro.common.exception.BusinessException;
 import com.tdpro.common.utils.Response;
 import com.tdpro.common.utils.ResponseUtils;
 import com.tdpro.entity.PUserSite;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Service
 public class UserSiteServiceImpl implements UserSiteService {
@@ -96,5 +99,36 @@ public class UserSiteServiceImpl implements UserSiteService {
         List<UserSitePageETD> list = userSiteMapper.selectPageList(sitePageETD);
         PageInfo pageInfo = new PageInfo(list);
         return ResponseUtils.successRes(pageInfo);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
+    public Response userInsertSite(PUserSite userSite) {
+        if(StringUtil.isEmpty(userSite.getPhone()) || !Pattern.matches("^1[123456789]\\d{9}$", userSite.getPhone())){
+            return ResponseUtils.errorRes("手机号错误");
+        }
+        if(StringUtil.isEmpty(userSite.getSite())){
+            return ResponseUtils.errorRes("收货地址错误");
+        }
+        if(StringUtil.isEmpty(userSite.getName())){
+            return ResponseUtils.errorRes("收件人错误");
+        }
+        PUserSite siteADD =new PUserSite();
+        siteADD.setName(userSite.getName());
+        siteADD.setPhone(userSite.getPhone());
+        siteADD.setSite(userSite.getSite());
+        siteADD.setUid(userSite.getUid());
+        int isDefault = userSite.getIsDefault() == null ? 0 : userSite.getIsDefault();
+        siteADD.setIsDefault(isDefault);
+        if(0 == userSiteMapper.insertSelective(siteADD)){
+            throw new BusinessException("添加失败");
+        }
+        if(isDefault == 1){
+            UserSiteETD siteETD1 = new UserSiteETD();
+            siteETD1.setId(siteADD.getId());
+            siteETD1.setUid(userSite.getUid());
+            userSiteMapper.updateNotIsDefaultByUid(siteETD1);
+        }
+        return ResponseUtils.successRes(1);
     }
 }

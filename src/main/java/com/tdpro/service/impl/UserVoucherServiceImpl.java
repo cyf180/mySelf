@@ -57,8 +57,17 @@ public class UserVoucherServiceImpl implements UserVoucherService {
     }
 
     @Override
-    public Boolean updateUserVoucherIsUse(List<POrderVoucher> list) {
+    public Boolean updateUserVoucherIsUse(List<PUserVoucher> list) {
         int update = userVoucherMapper.updateIsUse(list);
+        if(update != list.size()){
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public Boolean updateUserVoucherIsUseBy(List<POrderVoucher> list) {
+        int update = userVoucherMapper.updateIsUseByU(list);
         if(update != list.size()){
             return false;
         }

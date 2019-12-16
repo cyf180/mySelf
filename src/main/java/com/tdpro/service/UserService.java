@@ -53,7 +53,7 @@ public interface UserService {
      * @param order
      * @return
      */
-    Response userBalancePay(POrder order,PUser user);
+    Response userBalancePay(POrder order,PUser user,BigDecimal realPrice);
 
     /**
      * 用户余额修改

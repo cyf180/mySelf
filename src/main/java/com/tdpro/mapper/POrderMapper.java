@@ -1,6 +1,7 @@
 package com.tdpro.mapper;
 
 import com.tdpro.entity.POrder;
+import com.tdpro.entity.extend.OrderCartETD;
 import com.tdpro.entity.extend.OrderETD;
 import com.tdpro.entity.extend.OrderPageETD;
 import org.apache.ibatis.annotations.Mapper;
@@ -43,4 +44,8 @@ public interface POrderMapper {
     OrderPageETD findOrderInfoById(Long id);
 
     List<OrderETD> selectListByUid(OrderETD orderETD);
+
+    int countByUidAndZoneTypePayNum(@Param("uid") Long uid,@Param("zoneType") Integer zoneType);
+
+    OrderCartETD selectAffirmById(Long id);
 }

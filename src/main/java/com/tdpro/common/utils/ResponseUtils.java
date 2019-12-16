@@ -31,6 +31,11 @@ public class ResponseUtils {
         return response;
     }
 
+    public static<T>  Response successRes(T t,ErrorCodeConstants.ErrorCode errorCode) {
+        Response response = new Response(errorCode.SYSTEM_SUCCESS.getMemo(), errorCode.getErrorCode(),HttpStatus.OK, t,true);
+        return response;
+    }
+
     public static Response errorRes() {
         Response response = new Response(ErrorCodeConstants.ErrorCode.SYSTEM_ERROR.getMemo(), ErrorCodeConstants.ErrorCode.SYSTEM_ERROR.getErrorCode(),HttpStatus.INTERNAL_SERVER_ERROR, null,false);
         return response;

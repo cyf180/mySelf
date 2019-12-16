@@ -40,6 +40,10 @@ public class GoodsServiceImpl implements GoodsService {
     private PGoodsExchangeMapper exchangeMapper;
     @Autowired
     private PGoodsClassMapper classMapper;
+    @Autowired
+    private POrderMapper orderMapper;
+    @Autowired
+     private PCartMapper cartMapper;
     Lock isDelLock = new ReentrantLock();
     @Override
     public List<GoodsETD> goodsList(GoodsETD goodsETD){
@@ -90,23 +94,29 @@ public class GoodsServiceImpl implements GoodsService {
 
     @Override
     public Response goodsAffirm(Long id,Long uid) {
-        if(null == uid){
-            return ResponseUtils.errorRes("请先登录");
-        }
         if(null == id){
             return ResponseUtils.errorRes("产品信息错误");
         }
-        OrderCartETD orderCart = goodsMapper.selectAffirmById(id);
+        OrderCartETD orderCart = orderMapper.selectAffirmById(id);
         if(null == orderCart){
-            return ResponseUtils.errorRes("商品已下架");
+            return ResponseUtils.errorRes("订单不存在或不属于待支付");
         }
         UserSiteETD userSite = userSiteMapper.selectOneByUid(uid);
         if(null != userSite){
             orderCart.setUserSite(userSite);
         }
-        List<GoodsExchangeETD> exchangeList = exchangeMapper.selectListByGoodsId(orderCart.getGoodsId());
+        List<GoodsExchangeETD> exchangeList = exchangeMapper.selectListByGoodsIdAndUid(orderCart.getGoodsId(),uid);
         if(null != exchangeList && exchangeList.size() > 0){
             orderCart.setGoodsExchangeList(exchangeList);
+        }
+        List<CartETD> cartList = cartMapper.findListByOrderId(orderCart.getOrderId());
+        if(null != cartList){
+            for (CartETD cart:cartList){
+                if(StringUtil.isNotEmpty(cart.getHostImg())){
+                    cart.setHostImg(imgPath+cart.getHostImg());
+                }
+            }
+            orderCart.setCartList(cartList);
         }
         return ResponseUtils.successRes(orderCart);
     }

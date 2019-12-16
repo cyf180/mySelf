@@ -134,9 +134,17 @@
   </select>
   <update id="updateIsUse">
     update p_user_voucher set useState = -1
-    and id in (
+    where id in (
     <foreach collection="list" item="item" index="index" separator=",">
-      #{item.userVoucherId}
+      #{item.id}
+    </foreach>
+    )
+  </update>
+  <update id="updateIsUseByU">
+    update p_user_voucher set useState = -1
+    where id in (
+    <foreach collection="list" item="item" index="index" separator=",">
+      #{item.id}
     </foreach>
     )
   </update>

@@ -23,5 +23,7 @@ public interface PGoodsExchangeMapper {
 
     List<GoodsExchangeETD> selectListByGoodsId(Long goodsId);
 
+    List<GoodsExchangeETD> selectListByGoodsIdAndUid(@Param("goodsId") Long goodsId,@Param("uid") Long uid);
+
     GoodsExchangeETD selectByGoodsIdAndVoucherId(@Param("goodsId") Long goodsId, @Param("voucherId") Long voucherId);
 }

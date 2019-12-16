@@ -33,7 +33,7 @@ public interface OrderService {
      * @param id
      * @return
      */
-    Boolean updateOrderIsPay(Long id, PayType payType,String wxOrderNo,BigDecimal callbackPrice);
+    Boolean updateOrderIsPay(Long id, PayType payType,String wxOrderNo,BigDecimal callbackPrice,BigDecimal realPrice);
 
     /**
      * 根据订单号查询订单

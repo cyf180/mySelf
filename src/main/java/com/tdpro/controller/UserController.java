@@ -59,6 +59,7 @@ public class UserController {
             @ApiImplicitParam(name = "bankBranch", value = "开户支行", required = true, dataType = "string", paramType = "form"),
             @ApiImplicitParam(name = "bankCard", value = "银行卡号", required = true, dataType = "string", paramType = "form"),
             @ApiImplicitParam(name = "idCard", value = "身份证", required = false, dataType = "string", paramType = "form"),
+            @ApiImplicitParam(name = "payPassword", value = "密码", required = false, dataType = "string", paramType = "form"),
     })
     @ApiOperation(value = "修改用户资料")
     public Response updateUser(@ApiIgnore @RequestAttribute Long uid,@Valid @RequestBody UserUPD user){

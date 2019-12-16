@@ -26,7 +26,9 @@ public interface PUserVoucherMapper {
 
     List<PUserVoucher> countByUidAndVoucherId(UserVoucherETD voucherETD);
 
-    int updateIsUse(@Param("list") List<POrderVoucher> list);
+    int updateIsUse(@Param("list") List<PUserVoucher> list);
+
+    int updateIsUseByU(@Param("list") List<POrderVoucher> list);
 
     int updateIsLock(@Param("list") List<PUserVoucher> list);
 

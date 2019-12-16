@@ -34,7 +34,7 @@
       #{site,jdbcType=VARCHAR}, #{isDefault,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.tdpro.entity.PUserSite" >
+  <insert id="insertSelective" parameterType="com.tdpro.entity.PUserSite" useGeneratedKeys="true" keyProperty="id">
     <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>

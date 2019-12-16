@@ -33,7 +33,10 @@ public class PayController {
     @PostMapping("unifyPay")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "orderId", value = "订单id", required = true, dataType = "long", paramType = "form"),
-            @ApiImplicitParam(name = "payType", value = "支付类型(0:余额 1:微信)", required = true, dataType = "long", paramType = "form")
+            @ApiImplicitParam(name = "payType", value = "支付类型(0:余额 1:微信)", required = true, dataType = "long", paramType = "form"),
+            @ApiImplicitParam(name = "siteId", value = "收货地址id", required = true, dataType = "long", paramType = "form"),
+            @ApiImplicitParam(name = "userNote", value = "用户备注", required = false, dataType = "string", paramType = "form"),
+            @ApiImplicitParam(name = "voucherId", value = "选择优惠券id", required = false, dataType = "long", paramType = "form"),
     })
     @ApiOperation(value = "统一支付")
     public Response getPay(@ApiIgnore @RequestAttribute Long uid, @Valid @RequestBody OrderPayETD orderPayETD){
@@ -43,10 +46,10 @@ public class PayController {
             orderPayETD.setUid(uid);
             PayReturn payReturn = payService.unifyPay(orderPayETD);
             if(payReturn.getState()){
-                if(payReturn.getType().equals(new Integer(1))){
+                if(payReturn.getType() == 1){
                     Future<Boolean> knot =  knotService.knot(payReturn.getOrderId());
                     response = ResponseUtils.successRes(payReturn.getOrderId());
-                }else if(payReturn.getType().equals(new Integer(2))){
+                }else if(payReturn.getType() == 2){
                     response = ResponseUtils.successRes(payReturn.getSuccessRes());
                 }else{
                     response = ResponseUtils.successRes(payReturn.getOrderId());

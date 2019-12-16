@@ -28,8 +28,6 @@ public interface PGoodsMapper {
 
     GoodsETD selectInfo(GoodsETD goodsETD);
 
-    OrderCartETD selectAffirmById(Long id);
-
     int updateRepertory(GoodsRepertoryUpdateETD repertoryUpdateETD);
 
     List<GoodsPageETD> adminPageList(GoodsPageETD goodsPageETD);

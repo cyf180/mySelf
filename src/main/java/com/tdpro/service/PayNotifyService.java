@@ -8,7 +8,7 @@ public interface PayNotifyService {
      * @param resultDate
      * @return
      */
-    Boolean orderPayNotify(WxPayOrderNotifyResult resultDate);
+    Long orderPayNotify(WxPayOrderNotifyResult resultDate);
 
     /**
      * 会员购买支付回调

@@ -224,12 +224,6 @@
     where id=#{id}
     and isDel = 0
   </select>
-  <select id="selectAffirmById" resultType="com.tdpro.entity.extend.OrderCartETD" parameterType="java.lang.Long">
-    select id as goodsId,goodsName,zoneType,price
-    from p_goods
-    where id=#{0}
-    and isDel = 0
-  </select>
   <update id="updateRepertory" parameterType="com.tdpro.entity.extend.GoodsRepertoryUpdateETD">
     update p_goods
     set repertory = #{repertory},
