@@ -16,6 +16,7 @@ import com.tdpro.entity.extend.GoodsETD;
 import com.tdpro.entity.extend.GoodsExchangeETD;
 import com.tdpro.entity.extend.OrderPayETD;
 import com.tdpro.service.*;
+import com.xiaoleilu.hutool.crypto.digest.DigestUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -86,14 +87,41 @@ public class PayServiceImpl implements PayService {
             payReturn.setMsg("订单异常");
             return payReturn;
         }
+        String payPwd;
         Long orderId = orderInfo.getId();
         GoodsETD goodsInfo = goodsService.selectInfo(orderInfo.getGoodsId());
         PUser userInfo = userService.findById(payETD.getUid());
         switch (orderInfo.getZoneType().intValue()) {
             case 2:
+                if(StringUtil.isEmpty(userInfo.getPayPassword())){
+                    payReturn.setMsg("未设置支付密码");
+                    return payReturn;
+                }
+                if(StringUtil.isEmpty(payETD.getPayPassword())){
+                    payReturn.setMsg("请输入支付密码");
+                    return payReturn;
+                }
+                payPwd = DigestUtil.md5Hex(payETD.getPayPassword());
+                if(!payPwd.equals(userInfo.getPayPassword())){
+                    payReturn.setMsg("支付密码错误");
+                    return payReturn;
+                }
                 payReturn = this.orderExchangePay(orderInfo);
                 break;
             case 1:
+                if(StringUtil.isEmpty(userInfo.getPayPassword())){
+                    payReturn.setMsg("未设置支付密码");
+                    return payReturn;
+                }
+                if(StringUtil.isEmpty(payETD.getPayPassword())){
+                    payReturn.setMsg("请输入支付密码");
+                    return payReturn;
+                }
+                payPwd = DigestUtil.md5Hex(payETD.getPayPassword());
+                if(!payPwd.equals(userInfo.getPayPassword())){
+                    payReturn.setMsg("支付密码错误");
+                    return payReturn;
+                }
                 payReturn = this.orderMemberPay(orderInfo);
                 break;
             case 0:
@@ -144,6 +172,19 @@ public class PayServiceImpl implements PayService {
             }
         }
         if (PayType.BALANCE_PAY.getType().equals(payETD.getPayType())) {
+            if(StringUtil.isEmpty(userInfo.getPayPassword())){
+                payReturn.setMsg("未设置支付密码");
+                return payReturn;
+            }
+            if(StringUtil.isEmpty(payETD.getPayPassword())){
+                payReturn.setMsg("请输入支付密码");
+                return payReturn;
+            }
+            String payPwd = DigestUtil.md5Hex(payETD.getPayPassword());
+            if(!payPwd.equals(userInfo.getPayPassword())){
+                payReturn.setMsg("支付密码错误");
+                return payReturn;
+            }
             PayType payType = PayType.BALANCE_PAY;
             Response updateUser = userService.userBalancePay(orderInfo, userInfo,realPrice);
             if (null != updateUser) {

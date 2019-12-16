@@ -37,6 +37,7 @@ public class PayController {
             @ApiImplicitParam(name = "siteId", value = "收货地址id", required = true, dataType = "long", paramType = "form"),
             @ApiImplicitParam(name = "userNote", value = "用户备注", required = false, dataType = "string", paramType = "form"),
             @ApiImplicitParam(name = "voucherId", value = "选择优惠券id", required = false, dataType = "long", paramType = "form"),
+            @ApiImplicitParam(name = "payPassword", value = "支付密码（除了微信支付，其他都要)", required = false, dataType = "string", paramType = "form"),
     })
     @ApiOperation(value = "统一支付")
     public Response getPay(@ApiIgnore @RequestAttribute Long uid, @Valid @RequestBody OrderPayETD orderPayETD){

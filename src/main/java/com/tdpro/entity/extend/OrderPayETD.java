@@ -13,4 +13,5 @@ public class OrderPayETD {
     private String userNote;
     @ApiModelProperty(value = "收货地址id")
     private Long siteId;
+    private String payPassword;
 }
