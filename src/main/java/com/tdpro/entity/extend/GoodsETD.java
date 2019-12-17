@@ -34,6 +34,8 @@ public class GoodsETD extends Page {
     private Date createTime;
     private Integer repertory;
     private Integer soldNum;
+    @ApiModelProperty(value = "0:未收藏 1:已收藏")
+    private Integer isPut = new Integer(0);
     @ApiModelProperty(value = "规格列表(详情使用)")
     List<GoodsSuitETD> suitList;
     @ApiModelProperty(value = "图片列表(详情使用)")

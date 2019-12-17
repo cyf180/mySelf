@@ -44,7 +44,7 @@ public class GoodsController {
             @ApiImplicitParam(name = "id", value = "商品id", required = true, dataType = "long", paramType = "query"),
     })
     @ApiOperation(value = "商品详情接口",response = GoodsETD.class)
-    public Response getGoodInfo(GoodsETD goodsETD){
-        return goodsService.goodsInfo(goodsETD);
+    public Response getGoodInfo(@ApiIgnore @RequestAttribute Long uid,GoodsETD goodsETD){
+        return goodsService.goodsInfo(goodsETD,uid);
     }
 }

@@ -19,7 +19,7 @@ import java.io.IOException;
 public class QiniuSimpleUpload {
     private String accessKey="uOp69-ZMu6dmXC1mkKbwQ1RkCaywX3CI6-ko8YVf";
     private String secretKey="wf_SY30qvQ_2TXoDpircGDSWdma4HaUq3tkIWsK7";
-    private String bucketname="rentcar";
+    private String bucketname="zhutx";
 
 
     //密钥配置

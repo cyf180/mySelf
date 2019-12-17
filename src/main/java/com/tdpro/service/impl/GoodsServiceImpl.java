@@ -10,6 +10,7 @@ import com.tdpro.entity.*;
 import com.tdpro.entity.extend.*;
 import com.tdpro.mapper.*;
 import com.tdpro.service.GoodsService;
+import com.tdpro.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -43,7 +44,9 @@ public class GoodsServiceImpl implements GoodsService {
     @Autowired
     private POrderMapper orderMapper;
     @Autowired
-     private PCartMapper cartMapper;
+    private PCartMapper cartMapper;
+    @Autowired
+    private PCollectMapper collectMapper;
     Lock isDelLock = new ReentrantLock();
     @Override
     public List<GoodsETD> goodsList(GoodsETD goodsETD){
@@ -62,7 +65,7 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     @Override
-    public Response goodsInfo(GoodsETD goodsETD){
+    public Response goodsInfo(GoodsETD goodsETD,Long uid){
         if(null == goodsETD.getId()){
             return ResponseUtils.errorRes("关键之错误");
         }
@@ -73,6 +76,12 @@ public class GoodsServiceImpl implements GoodsService {
         List<GoodsSuitETD> suitList = goodsSuitMapper.selectAllListByGoodsId(goodsInfo.getId());
         if(null != suitList  && suitList.size() > 0){
             goodsInfo.setSuitList(suitList);
+        }
+        if(!new Integer(0).equals(uid)){
+            PCollect collect = collectMapper.findByUidAndGoodsId(uid,goodsInfo.getId());
+            if(null != collect){
+                goodsInfo.setIsSuit(1);
+            }
         }
         List<PGoodsImg> imgList = goodsImgMapper.selectListByGoodsId(goodsInfo.getId());
         if(null != imgList && imgList.size() >0){

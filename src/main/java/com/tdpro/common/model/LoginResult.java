@@ -21,4 +21,5 @@ public class LoginResult {
     @ApiModelProperty("购买会员价格")
     BigDecimal buyUserPrice;
     Long uid;
+    private String qrCode;
 }

@@ -35,4 +35,5 @@ public class UserETD {
     @ApiModelProperty(value = "待收货数量")
     private Integer waitingTakeOrderNum;
     private Integer suitLevelNum;
+    private Integer agent;
 }

@@ -137,6 +137,9 @@
       <if test="teamSuitNum != null" >
         teamSuitNum,
       </if>
+      <if test="wxQrCode != null" >
+        wxQrCode,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="isUser != null" >
@@ -204,6 +207,9 @@
       </if>
       <if test="teamSuitNum != null" >
         #{teamSuitNum,jdbcType=INTEGER},
+      </if>
+      <if test="wxQrCode != null" >
+        #{wxQrCode,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -306,7 +312,7 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="getUserCentre" resultType="com.tdpro.entity.extend.UserETD" parameterType="java.lang.Long">
-    select u.id,u.balance,u.integral,u.teamOneNum,u.teamSuitNum,u.isUser,k.rate,u.phone,
+    select u.id,u.balance,u.integral,u.teamOneNum,u.teamSuitNum,u.isUser,k.rate,u.phone,u.agent,
     (select count(*) from p_user where strawUid=u.id) as teamPeopleNum,
     (select count(*) from p_collect where uid=u.id) as collectNum,
     (select count(*) from p_user_voucher where uid=u.id and state=0 and useState=0) as voucherNum,

@@ -22,7 +22,7 @@ public interface GoodsService {
      * @param goodsETD
      * @return
      */
-    Response goodsInfo(GoodsETD goodsETD);
+    Response goodsInfo(GoodsETD goodsETD,Long uid);
 
     /**
      * 商品确认

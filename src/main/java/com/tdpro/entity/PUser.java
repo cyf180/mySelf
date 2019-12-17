@@ -1,11 +1,12 @@
 package com.tdpro.entity;
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-
+@Data
 public class PUser implements Serializable {
     private Long id;
     @ApiModelProperty(value = "是否是会员(0:不是 1:是)")
@@ -53,6 +54,8 @@ public class PUser implements Serializable {
     private BigDecimal itemBuyAmount;
     private BigDecimal itemLeftAmount;
     private Integer suitLevelNum;
+    private String wxQrCode;
+    private Integer agent;
     private BigDecimal rate;
 
     private static final long serialVersionUID = 1L;

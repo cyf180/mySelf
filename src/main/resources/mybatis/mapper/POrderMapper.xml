@@ -406,6 +406,9 @@
       <if test="payType != null ">
         and o.payType = #{payType}
       </if>
+      <if test="uid != null ">
+        and o.uid = #{uid}
+      </if>
       <if test="state != null ">
         and o.state = #{state}
       </if>

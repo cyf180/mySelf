@@ -1,6 +1,7 @@
 package com.tdpro.entity.extend;
 
 import com.tdpro.entity.PGoodsImg;
+import com.tdpro.entity.PGoodsSuit;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -28,5 +29,7 @@ public class GoodsInfoETD {
     private String productImgs;
     private Integer sixCouponNum;
     private Integer threeCouponNum;
+    private Integer isSuitCount;
+    private List<PGoodsSuit> suitList;
     private List<PGoodsImg> imgList;
 }

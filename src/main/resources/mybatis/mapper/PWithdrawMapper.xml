@@ -254,6 +254,9 @@
       <if test="status != null">
         w.`status`=#{status}
       </if>
+      <if test="uid != null">
+        w.uid=#{uid}
+      </if>
     </where>
   </select>
 </mapper>

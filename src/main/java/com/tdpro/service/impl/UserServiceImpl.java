@@ -1,17 +1,23 @@
 package com.tdpro.service.impl;
 
+import cn.binarywang.wx.miniapp.api.WxMaService;
+import cn.binarywang.wx.miniapp.api.impl.WxMaServiceImpl;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.github.binarywang.java.emoji.EmojiConverter;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.StringUtil;
 import com.tdpro.common.OnlineUserInfo;
+import com.tdpro.common.QiniuSimpleUpload;
 import com.tdpro.common.constant.ErrorCodeConstants;
 import com.tdpro.common.constant.IssueType;
 import com.tdpro.common.model.LoginRequest;
 import com.tdpro.common.model.LoginResult;
 import com.tdpro.common.utils.Response;
 import com.tdpro.common.utils.ResponseUtils;
+import com.tdpro.config.weixin.WxMaProperties;
 import com.tdpro.entity.POrder;
 import com.tdpro.entity.PUser;
 import com.tdpro.entity.PUserLogin;
@@ -22,11 +28,13 @@ import com.tdpro.service.*;
 import com.xiaoleilu.hutool.crypto.digest.DigestUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -41,6 +49,12 @@ import java.util.regex.Pattern;
 @Service
 @Slf4j
 public class UserServiceImpl implements UserService {
+    @Value("${wechat.mainapp.appid}")
+    private String appid;
+    @Value("${wechat.mainapp.secret}")
+    private String secret;
+    @Value("${qiniu.imgPath}")
+    private String imgPath;
     @Autowired
     private PUserMapper userMapper;
     @Autowired
@@ -59,6 +73,9 @@ public class UserServiceImpl implements UserService {
     private LogService logService;
     @Autowired
     private UserVoucherService userVoucherService;
+    WxMaProperties wxMaProperties=new WxMaProperties();
+    WxMaService wxMaService = new WxMaServiceImpl();
+    private EmojiConverter emojiConverter = EmojiConverter.getInstance();
     private Lock lock = new ReentrantLock();
 
     @Override
@@ -259,9 +276,9 @@ public class UserServiceImpl implements UserService {
             return ResponseUtils.errorRes("该手机号已存在");
         }
         loginResult.setPhone(userETD.getPhone());
-        if(StringUtil.isEmpty(userETD.getPayPassword()) || !Pattern.matches("^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,12}$", userETD.getPayPassword())){
-            return ResponseUtils.errorRes("支付密码格式错误");
-        }
+//        if(StringUtil.isEmpty(userETD.getPayPassword()) || !Pattern.matches("\\d{5}$ ", userETD.getPayPassword())){
+//            return ResponseUtils.errorRes("请输入6位数字密码");
+//        }
 
         if(!codeService.codeVerification(userETD.getPhone(),userETD.getCode())){
             return ResponseUtils.errorRes("验证码错误或已过期");
@@ -297,17 +314,28 @@ public class UserServiceImpl implements UserService {
                 }
                 strawUid = strawUser.getId();
             }
+
+            String nikName = emojiConverter.toHtml(userETD.getNickName());
             userADD.setStrawUid(strawUid);
-            userADD.setNickName(userETD.getNickName());
+            userADD.setNickName(nikName);
+            userADD.setWxQrCode("");
             if(0==userMapper.insertSelective(userADD)){
                 throw new RuntimeException("用户添加失败");
             }
-
+            String qrCode = this.getQrCode(userADD.getId());
+            if(StringUtil.isNotEmpty(qrCode)){
+                PUser userUPD = new PUser();
+                userUPD.setId(userADD.getId());
+                userUPD.setWxQrCode(qrCode);
+                if(0 == userMapper.updateByPrimaryKeySelective(userUPD)){
+                    throw new RuntimeException("修改二维码失败");
+                }
+            }
             PUserLogin userLoginUPD = new PUserLogin();
             userLoginUPD.setId(userLogin.getId());
             userLoginUPD.setUid(userADD.getId());
             userLoginUPD.setHeadPath(userETD.getHeadPath());
-            userLoginUPD.setNickName(userETD.getNickName());
+            userLoginUPD.setNickName(nikName);
             if(!userLoginService.updateUserLogin(userLoginUPD)){
                 throw new RuntimeException("绑定用手机失败");
             }
@@ -320,6 +348,10 @@ public class UserServiceImpl implements UserService {
             loginResult.setIsBindPhone(1);
             loginResult.setUid(userADD.getId());
             loginResult.setKey(userLogin.getOpenId());
+            if(StringUtil.isNotEmpty(qrCode)){
+                loginResult.setQrCode(imgPath+qrCode);
+            }
+
             String accessToken = jwtService.createToken(onlineUserInfo);
             if (StringUtils.hasText(accessToken)) {
                 onlineUserInfo.setToken(accessToken);
@@ -455,5 +487,27 @@ public class UserServiceImpl implements UserService {
             }
         }
         return ResponseUtils.successRes(1);
+    }
+
+    private String getQrCode(Long uid){
+        File file = new File("");
+        QiniuSimpleUpload qiniuSimpleUpload=new QiniuSimpleUpload();
+        String qrCodePath = null;
+        try {
+            wxMaProperties.setAppid(appid);   //需要替换为实际商户appid
+            wxMaProperties.setSecret(secret); //需要替换为实际商户Secret
+            wxMaProperties.setExpiresTime(System.currentTimeMillis());
+            wxMaService.setWxMaConfig(wxMaProperties);
+            file = wxMaService.getQrcodeService().createWxCodeLimit("pages/index/index",uid.toString());
+            String imgName=System.currentTimeMillis()+".png";
+            String upResult = qiniuSimpleUpload.upload(file, imgName);
+            JSONObject formatUpResult = JSON.parseObject(upResult);
+            if (!org.apache.commons.lang3.StringUtils.isEmpty(formatUpResult.get("key").toString())) {
+                qrCodePath = formatUpResult.get("key").toString();
+            }
+        } catch ( Exception e ) {
+            e.printStackTrace();
+        }
+        return qrCodePath;
     }
 }
