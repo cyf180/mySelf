@@ -13,10 +13,10 @@ public interface CartService {
      * @param goodsInfo
      * @param orderId
      * @param num
-     * @param suitInfo
+     * @param suitName
      * @return
      */
-    Boolean insertCart(Long uid, GoodsETD goodsInfo, Long orderId, int num, PGoodsSuit suitInfo);
+    Boolean insertCart(Long uid, GoodsETD goodsInfo, Long orderId, int num,String suitName);
 
     List<CartETD> findListByOrderId(Long orderId);
 }

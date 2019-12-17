@@ -21,4 +21,6 @@ public interface PGoodsSuitMapper {
     int updateByPrimaryKey(PGoodsSuit record);
 
     List<GoodsSuitETD> selectAllListByGoodsId(Long goodsId);
+
+    int countByGoodsId(Long goodsId);
 }

@@ -25,5 +25,4 @@ public class OrderCartETD {
     List<GoodsSuitETD> suitList;
     @ApiModelProperty(value = "订单产品列表")
     List<CartETD> cartList;
-
 }

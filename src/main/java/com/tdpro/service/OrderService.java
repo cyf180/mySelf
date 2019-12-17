@@ -3,10 +3,7 @@ package com.tdpro.service;
 import com.tdpro.common.constant.PayType;
 import com.tdpro.common.utils.Response;
 import com.tdpro.entity.POrder;
-import com.tdpro.entity.extend.OrderCartETD;
-import com.tdpro.entity.extend.OrderConfigETD;
-import com.tdpro.entity.extend.OrderETD;
-import com.tdpro.entity.extend.OrderPageETD;
+import com.tdpro.entity.extend.*;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -19,7 +16,7 @@ public interface OrderService {
      * @param orderCartETD
      * @return
      */
-    Response insertOrder(OrderCartETD orderCartETD);
+    Response insertOrder(OrderAddETD orderCartETD);
 
     /**
      * 查询订单详情

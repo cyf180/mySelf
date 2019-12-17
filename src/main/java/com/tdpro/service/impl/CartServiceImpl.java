@@ -21,7 +21,7 @@ public class CartServiceImpl implements CartService {
     @Autowired
     private PCartMapper cartMapper;
     @Override
-    public Boolean insertCart(Long uid, GoodsETD goodsInfo, Long orderId, int num, PGoodsSuit suitInfo) {
+    public Boolean insertCart(Long uid, GoodsETD goodsInfo, Long orderId, int num,String suitName) {
         PCart cartADD= new PCart();
         cartADD.setUid(uid);
         cartADD.setOrderId(orderId);
@@ -30,9 +30,8 @@ public class CartServiceImpl implements CartService {
         cartADD.setNumber(num);
         cartADD.setGoodsName(goodsInfo.getGoodsName());
         cartADD.setCreateTime(new Date());
-        if(null != suitInfo) {
-            cartADD.setSuitId(suitInfo.getId());
-            cartADD.setSuitName(suitInfo.getExplain());
+        if(StringUtil.isNotEmpty(suitName)) {
+            cartADD.setSuitName(suitName);
         }
         if(0 == cartMapper.insertSelective(cartADD)){
             return false;

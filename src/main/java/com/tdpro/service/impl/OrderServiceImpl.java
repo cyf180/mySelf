@@ -54,8 +54,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
-    public Response insertOrder(OrderCartETD orderCartETD) {
-        if (null == orderCartETD.getGoodsId() || null == orderCartETD.getSuitList() || orderCartETD.getSuitList().size() <= 0) {
+    public Response insertOrder(OrderAddETD orderCartETD) {
+        if (null == orderCartETD.getGoodsId() || null == orderCartETD.getCartAddList() || orderCartETD.getCartAddList().size() <= 0) {
             return ResponseUtils.errorRes("操作异常");
         }
         Long uid = orderCartETD.getUid();
@@ -68,10 +68,10 @@ public class OrderServiceImpl implements OrderService {
             return ResponseUtils.errorRes("库存不足");
         }
         int orderNumber = 0;
-        if (null != orderCartETD.getSuitList() && orderCartETD.getSuitList().size() > 0) {
-            List<GoodsSuitETD> suitList = orderCartETD.getSuitList();
-            for (GoodsSuitETD suit : suitList) {
-                int num = (null == suit.getNumber() || suit.getNumber() == 0) ? 1 : suit.getNumber();
+        if (null != orderCartETD.getCartAddList() && orderCartETD.getCartAddList().size() > 0) {
+            List<CartAddETD> cartList = orderCartETD.getCartAddList();
+            for (CartAddETD cartAdd : cartList) {
+                int num = (null == cartAdd.getNumber() || cartAdd.getNumber() == 0) ? 1 : cartAdd.getNumber();
                 orderNumber = orderNumber + num;
             }
         } else {
@@ -110,15 +110,39 @@ public class OrderServiceImpl implements OrderService {
         }
         POrder orderADD = getAddOrder(goodsInfo, uid, orderNumber);
         Long orderId = orderADD.getId();
-        List<GoodsSuitETD> suitList = orderCartETD.getSuitList();
-        for (GoodsSuitETD suit : suitList) {
-            int num = (null == suit.getNumber() || suit.getNumber() == 0) ? 1 : suit.getNumber();
-            if (null != suit.getId()) {
-                PGoodsSuit suitInfo = goodsSuitService.findById(suit.getId());
-                if (null == suitInfo || !suitInfo.getGoodsId().equals(goodsId)) {
-                    throw new RuntimeException("规格选择错误");
+        List<CartAddETD> cartList = orderCartETD.getCartAddList();
+        for (CartAddETD cart : cartList) {
+            int num = (null == cart.getNumber() || cart.getNumber() == 0) ? 1 : cart.getNumber();
+            if (null != cart.getSuitList() && cart.getSuitList().size() > 0) {
+                int addSuitNum = 0;
+                int suitNum = goodsSuitService.countGoodsSuitNum(goodsId);
+                List<Long> suitIds = new ArrayList<>();
+                StringBuffer suitName = new StringBuffer();
+                for (SuitAddETD suit : cart.getSuitList()) {
+                    int addNum = suit.getNumber() == null ? 0 : suit.getNumber();
+                    if (null == suit.getId()) {
+                        throw new RuntimeException("规格参数异常");
+                    }
+                    long suiId = suit.getId();
+                    if (suitIds.contains(suiId)) {
+                        throw new RuntimeException("有重复规格");
+                    }
+                    suitIds.add(suiId);
+                    PGoodsSuit suitInfo = goodsSuitService.findById(suiId);
+                    if (null == suitInfo || !suitInfo.getGoodsId().equals(goodsId)) {
+                        throw new RuntimeException("规格选择错误");
+                    }
+                    if (StringUtil.isNotEmpty(suitName.toString())) {
+                        suitName.append(",").append(suitInfo.getExplain()).append(" ×").append(addNum);
+                    } else {
+                        suitName.append(suitInfo.getExplain()).append(" ×").append(addNum);
+                    }
+                    addSuitNum = addSuitNum +addNum;
                 }
-                if (!cartService.insertCart(uid, goodsInfo, orderId, num, suitInfo)) {
+                if(suitNum != addSuitNum){
+                    throw new RuntimeException("选择规格错误");
+                }
+                if (!cartService.insertCart(uid, goodsInfo, orderId, num, suitName.toString())) {
                     throw new RuntimeException("添加购物车失败");
                 }
             } else {

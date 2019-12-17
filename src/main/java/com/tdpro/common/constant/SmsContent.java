@@ -1,7 +1,7 @@
 package com.tdpro.common.constant;
 
 public enum SmsContent {
-    ENROLL_SEND(1,"亲爱的懒猫柜族，您的手机验证码是：@code，该验证码将在5分钟后失效","注册短信发送");
+    ENROLL_SEND(1,"注册验证码：@code,尊敬的用户，您的手机号正在进行芙美人会员注册操作，请妥善保存","注册短信发送");
     private Integer type;
     private String content;
     private String msg;

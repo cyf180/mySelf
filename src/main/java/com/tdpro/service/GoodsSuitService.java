@@ -9,4 +9,6 @@ public interface GoodsSuitService {
      * @return
      */
     PGoodsSuit findById(Long id);
+
+    int countGoodsSuitNum(Long goodsId);
 }

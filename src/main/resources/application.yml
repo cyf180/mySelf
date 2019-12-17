@@ -38,7 +38,7 @@ mybatis:
       configLocation: classpath:mybatis/mybatis-config.xml
 
 qiniu:
-  imgPath: https://rentcar.txw18.com/
+  imgPath: https://myimg.txw18.com/
 
 wxconfig:
   appid: wxcfee96fb699a352d

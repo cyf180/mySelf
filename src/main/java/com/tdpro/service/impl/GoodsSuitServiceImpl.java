@@ -14,4 +14,9 @@ public class GoodsSuitServiceImpl implements GoodsSuitService {
     public PGoodsSuit findById(Long id) {
         return goodsSuitMapper.selectByPrimaryKey(id);
     }
+
+    @Override
+    public int countGoodsSuitNum(Long goodsId) {
+        return goodsSuitMapper.countByGoodsId(goodsId);
+    }
 }

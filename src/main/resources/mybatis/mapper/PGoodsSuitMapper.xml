@@ -84,4 +84,9 @@
     from p_goods_suit
     where goodsId=#{0}
   </select>
+  <select id="countByGoodsId" resultType="java.lang.Integer" parameterType="java.lang.Long">
+    select count(*)
+    from p_goods_suit
+    where goodsId=#{0}
+  </select>
 </mapper>

@@ -3,6 +3,7 @@ package com.tdpro.controller;
 import com.tdpro.common.utils.Response;
 import com.tdpro.common.utils.ResponseUtils;
 import com.tdpro.entity.POrder;
+import com.tdpro.entity.extend.OrderAddETD;
 import com.tdpro.entity.extend.OrderCartETD;
 import com.tdpro.entity.extend.OrderETD;
 import com.tdpro.entity.extend.VoucherIssueETD;
@@ -43,12 +44,12 @@ public class OrderController {
     @PostMapping("addOrder")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "goodsId", value = "商品id", required = true, dataType = "long", paramType = "form"),
-            @ApiImplicitParam(name = "suitList", value = "套装规格列表", required = true, dataType = "list", paramType = "form"),
-            @ApiImplicitParam(name = "suitList.number", value = "数量", required = true, dataType = "int", paramType = "form"),
-            @ApiImplicitParam(name = "suitList.id", value = "套装id", required = false, dataType = "long", paramType = "form"),
+            @ApiImplicitParam(name = "cartAddList.number", value = "订单数量", required = true, dataType = "list", paramType = "form"),
+            @ApiImplicitParam(name = "cartAddList.suitList.id", value = "套装id", required = false, dataType = "long", paramType = "form"),
+            @ApiImplicitParam(name = "cartAddList.suitList.number", value = "套装数量", required = false, dataType = "int", paramType = "form"),
     })
     @ApiOperation(value = "新增订单")
-    public Response insetOrder(@ApiIgnore @RequestAttribute Long uid, @Valid @RequestBody OrderCartETD cartETD){
+    public Response insetOrder(@ApiIgnore @RequestAttribute Long uid, @Valid @RequestBody OrderAddETD cartETD){
         Response response;
         try {
             addOrderLock.lock();
