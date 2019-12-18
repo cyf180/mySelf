@@ -36,4 +36,5 @@ public class UserETD {
     private Integer waitingTakeOrderNum;
     private Integer suitLevelNum;
     private Integer agent;
+    private BigDecimal topUpBalance;
 }

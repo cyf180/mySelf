@@ -1,8 +1,10 @@
 package com.tdpro.entity;
 
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.Date;
-
+@Data
 public class PAdmin implements Serializable {
     private Long id;
 
@@ -23,6 +25,8 @@ public class PAdmin implements Serializable {
     private Date liftingTime;
 
     private Date createTime;
+
+    private String oldPassword;
 
     private static final long serialVersionUID = 1L;
 

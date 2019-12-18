@@ -35,7 +35,7 @@ public class AUserController {
             @ApiImplicitParam(name = "endTime", value = "结束时间", required = false, dataType = "string", paramType = "query"),
             @ApiImplicitParam(name = "strawUid", value = "上级id", required = false, dataType = "long", paramType = "query")
     })
-    @ApiOperation(value = "衣物流水接口", response = UserPageETD.class)
+    @ApiOperation(value = "用户", response = UserPageETD.class)
     public Response getUserPageList(UserPageETD userPage){
         return userService.userPageList(userPage);
     }

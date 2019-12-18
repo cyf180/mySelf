@@ -19,6 +19,8 @@ public class OrderCartETD {
     private Integer zoneType;
     @ApiModelProperty(value = "默认收货地址实体")
     private UserSiteETD userSite;
+    @ApiModelProperty(value = "订单总数量")
+    private Integer orderNum;
     @ApiModelProperty(value = "商品优惠券配置列表")
     List<GoodsExchangeETD> goodsExchangeList;
     @ApiModelProperty(value = "规格配置列表")

@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -130,6 +131,7 @@ public class UserVoucherServiceImpl implements UserVoucherService {
         userVoucher.setVoucherId(voucher.getId());
         userVoucher.setState(0);
         userVoucher.setUseState(0);
+        userVoucher.setCreateTime(new Date());
         int addUserVoucher = userVoucherMapper.insertSelective(userVoucher);
         boolean addIssue = issueLogService.insertIssueLog(user.getId(),payUid,voucher,issueType,userVoucher.getId());
         if(0 == addUserVoucher || !addIssue){

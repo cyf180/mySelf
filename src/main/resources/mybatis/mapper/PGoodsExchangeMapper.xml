@@ -100,4 +100,8 @@
     and e.voucherId=#{voucherId}
     limit 1
   </select>
+  <delete id="deleteByGoodsId" parameterType="java.lang.Long">
+    delete from p_goods_exchange
+    where goodsId = #{0}
+  </delete>
 </mapper>

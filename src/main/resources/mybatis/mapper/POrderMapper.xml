@@ -443,10 +443,25 @@
      <![CDATA[ and state >= 1]]>
   </select>
   <select id="selectAffirmById" resultType="com.tdpro.entity.extend.OrderCartETD" parameterType="java.lang.Long">
-    select id as orderId,goodsId,zoneType,totalPrice
+    select id as orderId,goodsId,zoneType,totalPrice,number as orderNum
     from p_order
     where id=#{0}
     and isDel = 0
     and state = 0
+  </select>
+  <select id="findAdminHome" resultType="com.tdpro.entity.extend.AdminHomeETD">
+    select
+    (select count(*) from p_order where state > 0 and to_days(createTime)=to_days(now())) as orderNum,
+    (select count(*) from p_order where state = 0) as stayPayNum,
+    (select count(*) from p_order where state = 1) as stayHairNum,
+    (select count(*) from p_order where state = 2) as hairNum,
+    (select count(*) from p_order where state = 2) as achieveNum,
+    (select ifnull(sum(realPrice),0.00) from p_order where state > 0 and to_days(payTime)=to_days(now())) as todaySales,
+    (select ifnull(sum(realPrice),0.00) from p_order where state > 0 and to_days(payTime)=to_days(now())-1) as yesterdaySales,
+    (select ifnull(sum(realPrice),0.00) from p_order where state > 0 <![CDATA[ and  DATE_SUB(CURDATE(), INTERVAL 7 DAY) <= date(payTime) ]]>  ) as sevenSales,
+    (select count(*) from p_user where to_days(createTime)=to_days(now())) as todayUserNum,
+    (select count(*) from p_user where to_days(createTime)=to_days(now())-1) as yesterdayUserNum,
+    (select count(*) from p_user where month(createTime)=month(curdate()) AND year(createTime) = year(curdate())) as monthUserNum,
+    (select count(*) from p_user) as allUserNum
   </select>
 </mapper>

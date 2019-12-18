@@ -25,4 +25,6 @@ public interface PGoodsSuitMapper {
     List<PGoodsSuit> selectAdminListByGoodsId(Long goodsId);
 
     int countByGoodsId(Long goodsId);
+
+    int deleteByGoodsId(Long goodsId);
 }

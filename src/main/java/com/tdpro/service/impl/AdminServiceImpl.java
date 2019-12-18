@@ -8,11 +8,14 @@ import com.tdpro.common.utils.Response;
 import com.tdpro.common.utils.ResponseUtils;
 import com.tdpro.entity.PAdmin;
 import com.tdpro.entity.PRole;
+import com.tdpro.entity.extend.AdminHomeETD;
 import com.tdpro.entity.extend.AdminPageETD;
 import com.tdpro.entity.extend.AdvertETD;
 import com.tdpro.entity.extend.RoleETD;
 import com.tdpro.mapper.PAdminMapper;
+import com.tdpro.mapper.POrderMapper;
 import com.tdpro.mapper.PRoleMapper;
+import com.tdpro.mapper.PUserMapper;
 import com.tdpro.service.AdminService;
 import com.xiaoleilu.hutool.crypto.digest.DigestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +35,10 @@ public class AdminServiceImpl implements AdminService {
     private PAdminMapper adminMapper;
     @Autowired
     private PRoleMapper roleMapper;
+    @Autowired
+    private POrderMapper orderMapper;
+    @Autowired
+    private PUserMapper userMapper;
     private Lock updLock = new ReentrantLock();
     private Lock updPwdLock = new ReentrantLock();
 
@@ -77,6 +84,10 @@ public class AdminServiceImpl implements AdminService {
         int six = admin.getSix() == null ? 0 : admin.getSix();
         int state = admin.getState() == null ? 0 : admin.getState();
         PAdmin adminUPD = new PAdmin();
+        if(StringUtil.isNotEmpty(admin.getPassword())){
+            String pwd = DigestUtil.md5Hex(admin.getPassword());
+            adminUPD.setPassword(pwd);
+        }
         adminUPD.setName(admin.getName());
         adminUPD.setSix(six);
         adminUPD.setRid(role.getId());
@@ -91,8 +102,6 @@ public class AdminServiceImpl implements AdminService {
             PAdmin adminFind = adminMapper.findByPhone(admin.getPhone());
             if (null == adminFind) {
                 adminUPD.setPhone(admin.getPhone());
-                String pwd = DigestUtil.md5Hex(admin.getPassword());
-                adminUPD.setPassword(pwd);
                 adminUPD.setCreateTime(new Date());
                 if (0 == adminMapper.insertSelective(adminUPD)) {
                     throw new BusinessException("添加失败");
@@ -106,10 +115,6 @@ public class AdminServiceImpl implements AdminService {
                 return ResponseUtils.errorRes("管理员不存在");
             }
             adminUPD.setId(adminInfo.getId());
-            if (StringUtil.isNotEmpty(admin.getPassword())) {
-                String pwd = DigestUtil.md5Hex(admin.getPassword());
-                adminUPD.setPassword(pwd);
-            }
             if (state == 0) {
                 adminUPD.setLiftingTime(new Date());
             } else {
@@ -157,17 +162,36 @@ public class AdminServiceImpl implements AdminService {
         if (StringUtil.isEmpty(admin.getPassword())) {
             return ResponseUtils.errorRes("请输入密码");
         }
+        PAdmin adminUPD = new PAdmin();
+
         PAdmin adminFid = adminMapper.selectByPrimaryKey(admin.getId());
         if (null == adminFid) {
             return ResponseUtils.errorRes("管理员不存在");
         }
+        if (StringUtil.isNotEmpty(admin.getPassword())) {
+            if(StringUtil.isEmpty(admin.getOldPassword())){
+                return ResponseUtils.errorRes("请输入旧密码");
+            }
+            String oldPwd = DigestUtil.md5Hex(admin.getOldPassword());
+            if(!oldPwd.equals(adminFid.getPassword())){
+                return ResponseUtils.errorRes("旧密码错误");
+            }
+        }
         String pwd = DigestUtil.md5Hex(admin.getPassword());
-        PAdmin adminUPD = new PAdmin();
+        if(adminFid.getPassword().equals(pwd)){
+            return ResponseUtils.errorRes("新密码不能与旧密码一致");
+        }
         adminUPD.setId(adminFid.getId());
         adminUPD.setPassword(pwd);
         if (0 == adminMapper.updateByPrimaryKeySelective(adminUPD)) {
             throw new BusinessException("修改密码失败");
         }
         return ResponseUtils.successRes(1);
+    }
+
+    @Override
+    public Response adminHome(){
+        AdminHomeETD adminHome = orderMapper.findAdminHome();
+        return ResponseUtils.successRes(adminHome);
     }
 }

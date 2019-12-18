@@ -28,4 +28,6 @@ public interface AdminService {
     Response adminInfo(Long id);
 
     Response passwordUpdate(PAdmin admin);
+
+    Response adminHome();
 }

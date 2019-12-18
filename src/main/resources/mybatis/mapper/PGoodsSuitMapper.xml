@@ -95,4 +95,8 @@
     from p_goods_suit
     where goodsId=#{0}
   </select>
+  <delete id="deleteByGoodsId" parameterType="java.lang.Long" >
+    delete from p_goods_suit
+    where goodsId = #{0}
+  </delete>
 </mapper>

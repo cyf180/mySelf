@@ -18,6 +18,8 @@ public class UserBalanceUpdateETD {
     private BigDecimal itemBuyAmount;
     private BigDecimal itemLeftAmount;
     private BigDecimal oldItemLeftAmount;
+    private BigDecimal topUpBalance;
+    private BigDecimal oldTopUpBalance;
     private Integer teamOneNum;
     private Integer teamSuitNum;
     private Integer suitLevelNum;

@@ -139,7 +139,7 @@ public class OrderServiceImpl implements OrderService {
                     }
                     addSuitNum = addSuitNum +addNum;
                 }
-                if(suitNum != addSuitNum){
+                if(5!= addSuitNum){
                     throw new RuntimeException("选择规格错误");
                 }
                 if (!cartService.insertCart(uid, goodsInfo, orderId, num, suitName.toString())) {

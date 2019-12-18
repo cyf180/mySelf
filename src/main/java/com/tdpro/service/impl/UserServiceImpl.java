@@ -181,18 +181,12 @@ public class UserServiceImpl implements UserService {
     public Response<LoginResult> wxLogin(LoginRequest login) {
         Response<LoginResult> resultResponse = ResponseUtils.errorResReg(ErrorCodeConstants.ErrorCode.SYSTEM_ERROR);
         LoginResult loginResult = new LoginResult();
-        loginResult.setIsBindPhone(0);
-        loginResult.setIsUser(0);
         //判断参数的合法性
         if (login == null || !StringUtils.hasText(login.getCode())) {
             return ResponseUtils.errorResReg(ErrorCodeConstants.ErrorCode.PARA_NORULE_ERROR);
         }
-        PUserPayConfig payConfig = userPayConfigService.findByType(0);
-        if(null != payConfig){
-            loginResult.setBuyUserPrice(payConfig.getPrice());
-        }
         int result = 0;
-        Long accountId = 0L;
+        Long uid= 0L;
         PUserLogin tThirdLogin = null;
         String openId = "";
         //调用微信授权获取openid
@@ -232,25 +226,24 @@ public class UserServiceImpl implements UserService {
             lock.unlock();
         }
         if (result == 1) {
+            PUser user = null;
             //校验用户是否已绑定手机号
             if (tThirdLogin.getUid() != null && tThirdLogin.getUid() > 0) {
-                PUser user = userMapper.selectByPrimaryKey(tThirdLogin.getUid());
-                if (user != null) {
-                    accountId = user.getId();
-                    //已绑定
-                    loginResult.setIsBindPhone(1);
-                    loginResult.setPhone(user.getPhone());
-                    loginResult.setKey(openId);
-                    loginResult.setIsUser(user.getIsUser());
+                user = userMapper.selectByPrimaryKey(tThirdLogin.getUid());
+                if (user == null) {
+                    return ResponseUtils.errorRes("用户异常");
+                }else {
+                    uid = user.getId();
                 }
             }
             // 验证成功生成token
             OnlineUserInfo onlineUserInfo = new OnlineUserInfo();
             onlineUserInfo.setLoginRole("USER_ROLE");
             onlineUserInfo.setUserLogId(tThirdLogin.getId());
-            onlineUserInfo.setUid(accountId);
+            onlineUserInfo.setUid(uid);
             // 存入微信sessionkey
             onlineUserInfo.setObject(cacheData);
+            loginResult = this.getLoginResult(user,tThirdLogin);
             String accessToken = jwtService.createToken(onlineUserInfo);
             if (StringUtils.hasText(accessToken)) {
                 //存入缓存
@@ -267,7 +260,6 @@ public class UserServiceImpl implements UserService {
     public Response insertUser(UserEnrollETD userETD) {
         Long userLoginId= userETD.getLoginId();
         LoginResult loginResult = new LoginResult();
-        loginResult.setIsBindPhone(0);
         if(StringUtil.isEmpty(userETD.getPhone()) || !Pattern.matches("^1[123456789]\\d{9}$", userETD.getPhone())){
             return ResponseUtils.errorRes("手机号错误");
         }
@@ -275,11 +267,9 @@ public class UserServiceImpl implements UserService {
         if(null != userFindByPhone){
             return ResponseUtils.errorRes("该手机号已存在");
         }
-        loginResult.setPhone(userETD.getPhone());
-//        if(StringUtil.isEmpty(userETD.getPayPassword()) || !Pattern.matches("\\d{5}$ ", userETD.getPayPassword())){
-//            return ResponseUtils.errorRes("请输入6位数字密码");
-//        }
-
+        if(StringUtil.isEmpty(userETD.getPayPassword()) || !Pattern.matches("^[0123456789]\\d{5}$", userETD.getPayPassword())){
+            return ResponseUtils.errorRes("请输入6位数字密码");
+        }
         if(!codeService.codeVerification(userETD.getPhone(),userETD.getCode())){
             return ResponseUtils.errorRes("验证码错误或已过期");
         }
@@ -293,20 +283,18 @@ public class UserServiceImpl implements UserService {
             return  ResponseUtils.errorRes("该微信已绑定手机号");
         }else{
             Long strawUid = null;
-            boolean issue = false;
             PUser userADD = new PUser();
             userADD.setPhone(userETD.getPhone());
             userADD.setIsUser(0);
             userADD.setState(0);
             userADD.setPayPassword(payPwd);
             userADD.setCreateTime(new Date());
-            if(null != userETD.getStrawUid()){
+            if(null != userETD.getStrawUid() && !new Long(0).equals(userETD.getStrawUid())){
                 PUser strawUser = this.findById(userETD.getStrawUid());
                 if(null == strawUser){
                     return ResponseUtils.errorRes("推荐人不存在");
                 }
                 strawUid=strawUser.getId();
-                issue = true;
             }else{
                 PUser strawUser = userMapper.findOne();
                 if(null == strawUser){
@@ -318,7 +306,6 @@ public class UserServiceImpl implements UserService {
             String nikName = emojiConverter.toHtml(userETD.getNickName());
             userADD.setStrawUid(strawUid);
             userADD.setNickName(nikName);
-            userADD.setWxQrCode("");
             if(0==userMapper.insertSelective(userADD)){
                 throw new RuntimeException("用户添加失败");
             }
@@ -330,6 +317,7 @@ public class UserServiceImpl implements UserService {
                 if(0 == userMapper.updateByPrimaryKeySelective(userUPD)){
                     throw new RuntimeException("修改二维码失败");
                 }
+                userADD.setWxQrCode(qrCode);
             }
             PUserLogin userLoginUPD = new PUserLogin();
             userLoginUPD.setId(userLogin.getId());
@@ -339,19 +327,11 @@ public class UserServiceImpl implements UserService {
             if(!userLoginService.updateUserLogin(userLoginUPD)){
                 throw new RuntimeException("绑定用手机失败");
             }
-            if(issue){
-                userVoucherService.voucherIssue(strawUid,userADD.getId(),IssueType.ENROLL_TYPE);
-            }
+            userVoucherService.voucherIssue(strawUid,userADD.getId(),IssueType.ENROLL_TYPE);
             onlineUserInfo.setUid(userADD.getId());
             onlineUserInfo.setUserLogId(userLogin.getId());
             onlineUserInfo.setLoginRole("USER_ROLE");
-            loginResult.setIsBindPhone(1);
-            loginResult.setUid(userADD.getId());
-            loginResult.setKey(userLogin.getOpenId());
-            if(StringUtil.isNotEmpty(qrCode)){
-                loginResult.setQrCode(imgPath+qrCode);
-            }
-
+            loginResult = this.getLoginResult(userADD,userLogin);
             String accessToken = jwtService.createToken(onlineUserInfo);
             if (StringUtils.hasText(accessToken)) {
                 onlineUserInfo.setToken(accessToken);
@@ -361,6 +341,29 @@ public class UserServiceImpl implements UserService {
             }
         }
         return ResponseUtils.successRes(loginResult);
+    }
+
+    private  LoginResult getLoginResult(PUser user,PUserLogin userLogin){
+        LoginResult loginResult = new LoginResult();
+        if(null != user){
+            loginResult.setUid(user.getId());
+            loginResult.setIsBindPhone(1);
+            loginResult.setIsUser(user.getIsUser());
+            loginResult.setPhone(user.getPhone());
+            if(StringUtil.isNotEmpty(user.getWxQrCode())){
+                loginResult.setQrCode(imgPath+user.getWxQrCode());
+            }
+        }else{
+            loginResult.setIsBindPhone(0);
+            loginResult.setIsUser(0);
+            loginResult.setUid(0L);
+        }
+        loginResult.setKey(userLogin.getOpenId());
+        PUserPayConfig payConfig = userPayConfigService.findByType(0);
+        if(null != payConfig){
+            loginResult.setBuyUserPrice(payConfig.getPrice());
+        }
+        return loginResult;
     }
 
     @Override

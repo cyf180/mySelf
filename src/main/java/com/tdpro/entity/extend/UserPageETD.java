@@ -56,6 +56,8 @@ public class UserPageETD extends QueryModel {
     private BigDecimal itemLeftAmount;
     private Integer suitLevelNum;
     private BigDecimal rate;
+    private Integer agent;
+    private BigDecimal topUpBalance;
     private String strawPhone;
     private String startTimes;
     private String endTimes;

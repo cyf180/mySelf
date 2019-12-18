@@ -4,6 +4,7 @@ import com.tdpro.common.utils.Response;
 import com.tdpro.common.utils.ResponseUtils;
 import com.tdpro.entity.PAdmin;
 import com.tdpro.entity.PAdvert;
+import com.tdpro.entity.extend.AdminHomeETD;
 import com.tdpro.entity.extend.AdminPageETD;
 import com.tdpro.entity.extend.AdvertETD;
 import com.tdpro.service.AdminService;
@@ -51,9 +52,6 @@ public class AdminController {
     }
 
     @PostMapping("addOrUpdate")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "订单id", required = true, dataType = "long", paramType = "form")
-    })
     @ApiOperation(value = "修改")
     public Response getAddOrUpdate(@Valid @RequestBody PAdmin admin){
         Response response;
@@ -103,5 +101,11 @@ public class AdminController {
             delLock.unlock();
         }
         return response;
+    }
+
+    @GetMapping("home")
+    @ApiOperation(value = "首页", response = AdminHomeETD.class)
+    public Response getHome() {
+        return adminService.adminHome();
     }
 }

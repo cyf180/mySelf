@@ -113,12 +113,19 @@ public class UserSiteServiceImpl implements UserSiteService {
         if(StringUtil.isEmpty(userSite.getName())){
             return ResponseUtils.errorRes("收件人错误");
         }
+        int isDefault = userSite.getIsDefault() == null ? 0 : userSite.getIsDefault();
+        if(isDefault == 0){
+            UserSiteETD userSiteFind = userSiteMapper.selectOneByUid(userSite.getUid());
+            if(null == userSiteFind){
+                isDefault = 1;
+            }
+        }
         PUserSite siteADD =new PUserSite();
         siteADD.setName(userSite.getName());
         siteADD.setPhone(userSite.getPhone());
         siteADD.setSite(userSite.getSite());
         siteADD.setUid(userSite.getUid());
-        int isDefault = userSite.getIsDefault() == null ? 0 : userSite.getIsDefault();
+
         siteADD.setIsDefault(isDefault);
         if(0 == userSiteMapper.insertSelective(siteADD)){
             throw new BusinessException("添加失败");

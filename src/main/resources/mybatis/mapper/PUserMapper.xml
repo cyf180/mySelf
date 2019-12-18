@@ -28,11 +28,14 @@
     <result column="suitLevelNum" property="suitLevelNum" jdbcType="INTEGER" />
     <result column="itemBuyAmount" property="itemBuyAmount" jdbcType="DECIMAL" />
     <result column="itemLeftAmount" property="itemLeftAmount" jdbcType="DECIMAL" />
+    <result column="wxQrCode" property="wxQrCode" jdbcType="VARCHAR" />
+    <result column="agent" property="agent" jdbcType="INTEGER" />
+    <result column="topUpBalance" property="topUpBalance" jdbcType="DECIMAL" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, isUser, phone, payPassword, `state`, strawUid, nickName, `name`, balance, integral, 
     totalIntegral, bankName, bankBranch, bankCard, idCard, createTime, disableTime, uncoilTime, 
-    strawPath, knotId, knotAmount, teamOneNum, teamSuitNum,teamSuitNum,itemLeftAmount,itemBuyAmount,suitLevelNum
+    strawPath, knotId, knotAmount, teamOneNum, teamSuitNum,teamSuitNum,itemLeftAmount,itemBuyAmount,suitLevelNum,wxQrCode,agent,topUpBalance
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -282,6 +285,15 @@
       <if test="teamSuitNum != null" >
         teamSuitNum = #{teamSuitNum,jdbcType=INTEGER},
       </if>
+      <if test="wxQrCode != null" >
+        wxQrCode = #{wxQrCode},
+      </if>
+      <if test="agent != null" >
+        agent = #{agent},
+      </if>
+      <if test="topUpBalance != null" >
+        topUpBalance = #{topUpBalance},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -312,7 +324,7 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="getUserCentre" resultType="com.tdpro.entity.extend.UserETD" parameterType="java.lang.Long">
-    select u.id,u.balance,u.integral,u.teamOneNum,u.teamSuitNum,u.isUser,k.rate,u.phone,u.agent,
+    select u.id,u.balance,u.integral,u.teamOneNum,u.teamSuitNum,u.isUser,k.rate,u.phone,u.agent,u.topUpBalance,
     (select count(*) from p_user where strawUid=u.id) as teamPeopleNum,
     (select count(*) from p_collect where uid=u.id) as collectNum,
     (select count(*) from p_user_voucher where uid=u.id and state=0 and useState=0) as voucherNum,
@@ -367,6 +379,9 @@
       <if test="knotId != null" >
         knotId = #{knotId},
       </if>
+      <if test="topUpBalance != null" >
+        topUpBalance = #{topUpBalance},
+      </if>
     </set>
     <where>
       id = #{id}
@@ -384,6 +399,9 @@
       </if>
       <if test="oldItemLeftAmount != null">
         and itemLeftAmount=#{oldItemLeftAmount}
+      </if>
+      <if test="oldItemLeftAmount != null">
+        and topUpBalance=#{oldTopUpBalance}
       </if>
     </where>
   </update>
@@ -405,7 +423,7 @@
   <select id="selectPageList" resultType="com.tdpro.entity.extend.UserPageETD" parameterType="com.tdpro.entity.extend.UserPageETD">
     select u.id,u.isUser,u.phone,u.payPassword,u.state,u.strawUid,u.nickName,u.name,u.balance,u.integral,u.totalIntegral,u.bankName,u.bankBranch,u.bankCard,
     u.idCard,u.createTime,u.disableTime,u.uncoilTime,u.strawPath,u.knotId,u.knotAmount,u.teamOneNum,u.teamSuitNum,u.itemBuyAmount,u.itemLeftAmount,u.suitLevelNum,
-    sw.phone as strawPhone,kc.rate
+    sw.phone as strawPhone,kc.rate,u.agent,u.topUpBalance
     from p_user u
     left join p_user sw on u.strawUid=sw.id
     left join p_knot_config kc on u.knotId=kc.id

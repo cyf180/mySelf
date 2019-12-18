@@ -1,8 +1,10 @@
 package com.tdpro.entity;
 
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.Date;
-
+@Data
 public class PUserVoucher implements Serializable {
     private Long id;
 
@@ -17,6 +19,8 @@ public class PUserVoucher implements Serializable {
     private Date startTime;
 
     private Date endTime;
+
+    private Date createTime;
 
     private static final long serialVersionUID = 1L;
 

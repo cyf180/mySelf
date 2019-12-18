@@ -411,7 +411,9 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     private boolean addExchange(GoodsInfoETD goodsInfoETD, Long goodsId) {
-        if (goodsInfoETD.getZoneType().equals(new Integer(2))) {
+        if (goodsInfoETD.getZoneType().equals(new Integer(1))) {
+            exchangeMapper.deleteByGoodsId(goodsId);
+        }else{
             if (null != goodsInfoETD.getSixCouponNum() && new Integer(0).compareTo(goodsInfoETD.getSixCouponNum()) < 0) {
                 if (!this.insertExchange(goodsId, goodsInfoETD.getSixCouponNum(), 1L)) {
                     return false;
@@ -438,27 +440,31 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     private boolean addGoodsSuit(GoodsInfoETD goodsInfoETD,Long goodsId) {
-        if (null != goodsInfoETD.getSuitList() && goodsInfoETD.getSuitList().size() > 0) {
-            List<PGoodsSuit> suitList = goodsInfoETD.getSuitList();
-            for (PGoodsSuit suit : suitList) {
-                if(StringUtil.isEmpty(suit.getExplain())){
-                    throw new BusinessException("规格配置不能为空");
-                }
-                PGoodsSuit goodsSuitADD = new PGoodsSuit();
-                goodsSuitADD.setExplain(suit.getExplain());
-                if(null == suit.getId()) {
-                    goodsSuitADD.setGoodsId(goodsId);
-                    goodsSuitADD.setCreateTime(new Date());
-                    if (0 == goodsSuitMapper.insertSelective(goodsSuitADD)) {
-                        return false;
+        if(null != goodsInfoETD.getIsSuitCount() && goodsInfoETD.getIsSuitCount().equals(new Integer(1))) {
+            if (null != goodsInfoETD.getSuitList() && goodsInfoETD.getSuitList().size() > 0) {
+                List<PGoodsSuit> suitList = goodsInfoETD.getSuitList();
+                for (PGoodsSuit suit : suitList) {
+                    if (StringUtil.isEmpty(suit.getExplain())) {
+                        throw new BusinessException("规格配置不能为空");
                     }
-                }else{
-                    goodsSuitADD.setId(suit.getId());
-                    if(0 == goodsSuitMapper.updateByPrimaryKeySelective(goodsSuitADD)){
-                        return false;
+                    PGoodsSuit goodsSuitADD = new PGoodsSuit();
+                    goodsSuitADD.setExplain(suit.getExplain());
+                    if (null == suit.getId()) {
+                        goodsSuitADD.setGoodsId(goodsId);
+                        goodsSuitADD.setCreateTime(new Date());
+                        if (0 == goodsSuitMapper.insertSelective(goodsSuitADD)) {
+                            return false;
+                        }
+                    } else {
+                        goodsSuitADD.setId(suit.getId());
+                        if (0 == goodsSuitMapper.updateByPrimaryKeySelective(goodsSuitADD)) {
+                            return false;
+                        }
                     }
                 }
             }
+        }else{
+            goodsSuitMapper.deleteByGoodsId(goodsId);
         }
         return true;
     }

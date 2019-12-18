@@ -9,9 +9,10 @@
     <result column="state" property="state" jdbcType="INTEGER" />
     <result column="startTime" property="startTime" jdbcType="TIMESTAMP" />
     <result column="endTime" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, `uid`, voucherId, useState, `state`, startTime, endTime
+    id, `uid`, voucherId, useState, `state`, startTime, endTime,createTime
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -58,6 +59,9 @@
       <if test="endTime != null" >
         endTime,
       </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="uid != null" >
@@ -77,6 +81,9 @@
       </if>
       <if test="endTime != null" >
         #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
       </if>
     </trim>
   </insert>
@@ -101,6 +108,9 @@
       <if test="endTime != null" >
         endTime = #{endTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -115,7 +125,7 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectListByUid" resultType="com.tdpro.entity.extend.UserVoucherETD" parameterType="com.tdpro.entity.extend.UserVoucherETD">
-    select uv.id,uv.uid,uv.voucherId,uv.useState,uv.state,uv.startTime,uv.endTime,v.voucherName,v.faceValue,v.price,v.isSill,v.mainSill,
+    select uv.id,uv.uid,uv.voucherId,uv.useState,uv.state,uv.startTime,uv.endTime,uv.createTime,v.voucherName,v.faceValue,v.price,v.isSill,v.mainSill,
     v.timeType,v.useExplain,(select count(*) from p_user_voucher where voucherId=uv.voucherId and useState=0 and state=0) as number
     from p_user_voucher uv
     left join p_voucher v on uv.voucherId=v.id

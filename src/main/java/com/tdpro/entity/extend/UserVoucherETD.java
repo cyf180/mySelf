@@ -36,4 +36,5 @@ public class UserVoucherETD extends Page{
     private String useExplain;
     @ApiModelProperty(value = "数量")
     private Integer number;
+    private Date createTime;
 }

@@ -56,6 +56,7 @@ public class PUser implements Serializable {
     private Integer suitLevelNum;
     private String wxQrCode;
     private Integer agent;
+    private BigDecimal topUpBalance;
     private BigDecimal rate;
 
     private static final long serialVersionUID = 1L;

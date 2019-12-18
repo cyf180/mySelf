@@ -60,4 +60,6 @@ public class UserInfoETD {
     private Integer sixCouponNum;
     private Integer threeCouponNum;
     private Integer teamUser;
+    private Integer agent;
+    private BigDecimal topUpBalance;
 }

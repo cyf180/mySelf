@@ -1,6 +1,7 @@
 package com.tdpro.mapper;
 
 import com.tdpro.entity.POrder;
+import com.tdpro.entity.extend.AdminHomeETD;
 import com.tdpro.entity.extend.OrderCartETD;
 import com.tdpro.entity.extend.OrderETD;
 import com.tdpro.entity.extend.OrderPageETD;
@@ -48,4 +49,6 @@ public interface POrderMapper {
     int countByUidAndZoneTypePayNum(@Param("uid") Long uid,@Param("zoneType") Integer zoneType);
 
     OrderCartETD selectAffirmById(Long id);
+
+    AdminHomeETD findAdminHome();
 }
