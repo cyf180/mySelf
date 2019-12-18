@@ -11,4 +11,6 @@ public interface GoodsSuitService {
     PGoodsSuit findById(Long id);
 
     int countGoodsSuitNum(Long goodsId);
+
+    Boolean delSuitById(Long goodsId);
 }

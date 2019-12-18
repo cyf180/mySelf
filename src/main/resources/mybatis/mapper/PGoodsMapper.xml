@@ -249,4 +249,11 @@
     </where>
     order by g.sort asc,g.createTime desc
   </select>
+  <select id="findAdminById" resultType="com.tdpro.entity.extend.GoodsInfoETD" parameterType="java.lang.Long">
+    select g.id,g.classId,g.goodsName,g.zoneType,g.isSuit,g.price,g.title,g.specification,g.hostImg,g.details,g.isDel,g.createTime,g.sort,g.repertory,g.soldNum,g.sort,
+    (select number from p_goods_exchange where goodsId=g.id and voucherId = 1) as sixCouponNum,
+    (select number from p_goods_exchange where goodsId=g.id and voucherId = 2) as threeCouponNum
+    from p_goods g
+    where g.id=#{id}
+  </select>
 </mapper>

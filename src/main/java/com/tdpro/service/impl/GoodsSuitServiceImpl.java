@@ -19,4 +19,12 @@ public class GoodsSuitServiceImpl implements GoodsSuitService {
     public int countGoodsSuitNum(Long goodsId) {
         return goodsSuitMapper.countByGoodsId(goodsId);
     }
+
+    @Override
+    public Boolean delSuitById(Long id) {
+        if(0 == goodsSuitMapper.deleteByPrimaryKey(id)){
+            return false;
+        }
+        return true;
+    }
 }

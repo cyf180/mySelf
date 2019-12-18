@@ -89,4 +89,10 @@
     from p_goods_suit
     where goodsId=#{0}
   </select>
+  <select id="selectAdminListByGoodsId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from p_goods_suit
+    where goodsId=#{0}
+  </select>
 </mapper>

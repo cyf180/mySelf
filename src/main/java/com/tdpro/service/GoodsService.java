@@ -57,14 +57,14 @@ public interface GoodsService {
      * @param goodsInfoETD
      * @return
      */
-    Response updateAndAddGoods(GoodsInfoETD goodsInfoETD);
+    Response addGoods(GoodsInfoETD goodsInfoETD);
 
     /**
      * 修改产品
      * @param goodsInfoETD
      * @return
      */
-    Response updateGoods(GoodsInfoETD goodsInfoETD);
+    Response updateGoodsSortAndRepertory(GoodsInfoETD goodsInfoETD);
 
     /**
      * 商品上下架
@@ -72,5 +72,10 @@ public interface GoodsService {
      * @return
      */
     Response updateGoodsIsDel(Long id);
+
+
+    Response adminGoodsInfo(Long id);
+
+    Response goodsUpdate(GoodsInfoETD goodsInfoETD);
 
 }

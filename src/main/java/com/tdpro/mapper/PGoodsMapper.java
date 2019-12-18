@@ -1,10 +1,7 @@
 package com.tdpro.mapper;
 
 import com.tdpro.entity.PGoods;
-import com.tdpro.entity.extend.GoodsETD;
-import com.tdpro.entity.extend.GoodsPageETD;
-import com.tdpro.entity.extend.GoodsRepertoryUpdateETD;
-import com.tdpro.entity.extend.OrderCartETD;
+import com.tdpro.entity.extend.*;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.math.BigDecimal;
@@ -31,4 +28,6 @@ public interface PGoodsMapper {
     int updateRepertory(GoodsRepertoryUpdateETD repertoryUpdateETD);
 
     List<GoodsPageETD> adminPageList(GoodsPageETD goodsPageETD);
+
+    GoodsInfoETD findAdminById(Long id);
 }
