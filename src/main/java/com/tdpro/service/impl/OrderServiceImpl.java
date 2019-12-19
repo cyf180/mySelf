@@ -49,6 +49,8 @@ public class OrderServiceImpl implements OrderService {
     private OrderConfigService orderConfigService;
     @Autowired
     private LogService logService;
+    @Autowired
+    private UserService userService;
     private Lock delOrderLock = new ReentrantLock();
     private Lock affirmOrderLock = new ReentrantLock();
 
@@ -59,6 +61,10 @@ public class OrderServiceImpl implements OrderService {
             return ResponseUtils.errorRes("操作异常");
         }
         Long uid = orderCartETD.getUid();
+        PUser userInfo = userService.findById(orderCartETD.getUid());
+        if(null == userInfo){
+            return ResponseUtils.errorRes("用户异常");
+        }
         Long goodsId = orderCartETD.getGoodsId();
         GoodsETD goodsInfo = goodsService.selectInfo(goodsId);
         if (null == goodsInfo) {
@@ -71,14 +77,26 @@ public class OrderServiceImpl implements OrderService {
         if (null != orderCartETD.getCartAddList() && orderCartETD.getCartAddList().size() > 0) {
             List<CartAddETD> cartList = orderCartETD.getCartAddList();
             for (CartAddETD cartAdd : cartList) {
+                int suitNum = goodsSuitService.countGoodsSuitNum(goodsId);
+                if(suitNum > 0){
+                    if(null == cartAdd.getSuitList() || cartAdd.getSuitList().size() < 0){
+                        return ResponseUtils.errorRes("请选择规格配置");
+                    }
+                }
                 int num = (null == cartAdd.getNumber() || cartAdd.getNumber() == 0) ? 1 : cartAdd.getNumber();
+                if(num < 0){
+                    return ResponseUtils.errorRes("数量错误");
+                }
                 orderNumber = orderNumber + num;
             }
         } else {
-            orderNumber = 1;
+            return ResponseUtils.errorRes("操作错误");
         }
         switch (goodsInfo.getZoneType().intValue()) {
             case 1:
+                if(userInfo.getIsUser().equals(new Integer(0))){
+                    return ResponseUtils.errorRes("您不是会员");
+                }
                 int num = orderMapper.countByUidAndZoneTypePayNum(uid, 1);
                 if (num > 0) {
                     return ResponseUtils.errorRes("您已免费领取过会员产品");
@@ -88,6 +106,9 @@ public class OrderServiceImpl implements OrderService {
                 }
                 break;
             case 2:
+                if(userInfo.getIsUser().equals(new Integer(0))){
+                    return ResponseUtils.errorRes("您不是会员");
+                }
                 List<GoodsExchangeETD> goodsExchangeList = exchangeService.selectListByGoodsId(goodsId);
                 if (null == goodsExchangeList || goodsExchangeList.size() <= 0) {
                     return ResponseUtils.errorRes("商品配置异常");
@@ -111,15 +132,18 @@ public class OrderServiceImpl implements OrderService {
         POrder orderADD = getAddOrder(goodsInfo, uid, orderNumber);
         Long orderId = orderADD.getId();
         List<CartAddETD> cartList = orderCartETD.getCartAddList();
+        int setOf = 1;
         for (CartAddETD cart : cartList) {
             int num = (null == cart.getNumber() || cart.getNumber() == 0) ? 1 : cart.getNumber();
             if (null != cart.getSuitList() && cart.getSuitList().size() > 0) {
                 int addSuitNum = 0;
-                int suitNum = goodsSuitService.countGoodsSuitNum(goodsId);
                 List<Long> suitIds = new ArrayList<>();
                 StringBuffer suitName = new StringBuffer();
                 for (SuitAddETD suit : cart.getSuitList()) {
                     int addNum = suit.getNumber() == null ? 0 : suit.getNumber();
+                    if(addNum < 0){
+                        throw new RuntimeException("规格数量错误");
+                    }
                     if (null == suit.getId()) {
                         throw new RuntimeException("规格参数异常");
                     }
@@ -140,7 +164,7 @@ public class OrderServiceImpl implements OrderService {
                     addSuitNum = addSuitNum +addNum;
                 }
                 if(5!= addSuitNum){
-                    throw new RuntimeException("选择规格错误");
+                    throw new RuntimeException("第"+setOf+"套规格数量错误,规格总数量必须为5");
                 }
                 if (!cartService.insertCart(uid, goodsInfo, orderId, num, suitName.toString())) {
                     throw new RuntimeException("添加购物车失败");
@@ -150,6 +174,7 @@ public class OrderServiceImpl implements OrderService {
                     throw new RuntimeException("添加购物车失败");
                 }
             }
+            setOf++;
         }
         return ResponseUtils.successRes(orderId);
     }

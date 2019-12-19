@@ -2,6 +2,7 @@ package com.tdpro.controller;
 
 import com.tdpro.common.utils.Response;
 import com.tdpro.common.utils.ResponseUtils;
+import com.tdpro.entity.PUser;
 import com.tdpro.entity.extend.UserInfoETD;
 import com.tdpro.entity.extend.UserPageETD;
 import com.tdpro.entity.extend.UserUPD;
@@ -26,6 +27,7 @@ public class AUserController {
     @Autowired
     private UserService userService;
     Lock updLock = new ReentrantLock();
+    Lock agentLock = new ReentrantLock();
     @GetMapping("pageList")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "pageNo", value = "当前页码",required = false,dataType = "int", paramType = "query"),
@@ -71,6 +73,24 @@ public class AUserController {
             response = ResponseUtils.errorRes(e.getMessage());
         }finally {
             updLock.unlock();
+        }
+        return response;
+    }
+
+    @PostMapping("updateAgent")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "用户id", required = true, dataType = "long", paramType = "form")
+    })
+    @ApiOperation(value = "代理设置取消")
+    public Response updateAgent(@ApiIgnore @RequestAttribute("adminId") Long adminId,@Valid @RequestBody PUser user){
+        Response response;
+        try {
+            agentLock.lock();
+            response = userService.updateUserAgent(user,adminId);
+        }catch (Exception e){
+            response = ResponseUtils.errorRes(e.getMessage());
+        }finally {
+            agentLock.unlock();
         }
         return response;
     }

@@ -1,7 +1,7 @@
 package com.tdpro.common.constant;
 
 public enum IssueType {
-    PAY_MEMBER_TYPE(1,"会员购买券发放"),
+    USER_ASK_TYPE(1,"会员问卷调查"),
     ENROLL_TYPE(0,"注册券发放");
     private Integer type;
     private String msg;

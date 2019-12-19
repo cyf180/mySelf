@@ -349,6 +349,9 @@
   <update id="updateBalance" parameterType="com.tdpro.entity.extend.UserBalanceUpdateETD">
     update p_user
     <set >
+      <if test="isUser != null" >
+        isUser = #{isUser,jdbcType=DECIMAL},
+      </if>
       <if test="balance != null" >
         balance = #{balance,jdbcType=DECIMAL},
       </if>

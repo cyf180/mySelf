@@ -1,6 +1,7 @@
 package com.tdpro.service.impl;
 
 import com.tdpro.common.constant.KnotType;
+import com.tdpro.common.exception.BusinessException;
 import com.tdpro.entity.*;
 import com.tdpro.entity.extend.UserBalanceUpdateETD;
 import com.tdpro.service.*;
@@ -86,6 +87,7 @@ public class KnotServiceImpl implements KnotService {
         return new AsyncResult<Boolean>(true);
     }
 
+    @Override
     @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
     public Future<Boolean> monthKnot() {
         int pageNo = 1;
@@ -97,6 +99,47 @@ public class KnotServiceImpl implements KnotService {
         rightNow.add(Calendar.MONTH, -1);
         Date startTime = rightNow.getTime();
         this.monthKnotAll(pageNo, startTime, endTime, year, month);
+        return new AsyncResult<Boolean>(true);
+    }
+
+    @Override
+    public Future<Boolean> buyMemberKnot(PUser user,PUserPay userPay) {
+        if(null != user && !user.getStrawUid().equals(new Long(0))){
+            PUser userOne = userService.findById(user.getStrawUid());
+            if(null != userOne){
+                BigDecimal knotOneBalance = new BigDecimal("68");
+                BigDecimal userOneNewBalance = userOne.getBalance().add(knotOneBalance);
+                dealLogService.insertDealLog("购买会员直接推荐人奖金获得",userPay.getId(),knotOneBalance,userOneNewBalance,userOne.getId(),user.getId());
+                userKnotService.insertUserKnot(userOne.getId(),user.getId(),userPay.getId(),null,knotOneBalance,userPay.getPayPrice(),KnotType.DOWN_BUY_MEMBER);
+                UserBalanceUpdateETD userOnoUPD = new UserBalanceUpdateETD();
+                userOnoUPD.setId(userOne.getId());
+                userOnoUPD.setBalance(userOneNewBalance);
+                userOnoUPD.setOldBalance(userOne.getBalance());
+                if(!userService.updateUserBalance(userOnoUPD)){
+                    throw new BusinessException("直接推荐人修改失败");
+                }
+                if(!userOne.getStrawUid().equals(new Long(0))){
+                    PUser userTwo = userService.findById(userOne.getStrawUid());
+                    if(null != userTwo){
+                        BigDecimal knotTwoBalance = new BigDecimal("34");
+                        BigDecimal userTwoNewBalance = userTwo.getBalance().add(knotTwoBalance);
+                        dealLogService.insertDealLog("购买会员间接推荐人奖金获得",null,knotTwoBalance,userTwoNewBalance,userTwo.getId(),user.getId());
+                        userKnotService.insertUserKnot(userTwo.getId(),user.getId(),userPay.getId(),null,knotTwoBalance,userPay.getPayPrice(),KnotType.DOWN_BUY_MEMBER);
+                        UserBalanceUpdateETD userTwoUPD = new UserBalanceUpdateETD();
+                        userTwoUPD.setId(userTwo.getId());
+                        userTwoUPD.setBalance(userTwoNewBalance);
+                        userTwoUPD.setOldBalance(userTwo.getBalance());
+                        if(!userService.updateUserBalance(userTwoUPD)){
+                            throw new BusinessException("间接推荐人修改失败");
+                        }
+                    }else{
+                        log.error("会员购买结算失败，间接推荐人异常,购买人ID：",user.getId());
+                    }
+                }
+            }else{
+                log.error("会员购买结算失败，直接推荐人异常,购买人ID：",user.getId());
+            }
+        }
         return new AsyncResult<Boolean>(true);
     }
 

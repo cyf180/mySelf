@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 @Data
 public class UserBalanceUpdateETD {
     private Long id;
+    private Integer isUser;
     private BigDecimal balance;
     private BigDecimal oldBalance;
     private BigDecimal integral;

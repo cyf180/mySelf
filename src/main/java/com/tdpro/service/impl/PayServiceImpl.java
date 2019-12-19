@@ -106,7 +106,7 @@ public class PayServiceImpl implements PayService {
                     payReturn.setMsg("支付密码错误");
                     return payReturn;
                 }
-                payReturn = this.orderExchangePay(orderInfo);
+                payReturn = this.orderExchangePay(orderInfo,payETD);
                 break;
             case 1:
                 if(StringUtil.isEmpty(userInfo.getPayPassword())){
@@ -267,37 +267,66 @@ public class PayServiceImpl implements PayService {
         payReturn.setOrderId(orderInfo.getId());
         return payReturn;
     }
-    private PayReturn orderExchangePay(POrder orderInfo){
+    private PayReturn orderExchangePay(POrder orderInfo,OrderPayETD payETD){
+        PayReturn payReturn = new PayReturn();
+        if(null == payETD.getVoucherId() || payETD.getVoucherId().equals(new Long(0))){
+            payReturn.setMsg("请选择一种兑换券");
+            return payReturn;
+        }
         long orderId = orderInfo.getId();
         long uid = orderInfo.getUid();
         int orderNumber = orderInfo.getNumber();
-        PayReturn payReturn = new PayReturn();
-        List<GoodsExchangeETD> goodsExchangeList = exchangeService.selectListByGoodsId(orderInfo.getGoodsId());
-        if (null == goodsExchangeList || goodsExchangeList.size() <= 0) {
-            payReturn.setMsg("商品配置异常");
+
+        GoodsExchangeETD goodsVoucher = exchangeService.selectByGoodsIdAndVoucherId(orderInfo.getGoodsId(), payETD.getVoucherId());
+        if (null == goodsVoucher) {
+            payReturn.setMsg("该商品不能使用当前券");
             return payReturn;
         }
-        for (GoodsExchangeETD exchange : goodsExchangeList) {
-            if (exchange.getNumber().compareTo(new Integer(0)) <= 0) {
-                payReturn.setMsg("商品兑换配置异常");
-                return payReturn;
-            }
-            Long voucherId = exchange.getVoucherId();
-            int needNum = exchange.getNumber() * orderNumber;
-            List<PUserVoucher> voucherList = userVoucherService.selectByUidAndVoucherId(orderInfo.getUid(), voucherId, needNum);
-            if (null == voucherList || voucherList.size() < needNum) {
-                payReturn.setMsg("您的" + exchange.getVoucherName() + "数量不足");
-                return payReturn;
-            }
-            for (PUserVoucher userVoucher : voucherList) {
-                if (!orderVoucherService.insertVoucher(orderId, uid, userVoucher.getId())) {
-                    throw new RuntimeException("券绑定失败");
-                }
-            }
-            if (!userVoucherService.updateUserVoucherIsUse(voucherList)) {
-                throw new RuntimeException("使用绑定失败");
+        if (goodsVoucher.getNumber().compareTo(new Integer(0)) <= 0) {
+            payReturn.setMsg("商品兑换配置异常");
+            return payReturn;
+        }
+        Long voucherId = goodsVoucher.getVoucherId();
+        int needNum = goodsVoucher.getNumber() * orderNumber;
+        List<PUserVoucher> voucherList = userVoucherService.selectByUidAndVoucherId(orderInfo.getUid(), voucherId, needNum);
+        if (null == voucherList || voucherList.size() < needNum) {
+            payReturn.setMsg("您的" + goodsVoucher.getVoucherName() + "数量不足");
+            return payReturn;
+        }
+        for (PUserVoucher userVoucher : voucherList) {
+            if (!orderVoucherService.insertVoucher(orderId, uid, userVoucher.getId())) {
+                throw new RuntimeException("券绑定失败");
             }
         }
+        if (!userVoucherService.updateUserVoucherIsUse(voucherList)) {
+            throw new RuntimeException("使用绑定失败");
+        }
+//        List<GoodsExchangeETD> goodsExchangeList = exchangeService.selectListByGoodsId(orderInfo.getGoodsId());
+//        if (null == goodsExchangeList || goodsExchangeList.size() <= 0) {
+//            payReturn.setMsg("商品配置异常");
+//            return payReturn;
+//        }
+//        for (GoodsExchangeETD exchange : goodsExchangeList) {
+//            if (exchange.getNumber().compareTo(new Integer(0)) <= 0) {
+//                payReturn.setMsg("商品兑换配置异常");
+//                return payReturn;
+//            }
+//            Long voucherId = exchange.getVoucherId();
+//            int needNum = exchange.getNumber() * orderNumber;
+//            List<PUserVoucher> voucherList = userVoucherService.selectByUidAndVoucherId(orderInfo.getUid(), voucherId, needNum);
+//            if (null == voucherList || voucherList.size() < needNum) {
+//                payReturn.setMsg("您的" + exchange.getVoucherName() + "数量不足");
+//                return payReturn;
+//            }
+//            for (PUserVoucher userVoucher : voucherList) {
+//                if (!orderVoucherService.insertVoucher(orderId, uid, userVoucher.getId())) {
+//                    throw new RuntimeException("券绑定失败");
+//                }
+//            }
+//            if (!userVoucherService.updateUserVoucherIsUse(voucherList)) {
+//                throw new RuntimeException("使用绑定失败");
+//            }
+//        }
         boolean orderIsPay = orderService.updateOrderIsPay(orderInfo.getId(), PayType.EXCHANGE_PAY, null, null, new BigDecimal("0"));
         boolean goodsUpd = goodsService.updateRepertory(orderInfo);
         if (!orderIsPay || !goodsUpd) {

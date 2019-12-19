@@ -88,7 +88,7 @@ public interface UserService {
      * @param uid
      * @return
      */
-    Boolean updateIsUser(Long uid);
+    Boolean updateIsUser(Long uid,BigDecimal topUpPrice);
 
     /**
      * 会员列表
@@ -110,4 +110,6 @@ public interface UserService {
      * @return
      */
     Response adminUpdateUser(UserInfoETD userInfoETD,Long adminId);
+
+    Response updateUserAgent(PUser user,Long adminId);
 }

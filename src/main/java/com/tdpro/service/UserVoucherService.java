@@ -3,7 +3,9 @@ package com.tdpro.service;
 import com.tdpro.common.constant.IssueType;
 import com.tdpro.common.utils.Response;
 import com.tdpro.entity.POrderVoucher;
+import com.tdpro.entity.PUser;
 import com.tdpro.entity.PUserVoucher;
+import com.tdpro.entity.PVoucher;
 import com.tdpro.entity.extend.UserVoucherETD;
 
 import java.util.List;
@@ -42,4 +44,6 @@ public interface UserVoucherService {
     void voucherIssue(Long strawUid,Long payUid,IssueType issueType);
 
     Boolean releaseUserVoucher(Long orderId);
+
+    boolean insertUserVoucher(PVoucher voucher, PUser user, Long payUid, IssueType issueType);
 }

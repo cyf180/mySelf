@@ -13,6 +13,7 @@ import com.tdpro.common.OnlineUserInfo;
 import com.tdpro.common.QiniuSimpleUpload;
 import com.tdpro.common.constant.ErrorCodeConstants;
 import com.tdpro.common.constant.IssueType;
+import com.tdpro.common.exception.BusinessException;
 import com.tdpro.common.model.LoginRequest;
 import com.tdpro.common.model.LoginResult;
 import com.tdpro.common.utils.Response;
@@ -142,23 +143,49 @@ public class UserServiceImpl implements UserService {
     @Override
     public Response userBalancePay(POrder order,PUser user,BigDecimal realPrice) {
         BigDecimal userOldBalance = user.getBalance();
-        BigDecimal userEndBalance = userOldBalance.subtract(realPrice);
+        BigDecimal userOldTopUpBalance = user.getTopUpBalance();
+        BigDecimal userAllBalance = userOldBalance.add(userOldTopUpBalance);
+        BigDecimal userEndBalance = userAllBalance.subtract(realPrice);
         if(userEndBalance.compareTo(new BigDecimal("0")) < 0){
             return ResponseUtils.errorRes("用户余额不足");
         }
+        BigDecimal newBalance = userOldBalance.subtract(realPrice);
+        BigDecimal newTopUpBalance = new BigDecimal("0");
+        if(newBalance.compareTo(new BigDecimal(0)) < 0){
+            newTopUpBalance = userOldTopUpBalance.subtract(newBalance.abs());
+            if(newTopUpBalance.compareTo(new BigDecimal("0")) < 0){
+                return ResponseUtils.errorRes("用户余额不足");
+            }
+            newBalance = new BigDecimal("0");
+        }
         UserBalanceUpdateETD userBalanceUPD = new UserBalanceUpdateETD();
         userBalanceUPD.setId(order.getUid());
-        userBalanceUPD.setBalance(userEndBalance);
+        userBalanceUPD.setBalance(newBalance);
+        userBalanceUPD.setTopUpBalance(newTopUpBalance);
         userBalanceUPD.setOldBalance(userOldBalance);
+        userBalanceUPD.setOldTopUpBalance(userOldTopUpBalance);
         if(0 == userMapper.updateBalance(userBalanceUPD)){
             user = this.findById(user.getId());
             userOldBalance = user.getBalance();
-            userEndBalance = userOldBalance.subtract(realPrice);
+            userOldTopUpBalance = user.getTopUpBalance();
+            userAllBalance = userOldBalance.add(userOldTopUpBalance);
+            userEndBalance = userAllBalance.subtract(realPrice);
             if(userEndBalance.compareTo(new BigDecimal("0")) < 0){
                 return ResponseUtils.errorRes("用户余额不足");
             }
-            userBalanceUPD.setBalance(userEndBalance);
+            newBalance = userOldBalance.subtract(realPrice);
+            newTopUpBalance = new BigDecimal("0");
+            if(newBalance.compareTo(new BigDecimal(0)) < 0){
+                newTopUpBalance = userOldTopUpBalance.subtract(newBalance.abs());
+                if(newTopUpBalance.compareTo(new BigDecimal("0")) < 0){
+                    return ResponseUtils.errorRes("用户余额不足");
+                }
+                newBalance = new BigDecimal("0");
+            }
+            userBalanceUPD.setBalance(newBalance);
+            userBalanceUPD.setTopUpBalance(newTopUpBalance);
             userBalanceUPD.setOldBalance(userOldBalance);
+            userBalanceUPD.setOldTopUpBalance(userOldTopUpBalance);
             if(0 == userMapper.updateBalance(userBalanceUPD)){
                 throw new RuntimeException("余额修改失败");
             }
@@ -373,11 +400,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean updateIsUser(Long uid) {
-        PUser userUPD = new PUser();
+    public Boolean updateIsUser(Long uid,BigDecimal topUpPrice) {
+        UserBalanceUpdateETD userUPD = new UserBalanceUpdateETD();
         userUPD.setId(uid);
         userUPD.setIsUser(1);
-        if(0 == userMapper.updateByPrimaryKeySelective(userUPD)){
+        userUPD.setTopUpBalance(topUpPrice);
+        if(0 == userMapper.updateBalance(userUPD)){
             return false;
         }
         return true;
@@ -488,6 +516,32 @@ public class UserServiceImpl implements UserService {
             if(0 == userMapper.updateBalance(userBalanceUPD)){
                 throw new RuntimeException("余额修改失败");
             }
+        }
+        return ResponseUtils.successRes(1);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Response updateUserAgent(PUser user,Long adminId) {
+        PUser userFind = this.findById(user.getId());
+        if(null == userFind){
+            return ResponseUtils.errorRes("用户不存在");
+        }
+        int agent = 0;
+        StringBuffer note =  new StringBuffer();
+        note.append("用户：").append(userFind.getPhone()).append(",ID：").append(userFind.getId()).append(",修改为：");
+        if(userFind.getAgent().equals(new Integer(0))){
+            agent = 1;
+            note.append("代理");
+        }else{
+            note.append("非代理");
+        }
+        logService.insertLog(adminId,"用户代理修改",note.toString(),1);
+        PUser userUPD = new PUser();
+        userUPD.setId(userFind.getId());
+        userUPD.setAgent(agent);
+        if(0 == userMapper.updateByPrimaryKeySelective(userUPD)){
+            throw new BusinessException("修改失败");
         }
         return ResponseUtils.successRes(1);
     }

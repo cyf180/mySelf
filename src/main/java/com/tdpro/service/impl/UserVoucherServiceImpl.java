@@ -124,8 +124,8 @@ public class UserVoucherServiceImpl implements UserVoucherService {
         }
         return true;
     }
-
-    private boolean insertUserVoucher(PVoucher voucher,PUser user,Long payUid,IssueType issueType){
+    @Override
+    public boolean insertUserVoucher(PVoucher voucher,PUser user,Long payUid,IssueType issueType){
         PUserVoucher userVoucher = new PUserVoucher();
         userVoucher.setUid(user.getId());
         userVoucher.setVoucherId(voucher.getId());
@@ -135,7 +135,7 @@ public class UserVoucherServiceImpl implements UserVoucherService {
         int addUserVoucher = userVoucherMapper.insertSelective(userVoucher);
         boolean addIssue = issueLogService.insertIssueLog(user.getId(),payUid,voucher,issueType,userVoucher.getId());
         if(0 == addUserVoucher || !addIssue){
-            log.error("优惠券发放失败,发放UID：{},添加用户优惠券状态：{},天剑发放记录状态：{}",user.getId(),addUserVoucher,addIssue);
+            log.error("优惠券发放失败,发放UID：{},添加用户优惠券状态：{},添加发放记录状态：{}",user.getId(),addUserVoucher,addIssue);
             return false;
         }
         return true;

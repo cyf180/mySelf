@@ -6,8 +6,10 @@ import com.github.binarywang.wxpay.constant.WxPayConstants;
 import com.github.binarywang.wxpay.util.SignUtils;
 import com.tdpro.common.constant.IssueType;
 import com.tdpro.common.constant.PayType;
+import com.tdpro.common.exception.BusinessException;
 import com.tdpro.config.SpringContext;
 import com.tdpro.entity.*;
+import com.tdpro.entity.extend.UserBalanceUpdateETD;
 import com.tdpro.service.*;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.concurrent.Future;
+
 @Service
 @Data
 @Slf4j
@@ -36,6 +40,8 @@ public class PayNotifyServiceImpl implements PayNotifyService {
     private UserPayService userPayService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private KnotService knotService;
 
     @Override
     @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
@@ -94,6 +100,7 @@ public class PayNotifyServiceImpl implements PayNotifyService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
     public Boolean userByNotify(WxPayOrderNotifyResult resultDate) {
         PPayConfig payConfig = payConfigService.findByChannelAndPayType(new Byte("0"), new Byte("1"));
         // 验签
@@ -121,14 +128,16 @@ public class PayNotifyServiceImpl implements PayNotifyService {
                     PUser user = userService.findById(payOrderInfo.getUid());
                     if(null != user) {
                         boolean updateOrder = userPayService.updateIsPay(payOrderInfo.getId(), payNo, totalFee);
-                        boolean updateUser = userService.updateIsUser(payOrderInfo.getUid());
+                        boolean updateUser = userService.updateIsUser(payOrderInfo.getUid(),payOrderInfo.getPayPrice());
                         if (!updateOrder || !updateUser) {
                             log.error("会员购买支付回调失败: {}，支付订单ID: {}", "订单修改状态：" + updateOrder + "，用户修改状态：" + updateUser, payOrderInfo.getId());
                             throw new RuntimeException("订单修改失败");
                         }
                         if(user.getStrawUid().compareTo(new Long(0)) > 0){
-                            userVoucherService.voucherIssue(user.getStrawUid(),user.getId(),IssueType.PAY_MEMBER_TYPE);
+//                            userVoucherService.voucherIssue(user.getStrawUid(),user.getId(),IssueType.PAY_MEMBER_TYPE);
+                            Future<Boolean> knot = knotService.buyMemberKnot(user,payOrderInfo);
                         }
+                        Future<Boolean> knot = knotService.buyMemberKnot(user,payOrderInfo);
                     }else{
                         log.error("会员购买支付回调失败: {}，支付订单ID: {}", "用户查询异常", payOrderInfo.getId());
                         throw new RuntimeException("会员购买支付回调金额不一致");

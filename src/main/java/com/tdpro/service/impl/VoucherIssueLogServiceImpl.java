@@ -25,7 +25,9 @@ public class VoucherIssueLogServiceImpl implements VoucherIssueLogService {
     public Boolean insertIssueLog(Long uid, Long payUid, PVoucher voucher, IssueType issueType,Long userVoucherId){
         PVoucherIssueLog issueLogADD = new PVoucherIssueLog();
         issueLogADD.setUid(uid);
-        issueLogADD.setPayUid(payUid);
+        if(null != payUid){
+            issueLogADD.setPayUid(payUid);
+        }
         issueLogADD.setVoucherId(voucher.getId());
         issueLogADD.setVoucherName(voucher.getVoucherName());
         issueLogADD.setType(issueType.getType());
