@@ -1,10 +1,13 @@
 package com.tdpro.controller;
 
 import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyResult;
+import com.github.binarywang.wxpay.config.WxPayConfig;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.github.binarywang.wxpay.service.impl.WxPayServiceImpl;
 import com.tdpro.service.KnotService;
+import com.tdpro.service.PayConfigService;
 import com.tdpro.service.PayNotifyService;
+import com.tdpro.service.UserPayService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -28,12 +31,16 @@ public class PayNotifyController {
     private PayNotifyService payNotifyService;
     @Autowired
     private KnotService knotService;
+    @Autowired
+    private PayConfigService payConfigService;
     private WxPayService wxPayService= new WxPayServiceImpl();
     @PostMapping("wxOrderPayNotify")
     @ApiOperation(value = "微信支付回调")
     public void wxOrderPayNotify(HttpServletRequest request, HttpServletResponse response){
         log.info("微信订单支付回调开始");
         try {
+            WxPayConfig wxPayConfig = payConfigService.getWxPayConfig(0);
+            wxPayService.setConfig(wxPayConfig);
             String xmlResult = IOUtils.toString(request.getInputStream(), request.getCharacterEncoding());
             log.info("微信订单支付回调订单号xmlResult: {}",xmlResult);
             WxPayOrderNotifyResult result = wxPayService.parseOrderNotifyResult(xmlResult);
@@ -63,6 +70,8 @@ public class PayNotifyController {
     public void buyMemberNotify(HttpServletRequest request, HttpServletResponse response){
         log.info("微信会员购买支付回调开始");
         try {
+            WxPayConfig wxPayConfig = payConfigService.getWxPayConfig(1);
+            wxPayService.setConfig(wxPayConfig);
             String xmlResult = IOUtils.toString(request.getInputStream(), request.getCharacterEncoding());
             log.info("微信会员购买回调订单号xmlResult: {}",xmlResult);
             WxPayOrderNotifyResult result = wxPayService.parseOrderNotifyResult(xmlResult);

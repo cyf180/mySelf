@@ -52,7 +52,7 @@ public class KnotServiceImpl implements KnotService {
                 if (null != user) {
                     if (!user.getStrawUid().equals(0)) {
                         PUser strawUserInfo = userService.findById(user.getStrawUid());
-                        if (null != strawUserInfo && !strawUserInfo.getIsUser().equals(new Integer(0))) {
+                        if (null != strawUserInfo && strawUserInfo.getIsUser().equals(new Integer(1))) {
                             switch (order.getIsSuit()) {
                                 case 0:
                                     //单品结算

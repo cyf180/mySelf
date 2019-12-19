@@ -55,14 +55,14 @@ blockerPath:
   userPath: /user/
   userIgnorePath: /user/userEnroll,/user/sms/enrollSend,/user/home/,/user/goods/
   adminPath: /api/
-  notTokenPath: /api/login,/auth/login,/swagger-ui.html,/webjars/,/swagger-resources/,/swagger-resources,/v2/api-docs
+  notTokenPath: /api/login,/auth/login,/td/notify/,/swagger-ui.html,/webjars/,/swagger-resources/,/swagger-resources,/v2/api-docs
 
 wechat:
   mainapp:
-#    appid: wx1d7c99f7945f0677 #wx390faf0b19fe5af2
-#    secret: 46752c7174dc19275f806cc891bc07db #8b6aabfc15cbfa26e866d542e6a166f9
-    appid: wx390faf0b19fe5af2
-    secret: 8b6aabfc15cbfa26e866d542e6a166f9
+    appid: wx1d7c99f7945f0677 #wx390faf0b19fe5af2
+    secret: 46752c7174dc19275f806cc891bc07db #8b6aabfc15cbfa26e866d542e6a166f9
+#    appid: wx390faf0b19fe5af2
+#    secret: 8b6aabfc15cbfa26e866d542e6a166f9
     token: G1X1jiil1iInLzl5iiRRzIjCnC1jiZ2a
     aesKey: KFwlcjWWSD8CsMxVlrS6s6FSws1NfpmFCrCpNsjnxdN
 

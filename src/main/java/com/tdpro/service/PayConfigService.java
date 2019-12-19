@@ -1,5 +1,6 @@
 package com.tdpro.service;
 
+import com.github.binarywang.wxpay.config.WxPayConfig;
 import com.tdpro.entity.PPayConfig;
 
 public interface PayConfigService {
@@ -9,4 +10,6 @@ public interface PayConfigService {
      * @return
      */
     PPayConfig findByChannelAndPayType(Byte channel,Byte payType);
+
+    WxPayConfig getWxPayConfig(int type);
 }

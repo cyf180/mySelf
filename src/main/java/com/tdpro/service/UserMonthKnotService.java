@@ -1,6 +1,8 @@
 package com.tdpro.service;
 
+import com.tdpro.common.utils.Response;
 import com.tdpro.entity.PUserMonthKnot;
+import com.tdpro.entity.extend.UserMonthKnotPageETD;
 
 import java.math.BigDecimal;
 
@@ -25,4 +27,6 @@ public interface UserMonthKnotService {
      * @return
      */
     PUserMonthKnot findByUidAndYearAndMonth(Long uid,Integer year,Integer month);
+
+    Response getAdminList(UserMonthKnotPageETD monthKnotPageETD);
 }

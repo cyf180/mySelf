@@ -62,7 +62,7 @@ public class PayNotifyServiceImpl implements PayNotifyService {
         String returnCode = resultDate.getReturnCode();
         String returnMsg = resultDate.getReturnMsg();
         if ("SUCCESS".equals(resultCode) && "SUCCESS".equals(returnCode)) {
-            POrder orderInfo = orderService.findByOrderNo(tradeNo);
+            POrder orderInfo = orderService.findByOrderNo(payNo);
             if (null != orderInfo) {
                 if (orderInfo.getState().equals(0)) {
                     if (!SpringContext.getActiveProfile().equals("dev")) {
@@ -78,7 +78,7 @@ public class PayNotifyServiceImpl implements PayNotifyService {
                             throw new RuntimeException("优惠券修改失败");
                         }
                     }
-                    boolean updateOrder = orderService.updateOrderIsPay(orderInfo.getId(), PayType.WX_PAY, payNo, totalFee,null);
+                    boolean updateOrder = orderService.updateOrderIsPay(orderInfo.getId(), PayType.WX_PAY, tradeNo, totalFee,null);
                     boolean updateGoods = goodsService.updateRepertory(orderInfo);
                     if (!updateOrder || !updateGoods) {
                         log.error("订单支付回调失败: {}，订单ID: ", "订单修改状态：" + updateOrder + "，产品库存修改：" + updateGoods, orderInfo.getId());
@@ -116,7 +116,7 @@ public class PayNotifyServiceImpl implements PayNotifyService {
         String returnCode = resultDate.getReturnCode();
         String returnMsg = resultDate.getReturnMsg();
         if ("SUCCESS".equals(resultCode) && "SUCCESS".equals(returnCode)) {
-            PUserPay payOrderInfo = userPayService.findByNo(tradeNo);
+            PUserPay payOrderInfo = userPayService.findByNo(payNo);
             if (null != payOrderInfo) {
                 if (payOrderInfo.getPayState().equals(0)) {
                     if (!SpringContext.getActiveProfile().equals("dev")) {
@@ -127,7 +127,7 @@ public class PayNotifyServiceImpl implements PayNotifyService {
                     }
                     PUser user = userService.findById(payOrderInfo.getUid());
                     if(null != user) {
-                        boolean updateOrder = userPayService.updateIsPay(payOrderInfo.getId(), payNo, totalFee);
+                        boolean updateOrder = userPayService.updateIsPay(payOrderInfo.getId(), tradeNo, totalFee);
                         boolean updateUser = userService.updateIsUser(payOrderInfo.getUid(),payOrderInfo.getPayPrice());
                         if (!updateOrder || !updateUser) {
                             log.error("会员购买支付回调失败: {}，支付订单ID: {}", "订单修改状态：" + updateOrder + "，用户修改状态：" + updateUser, payOrderInfo.getId());
@@ -137,7 +137,6 @@ public class PayNotifyServiceImpl implements PayNotifyService {
 //                            userVoucherService.voucherIssue(user.getStrawUid(),user.getId(),IssueType.PAY_MEMBER_TYPE);
                             Future<Boolean> knot = knotService.buyMemberKnot(user,payOrderInfo);
                         }
-                        Future<Boolean> knot = knotService.buyMemberKnot(user,payOrderInfo);
                     }else{
                         log.error("会员购买支付回调失败: {}，支付订单ID: {}", "用户查询异常", payOrderInfo.getId());
                         throw new RuntimeException("会员购买支付回调金额不一致");

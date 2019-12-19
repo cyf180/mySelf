@@ -141,4 +141,15 @@
     and `month`=#{month}
     limit 1
   </select>
+  <select id="findAdminPageList" resultType="com.tdpro.entity.extend.UserMonthKnotPageETD" parameterType="com.tdpro.entity.extend.UserMonthKnotPageETD">
+    select mk.*,u.phone
+    from p_user_month_knot mk
+    left join p_user u on mk.uid=u.id
+    <where>
+      <if test="phone != null">
+        u.phone like concat(concat('%', #{phone}), '%')
+      </if>
+    </where>
+    order by createTime desc
+  </select>
 </mapper>

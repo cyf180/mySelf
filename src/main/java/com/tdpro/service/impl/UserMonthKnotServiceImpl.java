@@ -1,6 +1,12 @@
 package com.tdpro.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.tdpro.common.utils.Response;
+import com.tdpro.common.utils.ResponseUtils;
 import com.tdpro.entity.PUserMonthKnot;
+import com.tdpro.entity.extend.UserKnotPageETD;
+import com.tdpro.entity.extend.UserMonthKnotPageETD;
 import com.tdpro.mapper.PUserMonthKnotMapper;
 import com.tdpro.service.UserMonthKnotService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +14,9 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserMonthKnotServiceImpl implements UserMonthKnotService {
@@ -37,5 +46,17 @@ public class UserMonthKnotServiceImpl implements UserMonthKnotService {
         userMonthKnot.setYear(year);
         userMonthKnot.setMonth(month);
         return userMonthKnotMapper.findByUidAndYearAndMonth(userMonthKnot);
+    }
+
+    @Override
+    public Response getAdminList(UserMonthKnotPageETD monthKnotPageETD){
+        Integer pageNum = monthKnotPageETD.getPageNo() == null ? 1 : monthKnotPageETD.getPageNo();
+        Integer pageSize = monthKnotPageETD.getPageSize() == null ? 10 : monthKnotPageETD.getPageSize();
+        PageHelper.startPage(pageNum, pageSize);
+        List<UserMonthKnotPageETD> list = userMonthKnotMapper.findAdminPageList(monthKnotPageETD);
+        Map map = new HashMap();
+        map.put("pageInfo",new PageInfo(list));
+        map.put("queryModel",monthKnotPageETD);
+        return ResponseUtils.successRes(map);
     }
 }

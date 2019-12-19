@@ -152,4 +152,22 @@
     where uk.uid=#{uid}
     order by id desc
   </select>
+  <select id="findAdminPageList" resultType="com.tdpro.entity.extend.UserKnotPageETD" parameterType="com.tdpro.entity.extend.UserKnotPageETD">
+    select uk.*,u.phone,pu.phone as payPhone
+    from p_user_knot uk
+    left join p_user u on uk.uid=u.id
+    left join p_user pu on uk.payUid=pu.id
+    <where>
+      <if test="knotType != null">
+        and uk.knotType=#{knotType}
+      </if>
+      <if test="phone != null">
+        u.phone like concat(concat('%', #{phone}), '%')
+      </if>
+      <if test="payPhone != null">
+        pu.phone like concat(concat('%', #{payPhone}), '%')
+      </if>
+    </where>
+    order by createTime desc
+  </select>
 </mapper>

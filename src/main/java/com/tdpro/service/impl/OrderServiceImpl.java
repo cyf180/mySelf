@@ -76,7 +76,7 @@ public class OrderServiceImpl implements OrderService {
         int orderNumber = 0;
         if (null != orderCartETD.getCartAddList() && orderCartETD.getCartAddList().size() > 0) {
             List<CartAddETD> cartList = orderCartETD.getCartAddList();
-            for (CartAddETD cartAdd : cartList) { ;
+            for (CartAddETD cartAdd : cartList) {
                 if(goodsInfo.getIsSuit().equals(new Integer(1))){
                     if(null == cartAdd.getSuitList() || cartAdd.getSuitList().size() < 0){
                         return ResponseUtils.errorRes("请选择规格配置");

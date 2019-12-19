@@ -4,6 +4,7 @@ import com.tdpro.common.constant.KnotType;
 import com.tdpro.common.utils.Response;
 import com.tdpro.entity.PUserKnot;
 import com.tdpro.entity.extend.UserKnotETD;
+import com.tdpro.entity.extend.UserKnotPageETD;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -31,4 +32,8 @@ public interface UserKnotService {
     int updateMonthKnotByIdList(List<Long> idList,Long monthId);
 
     Response userKnotList(UserKnotETD userKnotETD);
+
+    Response getAdminList(UserKnotPageETD userKnotPageETD);
+
+
 }

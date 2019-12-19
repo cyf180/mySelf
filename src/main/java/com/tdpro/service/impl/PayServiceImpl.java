@@ -11,6 +11,7 @@ import com.tdpro.common.utils.Response;
 import com.tdpro.common.utils.ResponseUtils;
 import com.tdpro.common.utils.weixin.WxUnifiedOrderUtils;
 import com.tdpro.common.utils.weixin.entity.WxPayET;
+import com.tdpro.config.SpringContext;
 import com.tdpro.entity.*;
 import com.tdpro.entity.extend.GoodsETD;
 import com.tdpro.entity.extend.GoodsExchangeETD;
@@ -205,8 +206,8 @@ public class PayServiceImpl implements PayService {
             payReturn.setType(1);
             payReturn.setOrderId(orderInfo.getId());
         } else if (PayType.WX_PAY.getType().equals(payETD.getPayType()) && realPrice.compareTo(new BigDecimal("0")) > 0) {
-            PPayConfig payConfig = payConfigService.findByChannelAndPayType(new Byte("0"), new Byte("1"));
-            if (null == payConfig) {
+            WxPayConfig wxPayConfig = payConfigService.getWxPayConfig(0);
+            if (null == wxPayConfig) {
                 payReturn.setMsg("微信支付为开启");
                 return payReturn;
             }
@@ -226,13 +227,10 @@ public class PayServiceImpl implements PayService {
             if(!orderService.updateOrder(orderSET)){
                 throw new RuntimeException("订单实付价格更新失败");
             }
+            if(SpringContext.getActiveProfile().equals("dev")){
+                realPrice = new BigDecimal("0.01");
+            }
             WxPayET wxPayET = new WxPayET();
-            WxPayConfig wxPayConfig = new WxPayConfig();
-            wxPayConfig.setMchId(payConfig.getMchId());
-            wxPayConfig.setMchKey(payConfig.getPaySecret());
-            wxPayConfig.setAppId(payConfig.getAppId());
-            wxPayConfig.setKeyPath(payConfig.getCertPath());
-            wxPayConfig.setNotifyUrl(payConfig.getBackPath());
             wxPayET.setWxPayConfig(wxPayConfig);
             wxPayET.setTradeType(WxPayConstants.TradeType.JSAPI);
             wxPayET.setCreateIp("127.0.0.1");
@@ -352,8 +350,8 @@ public class PayServiceImpl implements PayService {
         if (!new Integer(0).equals(userInfo.getIsUser())) {
             return ResponseUtils.errorRes("您已经是会员");
         }
-        PPayConfig payConfig = payConfigService.findByChannelAndPayType(new Byte("0"), new Byte("1"));
-        if (null == payConfig) {
+        WxPayConfig wxPayConfig = payConfigService.getWxPayConfig(1);
+        if (null == wxPayConfig) {
             return ResponseUtils.errorRes("微信支付为开启");
         }
         PUserPayConfig userPayConfig = userPayConfigService.findByType(0);
@@ -365,13 +363,10 @@ public class PayServiceImpl implements PayService {
         if (null == userPay) {
             throw new RuntimeException("添加购买订单失败");
         }
+        if(SpringContext.getActiveProfile().equals("dev")){
+            payPrice = new BigDecimal("0.01");
+        }
         WxPayET wxPayET = new WxPayET();
-        WxPayConfig wxPayConfig = new WxPayConfig();
-        wxPayConfig.setMchId(payConfig.getMchId());
-        wxPayConfig.setMchKey(payConfig.getPaySecret());
-        wxPayConfig.setAppId(payConfig.getAppId());
-        wxPayConfig.setKeyPath(payConfig.getCertPath());
-        wxPayConfig.setNotifyUrl(payConfig.getUserBackPath());
         wxPayET.setWxPayConfig(wxPayConfig);
         wxPayET.setTradeType(WxPayConstants.TradeType.JSAPI);
         wxPayET.setCreateIp("127.0.0.1");

@@ -403,7 +403,7 @@
       <if test="oldItemLeftAmount != null">
         and itemLeftAmount=#{oldItemLeftAmount}
       </if>
-      <if test="oldItemLeftAmount != null">
+      <if test="oldTopUpBalance != null">
         and topUpBalance=#{oldTopUpBalance}
       </if>
     </where>

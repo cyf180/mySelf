@@ -2,11 +2,14 @@ package com.tdpro.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.StringUtil;
 import com.tdpro.common.constant.KnotType;
 import com.tdpro.common.utils.Response;
 import com.tdpro.common.utils.ResponseUtils;
 import com.tdpro.entity.PUserKnot;
 import com.tdpro.entity.extend.UserKnotETD;
+import com.tdpro.entity.extend.UserKnotPageETD;
+import com.tdpro.entity.extend.UserPageETD;
 import com.tdpro.entity.extend.VoucherIssueETD;
 import com.tdpro.mapper.PUserKnotMapper;
 import com.tdpro.service.UserKnotService;
@@ -14,8 +17,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserKnotServiceImpl implements UserKnotService {
@@ -84,5 +91,17 @@ public class UserKnotServiceImpl implements UserKnotService {
         List<UserKnotETD> siteList = userKnotMapper.selectListByUid(userKnotETD);
         PageInfo pageInfo = new PageInfo(siteList);
         return ResponseUtils.successRes(pageInfo);
+    }
+
+    @Override
+    public Response getAdminList(UserKnotPageETD userKnotPageETD){
+        Integer pageNum = userKnotPageETD.getPageNo() == null ? 1 : userKnotPageETD.getPageNo();
+        Integer pageSize = userKnotPageETD.getPageSize() == null ? 10 : userKnotPageETD.getPageSize();
+        PageHelper.startPage(pageNum, pageSize);
+        List<UserKnotPageETD> list = userKnotMapper.findAdminPageList(userKnotPageETD);
+        Map map = new HashMap();
+        map.put("pageInfo",new PageInfo(list));
+        map.put("queryModel",userKnotPageETD);
+        return ResponseUtils.successRes(map);
     }
 }

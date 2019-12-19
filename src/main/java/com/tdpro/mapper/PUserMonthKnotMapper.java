@@ -1,7 +1,10 @@
 package com.tdpro.mapper;
 
 import com.tdpro.entity.PUserMonthKnot;
+import com.tdpro.entity.extend.UserMonthKnotPageETD;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 @Mapper
 public interface PUserMonthKnotMapper {
@@ -18,4 +21,6 @@ public interface PUserMonthKnotMapper {
     int updateByPrimaryKey(PUserMonthKnot record);
 
     PUserMonthKnot findByUidAndYearAndMonth(PUserMonthKnot record);
+
+    List<UserMonthKnotPageETD> findAdminPageList(UserMonthKnotPageETD knotPageETD);
 }
