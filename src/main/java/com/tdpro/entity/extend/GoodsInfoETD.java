@@ -29,7 +29,6 @@ public class GoodsInfoETD {
     private String productImgs;
     private Integer sixCouponNum;
     private Integer threeCouponNum;
-    private Integer isSuitCount;
     private List<PGoodsSuit> suitList;
     private List<PGoodsImg> imgList;
 }

@@ -76,9 +76,8 @@ public class OrderServiceImpl implements OrderService {
         int orderNumber = 0;
         if (null != orderCartETD.getCartAddList() && orderCartETD.getCartAddList().size() > 0) {
             List<CartAddETD> cartList = orderCartETD.getCartAddList();
-            for (CartAddETD cartAdd : cartList) {
-                int suitNum = goodsSuitService.countGoodsSuitNum(goodsId);
-                if(suitNum > 0){
+            for (CartAddETD cartAdd : cartList) { ;
+                if(goodsInfo.getIsSuit().equals(new Integer(1))){
                     if(null == cartAdd.getSuitList() || cartAdd.getSuitList().size() < 0){
                         return ResponseUtils.errorRes("请选择规格配置");
                     }
@@ -135,7 +134,7 @@ public class OrderServiceImpl implements OrderService {
         int setOf = 1;
         for (CartAddETD cart : cartList) {
             int num = (null == cart.getNumber() || cart.getNumber() == 0) ? 1 : cart.getNumber();
-            if (null != cart.getSuitList() && cart.getSuitList().size() > 0) {
+            if (goodsInfo.getIsSuit().equals(new Integer(1)) && null != cart.getSuitList() && cart.getSuitList().size() > 0) {
                 int addSuitNum = 0;
                 List<Long> suitIds = new ArrayList<>();
                 StringBuffer suitName = new StringBuffer();

@@ -256,4 +256,12 @@
     from p_goods g
     where g.id=#{id}
   </select>
+  <select id="findByNameAndZoneType" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from p_goods
+    where goodsName = #{goodsName}
+    and zoneType = #{zoneType}
+    limit 1
+  </select>
 </mapper>

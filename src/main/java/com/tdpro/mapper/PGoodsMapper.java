@@ -3,6 +3,7 @@ package com.tdpro.mapper;
 import com.tdpro.entity.PGoods;
 import com.tdpro.entity.extend.*;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -30,4 +31,6 @@ public interface PGoodsMapper {
     List<GoodsPageETD> adminPageList(GoodsPageETD goodsPageETD);
 
     GoodsInfoETD findAdminById(Long id);
+
+    PGoods findByNameAndZoneType(@Param("goodsName") String goodsName,@Param("zoneType") Integer zoneType);
 }
