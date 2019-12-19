@@ -330,9 +330,11 @@ public class GoodsServiceImpl implements GoodsService {
             }
             goodsInfo.setImgList(imgList);
         }
-        List<PGoodsSuit> suitList = goodsSuitMapper.selectAdminListByGoodsId(goodsInfo.getId());
-        if (null != suitList && suitList.size() > 0) {
-            goodsInfo.setSuitList(suitList);
+        if(goodsInfo.getIsSuit().equals(new Integer(1))) {
+            List<PGoodsSuit> suitList = goodsSuitMapper.selectAdminListByGoodsId(goodsInfo.getId());
+            if (null != suitList && suitList.size() > 0) {
+                goodsInfo.setSuitList(suitList);
+            }
         }
         return ResponseUtils.successRes(goodsInfo);
     }
