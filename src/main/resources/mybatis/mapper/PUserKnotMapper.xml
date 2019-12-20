@@ -162,10 +162,10 @@
         and uk.knotType=#{knotType}
       </if>
       <if test="phone != null">
-        u.phone like concat(concat('%', #{phone}), '%')
+        and u.phone like concat(concat('%', #{phone}), '%')
       </if>
       <if test="payPhone != null">
-        pu.phone like concat(concat('%', #{payPhone}), '%')
+        and pu.phone like concat(concat('%', #{payPhone}), '%')
       </if>
     </where>
     order by createTime desc

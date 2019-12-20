@@ -147,7 +147,7 @@
     left join p_user u on mk.uid=u.id
     <where>
       <if test="phone != null">
-        u.phone like concat(concat('%', #{phone}), '%')
+        and u.phone like concat(concat('%', #{phone}), '%')
       </if>
     </where>
     order by createTime desc
