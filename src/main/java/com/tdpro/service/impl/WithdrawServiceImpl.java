@@ -51,7 +51,7 @@ public class WithdrawServiceImpl implements WithdrawService {
         if(userInfo.getIsUser().equals(new Integer(0))){
             return ResponseUtils.errorRes("非会员不能体现");
         }
-        if(StringUtil.isEmpty(userInfo.getBankCard()) || StringUtil.isEmpty(userInfo.getBankName()) || StringUtil.isEmpty(userInfo.getBankBranch()) || StringUtil.isEmpty(userInfo.getName())){
+        if(StringUtil.isEmpty(userInfo.getBankCard()) || StringUtil.isEmpty(userInfo.getBankName()) || StringUtil.isEmpty(userInfo.getName())){
             return ResponseUtils.errorRes("请先完善个人信息");
         }
         PUserPayConfig config = sysConfigMapper.findByType(1);
