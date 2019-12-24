@@ -401,10 +401,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean updateIsUser(Long uid,BigDecimal topUpPrice) {
+        PUser user = this.findById(uid);
+        if(null == user){
+            return false;
+        }
+        BigDecimal newTopUpBalance = user.getTopUpBalance().add(topUpPrice);
         UserBalanceUpdateETD userUPD = new UserBalanceUpdateETD();
         userUPD.setId(uid);
         userUPD.setIsUser(1);
-        userUPD.setTopUpBalance(topUpPrice);
+        userUPD.setTopUpBalance(newTopUpBalance);
         if(0 == userMapper.updateBalance(userUPD)){
             return false;
         }
