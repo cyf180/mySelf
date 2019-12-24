@@ -212,11 +212,14 @@ public class GoodsServiceImpl implements GoodsService {
             return ResponseUtils.errorRes("商品价格错误");
         }
         Integer isSuit = goodsInfoETD.getIsSuit() == null ? 0 : goodsInfoETD.getIsSuit();
-//        if(zoneType.equals(0)){
+        if(zoneType.equals(1)){
+            if(null == goodsInfoETD.getSuitList() || goodsInfoETD.getSuitList().size() <= 0){
+                return ResponseUtils.errorRes("请添加套装规格");
+            }
 //            if(!isSuit.equals(0)){
 //                return ResponseUtils.errorRes("普通专区只能是单品");
 //            }
-//        }
+        }
         if (!zoneType.equals(2)) {
             if (null == goodsInfoETD.getPrice() || goodsInfoETD.getPrice().compareTo(new BigDecimal("0")) <= 0) {
                 return ResponseUtils.errorRes("商品价格必须大于0");
