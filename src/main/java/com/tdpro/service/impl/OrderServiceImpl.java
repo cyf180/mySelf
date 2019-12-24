@@ -14,6 +14,7 @@ import com.tdpro.mapper.*;
 import com.tdpro.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -30,6 +31,8 @@ import java.util.concurrent.locks.ReentrantLock;
 @Service
 @Slf4j
 public class OrderServiceImpl implements OrderService {
+    @Value("${qiniu.imgPath}")
+    private String imgPath;
     @Autowired
     private POrderMapper orderMapper;
     @Autowired
@@ -437,6 +440,13 @@ public class OrderServiceImpl implements OrderService {
         Integer pageSize = orderETD.getPageSize() == null ? 10 : orderETD.getPageSize();
         PageHelper.startPage(pageNo, pageSize);
         List<OrderETD> siteList = orderMapper.selectListByUid(orderETD);
+        if(null != siteList){
+            for (OrderETD order:siteList){
+                if(StringUtil.isNotEmpty(order.getHostImg())){
+                    order.setHostImg(imgPath+order.getHostImg());
+                }
+            }
+        }
         PageInfo pageInfo = new PageInfo(siteList);
         return ResponseUtils.successRes(pageInfo);
     }

@@ -68,6 +68,7 @@ public class PayServiceImpl implements PayService {
         }
         if(null == payETD.getSiteId()){
             payReturn.setMsg("请选择收货地址");
+            payReturn.setType(-1);
             return payReturn;
         }
         PUserSite site = userSiteService.findById(payETD.getSiteId());

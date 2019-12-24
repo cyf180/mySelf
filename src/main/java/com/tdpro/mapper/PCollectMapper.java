@@ -2,6 +2,7 @@ package com.tdpro.mapper;
 
 import com.tdpro.entity.PCollect;
 import com.tdpro.entity.extend.CollectETD;
+import com.tdpro.entity.extend.GoodsETD;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -21,7 +22,7 @@ public interface PCollectMapper {
 
     int updateByPrimaryKey(PCollect record);
 
-    List<CollectETD> selectListByUid(Long uid);
+    List<GoodsETD> selectListByUid(Long uid);
 
     PCollect findByUidAndGoodsId(@Param("uid") Long uid,@Param("goodsId") Long goodsId);
 }

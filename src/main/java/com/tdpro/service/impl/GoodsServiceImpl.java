@@ -74,6 +74,9 @@ public class GoodsServiceImpl implements GoodsService {
         if (null == goodsInfo) {
             return ResponseUtils.errorRes("产品已下架");
         }
+        if(StringUtil.isNotEmpty(goodsInfo.getHostImg())){
+            goodsInfo.setHostImg(imgPath+goodsInfo.getHostImg());
+        }
         if(goodsInfo.getIsSuit().equals(new Integer(1))) {
             List<GoodsSuitETD> suitList = goodsSuitMapper.selectAllListByGoodsId(goodsInfo.getId());
             if (null != suitList && suitList.size() > 0) {
@@ -83,7 +86,7 @@ public class GoodsServiceImpl implements GoodsService {
         if (!new Integer(0).equals(uid)) {
             PCollect collect = collectMapper.findByUidAndGoodsId(uid, goodsInfo.getId());
             if (null != collect) {
-                goodsInfo.setIsSuit(1);
+                goodsInfo.setIsPut(1);
             }
         }
         List<PGoodsImg> imgList = goodsImgMapper.selectListByGoodsId(goodsInfo.getId());
@@ -199,7 +202,7 @@ public class GoodsServiceImpl implements GoodsService {
             return ResponseUtils.errorRes("产品名称不能为空");
         }
         PGoods goodsFind = goodsMapper.findByNameAndZoneType(goodsInfoETD.getGoodsName(),zoneType);
-        if(null == goodsFind){
+        if(null != goodsFind){
             return ResponseUtils.errorRes("同一专区有该名称产品存在");
         }
         if (null == goodsInfoETD.getRepertory() || goodsInfoETD.getRepertory().compareTo(new Integer(0)) <= 0) {
@@ -208,6 +211,12 @@ public class GoodsServiceImpl implements GoodsService {
         if (null != goodsInfoETD.getPrice() && goodsInfoETD.getPrice().compareTo(new BigDecimal("0")) < 0) {
             return ResponseUtils.errorRes("商品价格错误");
         }
+        Integer isSuit = goodsInfoETD.getIsSuit() == null ? 0 : goodsInfoETD.getIsSuit();
+//        if(zoneType.equals(0)){
+//            if(!isSuit.equals(0)){
+//                return ResponseUtils.errorRes("普通专区只能是单品");
+//            }
+//        }
         if (!zoneType.equals(2)) {
             if (null == goodsInfoETD.getPrice() || goodsInfoETD.getPrice().compareTo(new BigDecimal("0")) <= 0) {
                 return ResponseUtils.errorRes("商品价格必须大于0");
@@ -231,7 +240,6 @@ public class GoodsServiceImpl implements GoodsService {
             goodsADD.setTitle(goodsInfoETD.getTitle());
         }
         Integer sort = goodsInfoETD.getSort() == null ? 0 : goodsInfoETD.getSort();
-        Integer isSuit = goodsInfoETD.getIsSuit() == null ? 0 : goodsInfoETD.getIsSuit();
         goodsADD.setSort(sort);
         goodsADD.setIsSuit(isSuit);
         goodsADD.setCreateTime(new Date());
@@ -368,6 +376,7 @@ public class GoodsServiceImpl implements GoodsService {
         if (null == goodsInfoETD.getRepertory() || goodsInfoETD.getRepertory().compareTo(new Integer(0)) <= 0) {
             return ResponseUtils.errorRes("库存错误");
         }
+        Integer isSuit = goodsInfoETD.getIsSuit() == null ? 0 : goodsInfoETD.getIsSuit();
         if (!zoneType.equals(2)) {
             if (null == goodsInfoETD.getPrice() || goodsInfoETD.getPrice().compareTo(new BigDecimal("0")) < 0) {
                 return ResponseUtils.errorRes("商品价格有误");
@@ -391,7 +400,7 @@ public class GoodsServiceImpl implements GoodsService {
             goodsADD.setTitle(goodsInfoETD.getTitle());
         }
         Integer sort = goodsInfoETD.getSort() == null ? 0 : goodsInfoETD.getSort();
-        Integer isSuit = goodsInfoETD.getIsSuit() == null ? 0 : goodsInfoETD.getIsSuit();
+
         goodsADD.setSort(sort);
         goodsADD.setIsSuit(isSuit);
         goodsADD.setCreateTime(new Date());
@@ -423,13 +432,34 @@ public class GoodsServiceImpl implements GoodsService {
             exchangeMapper.deleteByGoodsId(goodsId);
         }else{
             if (null != goodsInfoETD.getSixCouponNum() && new Integer(0).compareTo(goodsInfoETD.getSixCouponNum()) < 0) {
-                if (!this.insertExchange(goodsId, goodsInfoETD.getSixCouponNum(), 1L)) {
-                    return false;
+                GoodsExchangeETD exchangeFind = exchangeMapper.selectByGoodsIdAndVoucherId(goodsId,1L);
+                if(null == exchangeFind){
+                    if (!this.insertExchange(goodsId, goodsInfoETD.getSixCouponNum(), 1L)) {
+                        return false;
+                    }
+                }else{
+                    PGoodsExchange exchangeUPD = new PGoodsExchange();
+                    exchangeUPD.setId(exchangeFind.getId());
+                    exchangeUPD.setNumber(goodsInfoETD.getSixCouponNum());
+                    if(0 == exchangeMapper.updateByPrimaryKeySelective(exchangeUPD)){
+                        return false;
+                    }
                 }
+
             }
             if (null != goodsInfoETD.getThreeCouponNum() && new Integer(0).compareTo(goodsInfoETD.getThreeCouponNum()) < 0) {
-                if (!this.insertExchange(goodsId, goodsInfoETD.getThreeCouponNum(), 2L)) {
-                    return false;
+                GoodsExchangeETD exchangeFind = exchangeMapper.selectByGoodsIdAndVoucherId(goodsId,2L);
+                if(null == exchangeFind) {
+                    if (!this.insertExchange(goodsId, goodsInfoETD.getThreeCouponNum(), 2L)) {
+                        return false;
+                    }
+                }else{
+                    PGoodsExchange exchangeUPD = new PGoodsExchange();
+                    exchangeUPD.setId(exchangeFind.getId());
+                    exchangeUPD.setNumber(goodsInfoETD.getThreeCouponNum());
+                    if(0 == exchangeMapper.updateByPrimaryKeySelective(exchangeUPD)){
+                        return false;
+                    }
                 }
             }
         }

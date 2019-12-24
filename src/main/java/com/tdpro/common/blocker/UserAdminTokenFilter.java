@@ -88,15 +88,23 @@ public class UserAdminTokenFilter extends OncePerRequestFilter {
                                 FilterErrorUtils.notAuthorization(response,"未授权");
                                 return;
                             }
+                            request.setAttribute("loginId", userLogin.getId());
+                            PUser user = userService.findById(userInfo.getUid());
                             if (this.ignorePathBlock(request)) {
-                                request.setAttribute("uid", 0);
-                                request.setAttribute("loginId", userLogin.getId());
+                                if(null != user){
+                                    if (!userLogin.getUid().equals(userInfo.getUid())) {
+                                        FilterErrorUtils.notAuthorization(response,"用户异常");
+                                        return;
+                                    }
+                                    request.setAttribute("uid", user.getId());
+                                }else{
+                                    request.setAttribute("uid", 0);
+                                }
                             } else {
                                 if(userLogin.getUid().equals(new Long(0))){
                                     FilterErrorUtils.notLogin(response,"未登录");
                                     return;
                                 }
-                                PUser user = userService.findById(userInfo.getUid());
                                 if (null == user || !userLogin.getUid().equals(userInfo.getUid())) {
                                     FilterErrorUtils.notAuthorization(response,"用户异常");
                                     return;
@@ -106,7 +114,6 @@ public class UserAdminTokenFilter extends OncePerRequestFilter {
                                     return;
                                 }
                                 request.setAttribute("uid", user.getId());
-                                request.setAttribute("loginId", userLogin.getId());
                             }
                         } else if (this.adminPathBlock(request)) {
                             String urlStr = request.getRequestURI();

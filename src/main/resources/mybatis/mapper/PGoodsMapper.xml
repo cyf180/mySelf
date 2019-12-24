@@ -202,7 +202,7 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="pageList" resultType="com.tdpro.entity.extend.GoodsETD" parameterType="com.tdpro.entity.extend.GoodsETD">
-    select id,classId,goodsName,zoneType,isSuit,price,title,specification,hostImg,details,createTime
+    select id,classId,goodsName,zoneType,isSuit,price,title,specification,hostImg,createTime
     from p_goods
     <where>
       isDel = 0

@@ -38,6 +38,7 @@ public class HomeController {
         GoodsETD goodsETD = new GoodsETD();
         goodsETD.setPageNo(page.getPageNo());
         goodsETD.setPageSize(page.getPageSize());
+        goodsETD.setZoneType(0);
         HomeETD homeETD = new HomeETD();
         homeETD.setAdvertList(advertService.advertList());
         homeETD.setClassList(goodsClassService.getList(new Integer(6)));

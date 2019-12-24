@@ -19,11 +19,9 @@ import com.tdpro.common.model.LoginResult;
 import com.tdpro.common.utils.Response;
 import com.tdpro.common.utils.ResponseUtils;
 import com.tdpro.config.weixin.WxMaProperties;
-import com.tdpro.entity.POrder;
-import com.tdpro.entity.PUser;
-import com.tdpro.entity.PUserLogin;
-import com.tdpro.entity.PUserPayConfig;
+import com.tdpro.entity.*;
 import com.tdpro.entity.extend.*;
+import com.tdpro.mapper.PUserAskMapper;
 import com.tdpro.mapper.PUserMapper;
 import com.tdpro.service.*;
 import com.xiaoleilu.hutool.crypto.digest.DigestUtil;
@@ -74,6 +72,8 @@ public class UserServiceImpl implements UserService {
     private LogService logService;
     @Autowired
     private UserVoucherService userVoucherService;
+    @Autowired
+    private PUserAskMapper askMapper;
     WxMaProperties wxMaProperties=new WxMaProperties();
     WxMaService wxMaService = new WxMaServiceImpl();
     private EmojiConverter emojiConverter = EmojiConverter.getInstance();
@@ -377,6 +377,12 @@ public class UserServiceImpl implements UserService {
             loginResult.setIsBindPhone(1);
             loginResult.setIsUser(user.getIsUser());
             loginResult.setPhone(user.getPhone());
+            PUserAsk ask = askMapper.selectByPrimaryKey(user.getId());
+            if(null != ask){
+                loginResult.setIsAsk(1);
+            }else{
+                loginResult.setIsAsk(0);
+            }
             if(StringUtil.isNotEmpty(user.getWxQrCode())){
                 loginResult.setQrCode(imgPath+user.getWxQrCode());
             }

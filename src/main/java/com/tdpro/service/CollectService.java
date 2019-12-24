@@ -3,14 +3,15 @@ package com.tdpro.service;
 import com.tdpro.common.utils.Response;
 import com.tdpro.entity.PCollect;
 import com.tdpro.entity.extend.CollectETD;
+import com.tdpro.entity.extend.GoodsETD;
 
 public interface CollectService {
     /**
      * 用户收藏列表
-     * @param collectETD
+     * @param goodsETD
      * @return
      */
-    Response userCollect(CollectETD collectETD);
+    Response userCollect(GoodsETD goodsETD,Long uid);
 
     /**
      * 收藏删除

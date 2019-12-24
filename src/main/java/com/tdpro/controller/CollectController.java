@@ -3,6 +3,7 @@ package com.tdpro.controller;
 import com.tdpro.common.utils.Response;
 import com.tdpro.entity.PCollect;
 import com.tdpro.entity.extend.CollectETD;
+import com.tdpro.entity.extend.GoodsETD;
 import com.tdpro.service.CollectService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -26,10 +27,9 @@ public class CollectController {
             @ApiImplicitParam(name = "pageNo", value = "当前页码", required = false, dataType = "int", paramType = "query"),
             @ApiImplicitParam(name = "pageSize", value = "显示数量", required = false, dataType = "int", paramType = "query")
     })
-    @ApiOperation(value = "用户收藏列表接口",response = CollectETD.class)
-    public Response getTeamList(@ApiIgnore @RequestAttribute Long uid, CollectETD collectETD){
-        collectETD.setUid(uid);
-        return collectService.userCollect(collectETD);
+    @ApiOperation(value = "用户收藏列表接口",response = GoodsETD.class)
+    public Response getTeamList(@ApiIgnore @RequestAttribute Long uid, GoodsETD goodsETD){
+        return collectService.userCollect(goodsETD,uid);
     }
 
     @PostMapping("delCollect")

@@ -21,5 +21,7 @@ public class LoginResult {
     @ApiModelProperty("购买会员价格")
     BigDecimal buyUserPrice;
     Long uid;
+    @ApiModelProperty("问卷调查0未完成 1已完成")
+    private Integer IsAsk;
     private String qrCode;
 }

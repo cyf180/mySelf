@@ -427,14 +427,15 @@
     where o.id=#{0}
   </select>
   <select id="selectListByUid" resultType="com.tdpro.entity.extend.OrderETD" parameterType="com.tdpro.entity.extend.OrderETD">
-    select *
-    from p_order
-    where uid=#{uid}
-    and isDel = 0
+    select o.*,g.price as unitPrice,hostImg
+    from p_order o
+    left join p_goods g on o.goodsId=g.id
+    where o.uid=#{uid}
+    and o.isDel = 0
     <if test="state != null ">
-      and state = #{state}
+      and o.state = #{state}
     </if>
-    order by createTime desc
+    order by o.createTime desc
   </select>
   <select id="countByUidAndZoneTypePayNum" resultType="java.lang.Integer">
     select count(*) from p_order

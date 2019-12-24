@@ -6,8 +6,11 @@ import com.tdpro.common.exception.BusinessException;
 import com.tdpro.common.utils.Response;
 import com.tdpro.common.utils.ResponseUtils;
 import com.tdpro.entity.PCollect;
+import com.tdpro.entity.PGoods;
 import com.tdpro.entity.extend.CollectETD;
+import com.tdpro.entity.extend.GoodsETD;
 import com.tdpro.mapper.PCollectMapper;
+import com.tdpro.mapper.PGoodsMapper;
 import com.tdpro.service.CollectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,15 +29,17 @@ public class CollectServiceImpl implements CollectService {
     private String imgPath;
     @Autowired
     private PCollectMapper collectMapper;
+    @Autowired
+    private PGoodsMapper goodsMapper;
 
     Lock delLock = new ReentrantLock();
 
     @Override
-    public Response userCollect(CollectETD collectETD) {
-        Integer pageNo = collectETD.getPageNo() == null ? 1 : collectETD.getPageNo();
-        Integer pageSize = collectETD.getPageSize() == null ? 10: collectETD.getPageSize();
+    public Response userCollect(GoodsETD goodsETD,Long uid) {
+        Integer pageNo = goodsETD.getPageNo() == null ? 1 : goodsETD.getPageNo();
+        Integer pageSize = goodsETD.getPageSize() == null ? 10: goodsETD.getPageSize();
         PageHelper.startPage(pageNo,pageSize);
-        List<CollectETD> collectList = collectMapper.selectListByUid(collectETD.getUid());
+        List<GoodsETD> collectList = collectMapper.selectListByUid(uid);
         if(null != collectList && collectList.size() > 0){
             for (int i = 0;i<collectList.size();i++){
                 if(!StringUtils.isEmpty(collectList.get(i).getHostImg())) {
@@ -47,18 +52,17 @@ public class CollectServiceImpl implements CollectService {
 
     @Override
     public Response delCollect(CollectETD collectETD) {
-        Response response = ResponseUtils.successRes(1);
         try {
             delLock.lock();
             if(null == collectETD.getId()){
-                response = ResponseUtils.errorRes("关键值错");
+                return ResponseUtils.errorRes("关键值错");
             }
             PCollect collect = collectMapper.selectByPrimaryKey(collectETD.getId());
             if(null == collect){
-                response = ResponseUtils.errorRes("收藏不存在");
+                return ResponseUtils.errorRes("收藏不存在");
             }
             if(!collect.getUid().equals(collectETD.getUid())){
-                response = ResponseUtils.errorRes("收藏数据异常");
+                return ResponseUtils.errorRes("收藏数据异常");
             }
             if(0 == collectMapper.deleteByPrimaryKey(collect.getId())){
                 throw new RuntimeException("删除失败");
@@ -68,22 +72,26 @@ public class CollectServiceImpl implements CollectService {
         }finally {
             delLock.unlock();
         }
-        return response;
+        return ResponseUtils.successRes(1);
     }
 
     @Override
     public Response addCollect(PCollect collect){
+        PGoods  goods = goodsMapper.selectByPrimaryKey(collect.getGoodsId());
+        if(null == goods){
+            return ResponseUtils.errorRes("产品不存在");
+        }
         PCollect collectFind = collectMapper.findByUidAndGoodsId(collect.getUid(),collect.getGoodsId());
-        if(null != collectFind){
+        if(null == collectFind){
             PCollect collectADD = new PCollect();
-            collect.setUid(collect.getUid());
+            collectADD.setUid(collect.getUid());
             collectADD.setGoodsId(collect.getGoodsId());
             collectADD.setCreateTime(new Date());
             if(0 == collectMapper.insertSelective(collectADD)){
                 throw new BusinessException("收藏失败");
             }
         }else{
-            if(0 == collectMapper.deleteByPrimaryKey(collect.getId())){
+            if(0 == collectMapper.deleteByPrimaryKey(collectFind.getId())){
                 throw new RuntimeException("删除失败");
             }
         }

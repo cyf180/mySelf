@@ -69,7 +69,7 @@ public class OrderController {
             @ApiImplicitParam(name = "pageSize", value = "显示数量", required = false, dataType = "int", paramType = "query"),
             @ApiImplicitParam(name = "state", value = "0:未支付 1:已支付 2:已发货 3:完成", required = false, dataType = "int", paramType = "query")
     })
-    @ApiOperation(value = "用户券收入列表",response = VoucherIssueETD.class)
+    @ApiOperation(value = "用户券收入列表",response = OrderETD.class)
     public Response getOrderList(@ApiIgnore @RequestAttribute Long uid, OrderETD orderETD){
         orderETD.setUid(uid);
         return orderService.userOrderList(orderETD);
