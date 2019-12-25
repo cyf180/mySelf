@@ -115,6 +115,7 @@ public class OrderServiceImpl implements OrderService {
                 if (null == goodsExchangeList || goodsExchangeList.size() <= 0) {
                     return ResponseUtils.errorRes("商品配置异常");
                 }
+                boolean allow = false;
                 for (GoodsExchangeETD exchange : goodsExchangeList) {
                     if (exchange.getNumber().compareTo(new Integer(0)) <= 0) {
                         return ResponseUtils.errorRes("商品兑换配置异常");
@@ -122,9 +123,13 @@ public class OrderServiceImpl implements OrderService {
                     Long voucherId = exchange.getVoucherId();
                     int needNum = exchange.getNumber() * orderNumber;
                     List<PUserVoucher> voucherListOne = userVoucherService.selectByUidAndVoucherId(uid, voucherId, needNum);
-                    if (null == voucherListOne || voucherListOne.size() < needNum) {
-                        return ResponseUtils.errorRes("您的" + exchange.getVoucherName() + "数量不足");
+                    if (null != voucherListOne || voucherListOne.size() >= needNum) {
+                        allow = true;
+//                        return ResponseUtils.errorRes("您的" + exchange.getVoucherName() + "数量不足");
                     }
+                }
+                if(!allow){
+                    return ResponseUtils.errorRes("您的券数量不足");
                 }
                 break;
         }
