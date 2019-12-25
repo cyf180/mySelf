@@ -17,9 +17,9 @@ import java.io.IOException;
  */
 
 public class QiniuSimpleUpload {
-    private String accessKey="uOp69-ZMu6dmXC1mkKbwQ1RkCaywX3CI6-ko8YVf";
-    private String secretKey="wf_SY30qvQ_2TXoDpircGDSWdma4HaUq3tkIWsK7";
-    private String bucketname="zhutx";
+    private String accessKey="0Jo1K3ILOB5qJUpoZ883mWz5tyfMdWd9uUidz5Mp";
+    private String secretKey="SdC3BLvpp-5qhSF7Yk8Jzk2uXIpbj3w5s4r00Os9";
+    private String bucketname="tdpro";
 
 
     //密钥配置

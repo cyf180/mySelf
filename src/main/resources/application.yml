@@ -38,7 +38,7 @@ mybatis:
       configLocation: classpath:mybatis/mybatis-config.xml
 
 qiniu:
-  imgPath: http://myimg.txw18.com/
+  imgPath: http://img.fumeiren.top/
 
 wxconfig:
   appid: wxcfee96fb699a352d
@@ -77,5 +77,6 @@ xxl:
       logretentiondays: -1
     admin:
       addresses: http://127.0.0.1:8080/xxl-job-admin
+
 
 

@@ -284,6 +284,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
     public Response insertUser(UserEnrollETD userETD) {
         Long userLoginId= userETD.getLoginId();
         LoginResult loginResult = new LoginResult();
@@ -566,8 +567,8 @@ public class UserServiceImpl implements UserService {
             wxMaProperties.setSecret(secret); //需要替换为实际商户Secret
             wxMaProperties.setExpiresTime(System.currentTimeMillis());
             wxMaService.setWxMaConfig(wxMaProperties);
-            file = wxMaService.getQrcodeService().createWxCodeLimit("pages/index/index",uid.toString());
-            String imgName=System.currentTimeMillis()+".png";
+            file = wxMaService.getQrcodeService().createWxCodeLimit(uid.toString(),"pages/index/index",400,true,null);
+            String imgName=System.currentTimeMillis()+uid.toString()+".png";
             String upResult = qiniuSimpleUpload.upload(file, imgName);
             JSONObject formatUpResult = JSON.parseObject(upResult);
             if (!org.apache.commons.lang3.StringUtils.isEmpty(formatUpResult.get("key").toString())) {
