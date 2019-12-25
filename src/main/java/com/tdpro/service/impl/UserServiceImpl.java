@@ -310,7 +310,7 @@ public class UserServiceImpl implements UserService {
         if(!userLogin.getUid().equals(new Long(0))){
             return  ResponseUtils.errorRes("该微信已绑定手机号");
         }else{
-            Long strawUid = null;
+            Long strawUid = 0L;
             PUser userADD = new PUser();
             userADD.setPhone(userETD.getPhone());
             userADD.setIsUser(0);
@@ -325,12 +325,10 @@ public class UserServiceImpl implements UserService {
                 strawUid=strawUser.getId();
             }else{
                 PUser strawUser = userMapper.findOne();
-                if(null == strawUser){
-                    return ResponseUtils.errorRes("系统尚未开启");
+                if(null != strawUser){
+                    strawUid = strawUser.getId();
                 }
-                strawUid = strawUser.getId();
             }
-
             String nikName = emojiConverter.toHtml(userETD.getNickName());
             userADD.setStrawUid(strawUid);
             userADD.setNickName(nikName);
