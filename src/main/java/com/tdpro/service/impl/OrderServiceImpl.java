@@ -123,7 +123,7 @@ public class OrderServiceImpl implements OrderService {
                     Long voucherId = exchange.getVoucherId();
                     int needNum = exchange.getNumber() * orderNumber;
                     List<PUserVoucher> voucherListOne = userVoucherService.selectByUidAndVoucherId(uid, voucherId, needNum);
-                    if (null != voucherListOne || voucherListOne.size() >= needNum) {
+                    if (null != voucherListOne && voucherListOne.size() >= needNum) {
                         allow = true;
 //                        return ResponseUtils.errorRes("您的" + exchange.getVoucherName() + "数量不足");
                     }
