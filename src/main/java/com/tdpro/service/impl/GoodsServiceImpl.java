@@ -212,23 +212,34 @@ public class GoodsServiceImpl implements GoodsService {
             return ResponseUtils.errorRes("商品价格错误");
         }
         Integer isSuit = goodsInfoETD.getIsSuit() == null ? 0 : goodsInfoETD.getIsSuit();
-        if(zoneType.equals(1)){
+        if(isSuit.equals(1)){
             if(null == goodsInfoETD.getSuitList() || goodsInfoETD.getSuitList().size() <= 0){
                 return ResponseUtils.errorRes("请添加套装规格");
             }
-//            if(!isSuit.equals(0)){
-//                return ResponseUtils.errorRes("普通专区只能是单品");
-//            }
         }
-        if (!zoneType.equals(2)) {
-            if (null == goodsInfoETD.getPrice() || goodsInfoETD.getPrice().compareTo(new BigDecimal("0")) <= 0) {
-                return ResponseUtils.errorRes("商品价格必须大于0");
+        if (null != goodsInfoETD.getPrice()) {
+            if(goodsInfoETD.getPrice().compareTo(new BigDecimal("0")) < 0) {
+                return ResponseUtils.errorRes("商品价格有误");
             }
-        } else {
-            if ((null == goodsInfoETD.getSixCouponNum() && null == goodsInfoETD.getThreeCouponNum()) ||
-                    (goodsInfoETD.getSixCouponNum().compareTo(new Integer(0)) <= 0 && goodsInfoETD.getThreeCouponNum().compareTo(new Integer(0)) <= 0)) {
-                return ResponseUtils.errorRes("请输入兑换券数量");
-            }
+        }
+        switch (zoneType){
+            case 0:
+                if (null == goodsInfoETD.getPrice() || goodsInfoETD.getPrice().compareTo(new BigDecimal("0")) <= 0) {
+                    return ResponseUtils.errorRes("商品价格有误");
+                }
+                if(null != goodsInfoETD.getVipPrice()){
+                    if(goodsInfoETD.getVipPrice().compareTo(new BigDecimal("0")) < 0){
+                        return ResponseUtils.errorRes("会员价格错误");
+                    }
+                    goodsADD.setVipPrice(goodsInfoETD.getVipPrice());
+                }
+                break;
+            case 2:
+                if ((null == goodsInfoETD.getSixCouponNum() && null == goodsInfoETD.getThreeCouponNum()) ||
+                        (goodsInfoETD.getSixCouponNum().compareTo(new Integer(0)) <= 0 && goodsInfoETD.getThreeCouponNum().compareTo(new Integer(0)) <= 0)) {
+                    return ResponseUtils.errorRes("请输入兑换券数量");
+                }
+                break;
         }
         if (StringUtil.isEmpty(goodsInfoETD.getSpecification())) {
             return ResponseUtils.errorRes("请输规格");
@@ -241,6 +252,12 @@ public class GoodsServiceImpl implements GoodsService {
         }
         if (StringUtil.isNotEmpty(goodsInfoETD.getTitle())) {
             goodsADD.setTitle(goodsInfoETD.getTitle());
+        }
+        if(null != goodsInfoETD.getVipPrice()){
+            if(goodsInfoETD.getVipPrice().compareTo(new BigDecimal("0")) < 0){
+                return ResponseUtils.errorRes("会员价格错误");
+            }
+            goodsADD.setVipPrice(goodsInfoETD.getVipPrice());
         }
         Integer sort = goodsInfoETD.getSort() == null ? 0 : goodsInfoETD.getSort();
         goodsADD.setSort(sort);
@@ -379,16 +396,35 @@ public class GoodsServiceImpl implements GoodsService {
         if (null == goodsInfoETD.getRepertory() || goodsInfoETD.getRepertory().compareTo(new Integer(0)) <= 0) {
             return ResponseUtils.errorRes("库存错误");
         }
-        Integer isSuit = goodsInfoETD.getIsSuit() == null ? 0 : goodsInfoETD.getIsSuit();
-        if (!zoneType.equals(2)) {
-            if (null == goodsInfoETD.getPrice() || goodsInfoETD.getPrice().compareTo(new BigDecimal("0")) < 0) {
+        if (null != goodsInfoETD.getPrice()) {
+            if(goodsInfoETD.getPrice().compareTo(new BigDecimal("0")) < 0) {
                 return ResponseUtils.errorRes("商品价格有误");
             }
-        } else {
-            if ((null == goodsInfoETD.getSixCouponNum() && null == goodsInfoETD.getThreeCouponNum()) ||
-                    (goodsInfoETD.getSixCouponNum().compareTo(new Integer(0)) <= 0 && goodsInfoETD.getThreeCouponNum().compareTo(new Integer(0)) <= 0)) {
-                return ResponseUtils.errorRes("请输入兑换券数量");
+        }
+        Integer isSuit = goodsInfoETD.getIsSuit() == null ? 0 : goodsInfoETD.getIsSuit();
+        if(isSuit.equals(1)){
+            if(null == goodsInfoETD.getSuitList() || goodsInfoETD.getSuitList().size() <= 0){
+                return ResponseUtils.errorRes("请添加套装规格");
             }
+        }
+        switch (zoneType){
+            case 0:
+                if (null == goodsInfoETD.getPrice() || goodsInfoETD.getPrice().compareTo(new BigDecimal("0")) <= 0) {
+                    return ResponseUtils.errorRes("商品价格有误");
+                }
+                if(null != goodsInfoETD.getVipPrice()){
+                    if(goodsInfoETD.getVipPrice().compareTo(new BigDecimal("0")) < 0){
+                        return ResponseUtils.errorRes("会员价格错误");
+                    }
+                    goodsADD.setVipPrice(goodsInfoETD.getVipPrice());
+                }
+                break;
+            case 2:
+                if ((null == goodsInfoETD.getSixCouponNum() && null == goodsInfoETD.getThreeCouponNum()) ||
+                        (goodsInfoETD.getSixCouponNum().compareTo(new Integer(0)) <= 0 && goodsInfoETD.getThreeCouponNum().compareTo(new Integer(0)) <= 0)) {
+                    return ResponseUtils.errorRes("请输入兑换券数量");
+                }
+                break;
         }
         if (StringUtil.isEmpty(goodsInfoETD.getSpecification())) {
             return ResponseUtils.errorRes("请输规格");
@@ -402,8 +438,8 @@ public class GoodsServiceImpl implements GoodsService {
         if (StringUtil.isNotEmpty(goodsInfoETD.getTitle())) {
             goodsADD.setTitle(goodsInfoETD.getTitle());
         }
-        Integer sort = goodsInfoETD.getSort() == null ? 0 : goodsInfoETD.getSort();
 
+        Integer sort = goodsInfoETD.getSort() == null ? 0 : goodsInfoETD.getSort();
         goodsADD.setSort(sort);
         goodsADD.setIsSuit(isSuit);
         goodsADD.setCreateTime(new Date());

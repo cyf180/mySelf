@@ -1,9 +1,11 @@
 package com.tdpro.entity;
 
+import lombok.Data;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-
+@Data
 public class PGoods implements Serializable {
     private Long id;
 
@@ -16,6 +18,8 @@ public class PGoods implements Serializable {
     private Integer isSuit;
 
     private BigDecimal price;
+
+    private BigDecimal vipPrice;
 
     private String title;
 

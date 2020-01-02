@@ -21,6 +21,8 @@ public class GoodsETD extends Page {
     private Integer isSuit;
     @ApiModelProperty(value = "商品价格")
     private BigDecimal price;
+    @ApiModelProperty(value = "商品会员价格")
+    private BigDecimal vipPrice;
     @ApiModelProperty(value = "商品简介")
     private String title;
     @ApiModelProperty(value = "单位")

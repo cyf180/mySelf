@@ -125,7 +125,6 @@ public class OrderServiceImpl implements OrderService {
                     List<PUserVoucher> voucherListOne = userVoucherService.selectByUidAndVoucherId(uid, voucherId, needNum);
                     if (null != voucherListOne && voucherListOne.size() >= needNum) {
                         allow = true;
-//                        return ResponseUtils.errorRes("您的" + exchange.getVoucherName() + "数量不足");
                     }
                 }
                 if(!allow){
@@ -136,7 +135,7 @@ public class OrderServiceImpl implements OrderService {
         if (goodsInfo.getRepertory().compareTo(new Integer(orderNumber)) < 0) {
             return ResponseUtils.errorRes("库存不足");
         }
-        POrder orderADD = getAddOrder(goodsInfo, uid, orderNumber);
+        POrder orderADD = getAddOrder(goodsInfo, userInfo, orderNumber);
         Long orderId = orderADD.getId();
         List<CartAddETD> cartList = orderCartETD.getCartAddList();
         int setOf = 1;
@@ -173,11 +172,11 @@ public class OrderServiceImpl implements OrderService {
                 if(5!= addSuitNum){
                     throw new RuntimeException("第"+setOf+"套规格数量错误,规格总数量必须为5");
                 }
-                if (!cartService.insertCart(uid, goodsInfo, orderId, num, suitName.toString())) {
+                if (!cartService.insertCart(userInfo, goodsInfo, orderId, num, suitName.toString())) {
                     throw new RuntimeException("添加购物车失败");
                 }
             } else {
-                if (!cartService.insertCart(uid, goodsInfo, orderId, num, null)) {
+                if (!cartService.insertCart(userInfo, goodsInfo, orderId, num, null)) {
                     throw new RuntimeException("添加购物车失败");
                 }
             }
@@ -191,8 +190,16 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.selectByPrimaryKey(id);
     }
 
-    private POrder getAddOrder(GoodsETD goodsInfo, Long uid, int orderNumber) {
-        BigDecimal totalPrice = goodsInfo.getPrice().multiply(new BigDecimal(orderNumber)).setScale(2, BigDecimal.ROUND_DOWN);
+    private POrder getAddOrder(GoodsETD goodsInfo, PUser userInfo, int orderNumber) {
+        Long uid = userInfo.getId();
+        BigDecimal price = goodsInfo.getPrice();
+        if(userInfo.getIsUser().equals(new Integer(1)) && goodsInfo.getVipPrice().compareTo(new BigDecimal("0")) > 0){
+            price = goodsInfo.getVipPrice();//是会员取会员价格
+        }
+        if(price.compareTo(new BigDecimal("0")) < 0){
+            throw new BusinessException("商品价格异常");
+        }
+        BigDecimal totalPrice = price.multiply(new BigDecimal(orderNumber)).setScale(2, BigDecimal.ROUND_DOWN);
         Long goodsId = goodsInfo.getId();
         POrder orderADD = new POrder();
         orderADD.setUid(uid);

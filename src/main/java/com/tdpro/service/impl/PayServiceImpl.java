@@ -152,6 +152,9 @@ public class PayServiceImpl implements PayService {
         BigDecimal totalPrice = orderInfo.getTotalPrice();
         List<PUserVoucher> voucherList = null;
         long uid = userInfo.getId();
+        if(totalPrice.compareTo(BigDecimal.ZERO) <= 0){
+            payETD.setVoucherId(null);
+        }
         if (null != payETD.getVoucherId() && !payETD.getVoucherId().equals(new Long(0))) {
             GoodsExchangeETD goodsVoucher = exchangeService.selectByGoodsIdAndVoucherId(goodsInfo.getId(), payETD.getVoucherId());
             if (null == goodsVoucher) {
@@ -175,7 +178,7 @@ public class PayServiceImpl implements PayService {
         }else{
             realPrice = totalPrice;
         }
-        if (PayType.BALANCE_PAY.getType().equals(payETD.getPayType())) {
+        if (PayType.BALANCE_PAY.getType().equals(payETD.getPayType()) || realPrice.compareTo(BigDecimal.ZERO) <= 0) {
             if(StringUtil.isEmpty(userInfo.getPayPassword())){
                 payReturn.setMsg("未设置支付密码");
                 return payReturn;

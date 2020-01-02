@@ -16,6 +16,7 @@ public class GoodsInfoETD {
     private Integer zoneType;
     private Integer isSuit;
     private BigDecimal price;
+    private BigDecimal vipPrice;
     private String title;
     private String specification;
     private String hostImg;

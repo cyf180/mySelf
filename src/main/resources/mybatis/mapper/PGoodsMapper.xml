@@ -8,6 +8,7 @@
     <result column="zoneType" property="zoneType" jdbcType="INTEGER" />
     <result column="isSuit" property="isSuit" jdbcType="INTEGER" />
     <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="vipPrice" property="vipPrice" jdbcType="DECIMAL" />
     <result column="title" property="title" jdbcType="VARCHAR" />
     <result column="specification" property="specification" jdbcType="VARCHAR" />
     <result column="hostImg" property="hostImg" jdbcType="VARCHAR" />
@@ -19,7 +20,7 @@
   </resultMap>
   <sql id="Base_Column_List" >
     id, classId, goodsName, zoneType, isSuit, price, title, specification, hostImg, details, 
-    isDel, createTime,repertory,soldNum
+    isDel, createTime,repertory,soldNum,vipPrice
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -92,6 +93,9 @@
       <if test="sort != null" >
         sort,
       </if>
+      <if test="vipPrice != null" >
+        vipPrice,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="classId != null" >
@@ -135,6 +139,9 @@
       </if>
       <if test="sort != null" >
         #{sort},
+      </if>
+      <if test="vipPrice != null" >
+        #{vipPrice},
       </if>
     </trim>
   </insert>
@@ -183,6 +190,9 @@
       <if test="sort != null" >
         sort = #{sort},
       </if>
+      <if test="vipPrice != null" >
+        vipPrice = #{vipPrice},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -202,7 +212,7 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="pageList" resultType="com.tdpro.entity.extend.GoodsETD" parameterType="com.tdpro.entity.extend.GoodsETD">
-    select id,classId,goodsName,zoneType,isSuit,price,title,specification,hostImg,createTime
+    select id,classId,goodsName,zoneType,isSuit,price,title,specification,hostImg,createTime,vipPrice
     from p_goods
     <where>
       isDel = 0
@@ -219,7 +229,7 @@
     order by sort asc,createTime desc
   </select>
   <select id="selectInfo" resultType="com.tdpro.entity.extend.GoodsETD" parameterType="com.tdpro.entity.extend.GoodsETD">
-    select id,classId,goodsName,zoneType,isSuit,price,title,specification,hostImg,details,createTime,repertory,soldNum
+    select id,classId,goodsName,zoneType,isSuit,price,title,specification,hostImg,details,createTime,repertory,soldNum,vipPrice
     from p_goods
     where id=#{id}
     and isDel = 0
@@ -233,7 +243,7 @@
   </update>
   <select id="adminPageList" resultType="com.tdpro.entity.extend.GoodsPageETD" parameterType="com.tdpro.entity.extend.GoodsPageETD">
     select g.id,g.classId,g.goodsName,g.zoneType,g.isSuit,g.price,g.title,g.specification,g.hostImg,g.details,g.isDel,g.createTime,g.sort,g.repertory,g.soldNum,g.sort,
-    c.className
+    c.className,g.vipPrice
     from p_goods g
     left join p_goods_class c on g.classId=c.id
     <where>

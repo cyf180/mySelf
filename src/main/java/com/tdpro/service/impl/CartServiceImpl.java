@@ -3,6 +3,7 @@ package com.tdpro.service.impl;
 import com.github.pagehelper.StringUtil;
 import com.tdpro.entity.PCart;
 import com.tdpro.entity.PGoodsSuit;
+import com.tdpro.entity.PUser;
 import com.tdpro.entity.extend.CartETD;
 import com.tdpro.entity.extend.GoodsETD;
 import com.tdpro.mapper.PCartMapper;
@@ -21,7 +22,8 @@ public class CartServiceImpl implements CartService {
     @Autowired
     private PCartMapper cartMapper;
     @Override
-    public Boolean insertCart(Long uid, GoodsETD goodsInfo, Long orderId, int num,String suitName) {
+    public Boolean insertCart(PUser user, GoodsETD goodsInfo, Long orderId, int num, String suitName) {
+        Long uid = user.getId();
         PCart cartADD= new PCart();
         cartADD.setUid(uid);
         cartADD.setOrderId(orderId);
