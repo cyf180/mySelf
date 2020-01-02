@@ -19,6 +19,8 @@ public class CartETD {
 
     private BigDecimal price;
 
+    private BigDecimal vipPrice;
+
     private String suitName;
 
     private String goodsName;

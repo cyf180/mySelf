@@ -47,6 +47,8 @@ public class GoodsServiceImpl implements GoodsService {
     private PCartMapper cartMapper;
     @Autowired
     private PCollectMapper collectMapper;
+    @Autowired
+    private UserService userService;
     Lock isDelLock = new ReentrantLock();
 
     @Override
@@ -120,9 +122,12 @@ public class GoodsServiceImpl implements GoodsService {
         if (null != userSite) {
             orderCart.setUserSite(userSite);
         }
-        List<GoodsExchangeETD> exchangeList = exchangeMapper.selectListByGoodsIdAndUid(orderCart.getGoodsId(), uid);
-        if (null != exchangeList && exchangeList.size() > 0) {
-            orderCart.setGoodsExchangeList(exchangeList);
+        PUser user = userService.findById(uid);
+        if(null != user && !user.getIsUser().equals(new Integer(0))){
+            List<GoodsExchangeETD> exchangeList = exchangeMapper.selectListByGoodsIdAndUid(orderCart.getGoodsId(), uid);
+            if (null != exchangeList && exchangeList.size() > 0) {
+                orderCart.setGoodsExchangeList(exchangeList);
+            }
         }
         List<CartETD> cartList = cartMapper.findListByOrderId(orderCart.getOrderId());
         if (null != cartList) {

@@ -55,6 +55,8 @@ public class UserAskServiceImpl implements UserAskService {
             if(!issue){
                 throw new BusinessException("获取券失败");
             }
+            userVoucherService.voucherIssue(user.getStrawUid(),user.getId(),IssueType.USER_ASK_TYPE);
+
         }
         return ResponseUtils.successRes(1);
     }
