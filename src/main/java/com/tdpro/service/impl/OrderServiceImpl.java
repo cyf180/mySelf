@@ -193,7 +193,7 @@ public class OrderServiceImpl implements OrderService {
     private POrder getAddOrder(GoodsETD goodsInfo, PUser userInfo, int orderNumber) {
         Long uid = userInfo.getId();
         BigDecimal price = goodsInfo.getPrice();
-        if(userInfo.getIsUser().equals(new Integer(1)) && goodsInfo.getVipPrice().compareTo(new BigDecimal("0")) > 0){
+        if(userInfo.getIsUser().equals(new Integer(1)) && goodsInfo.getVipPrice().compareTo(new BigDecimal("0")) >= 0){
             price = goodsInfo.getVipPrice();//是会员取会员价格
         }
         if(price.compareTo(new BigDecimal("0")) < 0){
