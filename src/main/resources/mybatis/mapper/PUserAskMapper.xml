@@ -6,12 +6,13 @@
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.tdpro.entity.PUserAsk" extends="BaseResultMap" >
     <result column="content" property="content" jdbcType="LONGVARCHAR" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
     `uid`
   </sql>
   <sql id="Blob_Column_List" >
-    content
+    content,createTime
   </sql>
   <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
     select 
@@ -38,6 +39,9 @@
       <if test="content != null" >
         content,
       </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="uid != null" >
@@ -45,6 +49,9 @@
       </if>
       <if test="content != null" >
         #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
       </if>
     </trim>
   </insert>
@@ -62,4 +69,16 @@
     set content = #{content,jdbcType=LONGVARCHAR}
     where `uid` = #{uid,jdbcType=BIGINT}
   </update>
+  <select id="findPageList" resultType="com.tdpro.entity.extend.UserAskPageETD" parameterType="com.tdpro.entity.extend.UserAskPageETD">
+    select a.uid id,u.phone,a.createTime
+    from p_user_ask a
+    left join p_user u on a.uid=u.id
+    order by a.createTime desc
+  </select>
+  <select id="findInfo" resultType="com.tdpro.entity.extend.UserAskPageETD" parameterType="java.lang.Long">
+    select a.uid,u.phone,a.createTime,a.content
+    from p_user_ask a
+    left join p_user u on a.uid=u.id
+    where uid=#{0}
+  </select>
 </mapper>

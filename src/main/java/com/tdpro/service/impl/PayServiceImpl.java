@@ -156,10 +156,10 @@ public class PayServiceImpl implements PayService {
             payETD.setVoucherId(null);
         }
         if (null != payETD.getVoucherId() && !payETD.getVoucherId().equals(new Long(0))) {
-            if(userInfo.getIsUser().equals(new Integer(0))){
-                payReturn.setMsg("您不是会员尚不能使用抵用券");
-                return payReturn;
-            }
+//            if(userInfo.getIsUser().equals(new Integer(0))){
+//                payReturn.setMsg("您不是会员尚不能使用抵用券");
+//                return payReturn;
+//            }
             GoodsExchangeETD goodsVoucher = exchangeService.selectByGoodsIdAndVoucherId(goodsInfo.getId(), payETD.getVoucherId());
             if (null == goodsVoucher) {
                 payReturn.setMsg("该商品不能使用当前券");

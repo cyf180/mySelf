@@ -1,11 +1,14 @@
 package com.tdpro.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class PUserAsk implements Serializable {
     private Long uid;
 
     private String content;
+
+    private Date createTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -23,6 +26,14 @@ public class PUserAsk implements Serializable {
 
     public void setContent(String content) {
         this.content = content == null ? null : content.trim();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
     @Override

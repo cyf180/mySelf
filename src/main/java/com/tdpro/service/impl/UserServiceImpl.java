@@ -353,7 +353,7 @@ public class UserServiceImpl implements UserService {
             if(!userLoginService.updateUserLogin(userLoginUPD)){
                 throw new RuntimeException("绑定用手机失败");
             }
-            userVoucherService.voucherIssue(strawUid,userADD.getId(),IssueType.ENROLL_TYPE);
+//            userVoucherService.voucherIssue(strawUid,userADD.getId(),IssueType.ENROLL_TYPE);
             onlineUserInfo.setUid(userADD.getId());
             onlineUserInfo.setUserLogId(userLogin.getId());
             onlineUserInfo.setLoginRole("USER_ROLE");

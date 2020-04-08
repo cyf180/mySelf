@@ -123,7 +123,7 @@ public class GoodsServiceImpl implements GoodsService {
             orderCart.setUserSite(userSite);
         }
         PUser user = userService.findById(uid);
-        if(null != user && !user.getIsUser().equals(new Integer(0))){
+        if(null != user){
             List<GoodsExchangeETD> exchangeList = exchangeMapper.selectListByGoodsIdAndUid(orderCart.getGoodsId(), uid);
             if (null != exchangeList && exchangeList.size() > 0) {
                 orderCart.setGoodsExchangeList(exchangeList);
