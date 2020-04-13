@@ -49,6 +49,9 @@ public class GoodsServiceImpl implements GoodsService {
     private PCollectMapper collectMapper;
     @Autowired
     private UserService userService;
+    @Autowired
+    private POrderVoucherMapper orderVoucherMapper;
+
     Lock isDelLock = new ReentrantLock();
 
     @Override
@@ -117,6 +120,10 @@ public class GoodsServiceImpl implements GoodsService {
         OrderCartETD orderCart = orderMapper.selectAffirmById(id);
         if (null == orderCart) {
             return ResponseUtils.errorRes("订单不存在或不属于待支付");
+        }
+        PVoucher voucher = orderVoucherMapper.findByOrderId(orderCart.getOrderId());
+        if(null != voucher){
+            orderCart.setVoucher(voucher);
         }
         UserSiteETD userSite = userSiteMapper.selectOneByUid(uid);
         if (null != userSite) {

@@ -1,6 +1,7 @@
 package com.tdpro.entity.extend;
 
 import com.tdpro.entity.PGoodsExchange;
+import com.tdpro.entity.PVoucher;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -22,9 +23,10 @@ public class OrderCartETD {
     @ApiModelProperty(value = "订单总数量")
     private Integer orderNum;
     @ApiModelProperty(value = "商品优惠券配置列表")
-    List<GoodsExchangeETD> goodsExchangeList;
+    private List<GoodsExchangeETD> goodsExchangeList;
     @ApiModelProperty(value = "规格配置列表")
-    List<GoodsSuitETD> suitList;
+    private List<GoodsSuitETD> suitList;
     @ApiModelProperty(value = "订单产品列表")
-    List<CartETD> cartList;
+    private List<CartETD> cartList;
+    private PVoucher voucher;
 }

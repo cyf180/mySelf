@@ -156,10 +156,6 @@ public class PayServiceImpl implements PayService {
             payETD.setVoucherId(null);
         }
         if (null != payETD.getVoucherId() && !payETD.getVoucherId().equals(new Long(0))) {
-//            if(userInfo.getIsUser().equals(new Integer(0))){
-//                payReturn.setMsg("您不是会员尚不能使用抵用券");
-//                return payReturn;
-//            }
             GoodsExchangeETD goodsVoucher = exchangeService.selectByGoodsIdAndVoucherId(goodsInfo.getId(), payETD.getVoucherId());
             if (null == goodsVoucher) {
                 payReturn.setMsg("该商品不能使用当前券");
@@ -203,7 +199,7 @@ public class PayServiceImpl implements PayService {
                 return payReturn;
             }
             if (null != voucherList && voucherList.size() > 0) {
-                if (!userVoucherService.updateUserVoucherIsUse(voucherList)) {
+                if (!userVoucherService.updateUserVoucherIsUse(voucherList,orderInfo.getId())) {
                     throw new RuntimeException("使用券失败");
                 }
             }
@@ -224,14 +220,21 @@ public class PayServiceImpl implements PayService {
                 payReturn.setMsg("微信账号异常");
                 return payReturn;
             }
-            if (null != voucherList && voucherList.size() > 0) {
-                if (!userVoucherService.updateUserVoucherIsLock(voucherList)) {
-                    throw new RuntimeException("优惠券绑定失败");
+            POrder orderSET = new POrder();
+            List<POrderVoucher> orderVoucherList = orderVoucherService.findListByOrderId(orderInfo.getId());
+            if (null != orderVoucherList && orderVoucherList.size() > 0) {
+                realPrice = orderInfo.getRealPrice();
+            }else{
+                if (null != voucherList && voucherList.size() > 0) {
+                    if (!userVoucherService.updateUserVoucherIsLock(voucherList,orderInfo.getId())) {
+                        throw new RuntimeException("优惠券绑定失败");
+                    }
+                    orderSET.setRealPrice(realPrice);
                 }
             }
-            POrder orderSET = new POrder();
+            String payNo = this.createPayNo(orderInfo);
             orderSET.setId(orderInfo.getId());
-            orderSET.setRealPrice(realPrice);
+            orderSET.setPayNo(payNo);
             if(!orderService.updateOrder(orderSET)){
                 throw new RuntimeException("订单实付价格更新失败");
             }
@@ -242,7 +245,7 @@ public class PayServiceImpl implements PayService {
             wxPayET.setWxPayConfig(wxPayConfig);
             wxPayET.setTradeType(WxPayConstants.TradeType.JSAPI);
             wxPayET.setCreateIp("127.0.0.1");
-            wxPayET.setOutTradeNo(orderInfo.getOrderNo());
+            wxPayET.setOutTradeNo(payNo);
             wxPayET.setTotalFee(realPrice);
             wxPayET.setAttach("orderPay");
             wxPayET.setOpenId(userLogin.getOpenId());
@@ -299,12 +302,12 @@ public class PayServiceImpl implements PayService {
             payReturn.setMsg("您的" + goodsVoucher.getVoucherName() + "数量不足");
             return payReturn;
         }
-        for (PUserVoucher userVoucher : voucherList) {
-            if (!orderVoucherService.insertVoucher(orderId, uid, userVoucher.getId())) {
-                throw new RuntimeException("券绑定失败");
-            }
-        }
-        if (!userVoucherService.updateUserVoucherIsUse(voucherList)) {
+//        for (PUserVoucher userVoucher : voucherList) {
+//            if (!orderVoucherService.insertVoucher(orderId, uid, userVoucher.getId())) {
+//                throw new RuntimeException("券绑定失败");
+//            }
+//        }
+        if (!userVoucherService.updateUserVoucherIsUse(voucherList,orderId)) {
             throw new RuntimeException("使用绑定失败");
         }
 //        List<GoodsExchangeETD> goodsExchangeList = exchangeService.selectListByGoodsId(orderInfo.getGoodsId());
@@ -387,5 +390,11 @@ public class PayServiceImpl implements PayService {
             return ResponseUtils.errorRes(msgBean.get("msg").toString());
         }
         return ResponseUtils.successRes(msgBean.get("msg"));
+    }
+
+    private String createPayNo(POrder order) {
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append(order.getId()).append(order.getUid()).append(System.currentTimeMillis());
+        return stringBuffer.toString();
     }
 }

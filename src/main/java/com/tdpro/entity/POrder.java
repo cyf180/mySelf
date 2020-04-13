@@ -59,6 +59,8 @@ public class POrder implements Serializable {
 
     private Integer isKnot;
 
+    private String payNo;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -275,6 +277,14 @@ public class POrder implements Serializable {
 
     public void setIsKnot(Integer isKnot) {
         this.isKnot = isKnot;
+    }
+
+    public String getPayNo() {
+        return payNo;
+    }
+
+    public void setPayNo(String payNo) {
+        this.payNo = payNo;
     }
 
     @Override

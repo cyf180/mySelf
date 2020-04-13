@@ -63,6 +63,8 @@ public class OrderETD extends Page {
 
     private Integer isKnot;
 
+    private String payNo;
+
     private String hostImg;
 
     private BigDecimal unitPrice;

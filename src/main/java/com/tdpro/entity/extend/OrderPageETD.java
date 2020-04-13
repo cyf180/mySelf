@@ -63,6 +63,8 @@ public class OrderPageETD extends QueryModel {
 
     private Integer isKnot;
 
+    private String payNo;
+
     private String userPhone;
 
     private String startTimes;

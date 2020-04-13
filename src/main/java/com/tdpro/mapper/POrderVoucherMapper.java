@@ -1,6 +1,7 @@
 package com.tdpro.mapper;
 
 import com.tdpro.entity.POrderVoucher;
+import com.tdpro.entity.PVoucher;
 import com.tdpro.entity.extend.OrderVoucherETD;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -23,4 +24,6 @@ public interface POrderVoucherMapper {
     List<POrderVoucher> findListByOrderId(Long orderId);
 
     List<OrderVoucherETD> findAdminListByOrderId(Long orderId);
+
+    PVoucher findByOrderId(Long orderId);
 }

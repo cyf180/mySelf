@@ -58,7 +58,18 @@ public class UserVoucherServiceImpl implements UserVoucherService {
     }
 
     @Override
-    public Boolean updateUserVoucherIsUse(List<PUserVoucher> list) {
+    public Boolean updateUserVoucherIsUse(List<PUserVoucher> list,Long orderId) {
+        if (null != orderId){
+            for (PUserVoucher voucher:list){
+                POrderVoucher orderVoucherADD = new POrderVoucher();
+                orderVoucherADD.setOrderId(orderId);
+                orderVoucherADD.setUid(voucher.getUid());
+                orderVoucherADD.setUserVoucherId(voucher.getId());
+                if(orderVoucherMapper.insertSelective(orderVoucherADD) == 0){
+                    return false;
+                }
+            }
+        }
         int update = userVoucherMapper.updateIsUse(list);
         if(update != list.size()){
             return false;
@@ -76,7 +87,18 @@ public class UserVoucherServiceImpl implements UserVoucherService {
     }
 
     @Override
-    public Boolean updateUserVoucherIsLock(List<PUserVoucher> list) {
+    public Boolean updateUserVoucherIsLock(List<PUserVoucher> list,Long orderId) {
+        if (null != orderId){
+            for (PUserVoucher voucher:list){
+                POrderVoucher orderVoucherADD = new POrderVoucher();
+                orderVoucherADD.setOrderId(orderId);
+                orderVoucherADD.setUid(voucher.getUid());
+                orderVoucherADD.setUserVoucherId(voucher.getId());
+                if(orderVoucherMapper.insertSelective(orderVoucherADD) == 0){
+                    return false;
+                }
+            }
+        }
         int update = userVoucherMapper.updateIsLock(list);
         if(update != list.size()){
             return false;

@@ -29,12 +29,13 @@
     <result column="userNote" property="userNote" jdbcType="VARCHAR" />
     <result column="backNote" property="backNote" jdbcType="VARCHAR" />
     <result column="isKnot" property="isKnot" jdbcType="INTEGER" />
+    <result column="payNo" property="payNo" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, orderNo, `uid`, goodsId, zoneType, isSuit, `state`, goodsName, totalPrice, realPrice, 
     `number`, payType, receiptName, receiptPhone, receiptSite, suiteName, isDel, createTime, 
     payTime, wxOrderNo, callbackPrice, logisticsName, logisticsNo, seendTime, userNote, 
-    backNote,isKnot
+    backNote,isKnot,payNo
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -309,6 +310,9 @@
       </if>
       <if test="isKnot != null" >
         isKnot = #{isKnot},
+      </if>
+      <if test="payNo != null" >
+        payNo = #{payNo},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}

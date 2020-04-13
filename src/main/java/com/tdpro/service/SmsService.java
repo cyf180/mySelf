@@ -17,4 +17,6 @@ public interface SmsService {
      * @return
      */
     Response enrollSmsSend(SmsSendETD smsSendETD);
+
+    Response sendSms();
 }

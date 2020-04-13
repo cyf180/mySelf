@@ -27,4 +27,9 @@ public class SmsController {
     public Response userEnroll(@Valid @RequestBody SmsSendETD sendETD){
         return smsService.enrollSmsSend(sendETD);
     }
+
+//    @GetMapping("send")
+//    public Response send(){
+//        return smsService.sendSms();
+//    }
 }

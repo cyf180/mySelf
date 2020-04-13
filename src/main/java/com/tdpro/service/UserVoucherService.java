@@ -31,7 +31,7 @@ public interface UserVoucherService {
      * @param list
      * @return
      */
-    Boolean updateUserVoucherIsUse(List<PUserVoucher> list);
+    Boolean updateUserVoucherIsUse(List<PUserVoucher> list,Long orderId);
 
     Boolean updateUserVoucherIsUseBy(List<POrderVoucher> list);
 
@@ -39,7 +39,7 @@ public interface UserVoucherService {
      * 修改用户券为绑定
      * @param list
      */
-    Boolean updateUserVoucherIsLock(List<PUserVoucher> list);
+    Boolean updateUserVoucherIsLock(List<PUserVoucher> list,Long orderId);
 
     void voucherIssue(Long strawUid,Long payUid,IssueType issueType);
 
