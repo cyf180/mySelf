@@ -80,7 +80,7 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectListByUid" resultType="com.tdpro.entity.extend.GoodsETD" parameterType="java.lang.Long">
-    select g.id,g.classId,g.goodsName,g.zoneType,g.isSuit,g.price,g.title,g.specification,g.hostImg,g.createTime
+    select g.id,g.classId,g.goodsName,g.zoneType,g.isSuit,g.price,g.vipPrice,g.title,g.specification,g.hostImg,g.createTime
     from p_collect cl
     left join p_goods g on cl.goodsId=g.id
     where cl.uid=#{0}
