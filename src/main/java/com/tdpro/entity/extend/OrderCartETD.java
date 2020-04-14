@@ -28,5 +28,5 @@ public class OrderCartETD {
     private List<GoodsSuitETD> suitList;
     @ApiModelProperty(value = "订单产品列表")
     private List<CartETD> cartList;
-    private PVoucher voucher;
+    private GoodsExchangeETD voucher;
 }

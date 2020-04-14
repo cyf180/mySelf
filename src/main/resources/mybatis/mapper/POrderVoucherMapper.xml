@@ -90,11 +90,12 @@
     (select count(ov.id) from p_order_voucher ov left join p_user_voucher uv on ov.userVoucherId=uv.id where ov.orderId = #{0} and voucherId=v.id) as num
     from p_voucher v
   </select>
-  <select id="findByOrderId" resultType="com.tdpro.entity.PVoucher" parameterType="java.lang.Long">
-    select v.id,v.voucherName,v.faceValue
+  <select id="findByOrderId" resultType="com.tdpro.entity.extend.GoodsExchangeETD" parameterType="java.lang.Long">
+    select uv.id,v.id as voucherId,v.voucherName,v.faceValue,e.number
     from p_order_voucher ov
     left join p_user_voucher uv on ov.userVoucherId=uv.id
     left join p_voucher v on uv.voucherId=v.id
+    left join p_goods_exchange e on v.id=e.voucherId
     where ov.orderId=#{0}
     group by v.id limit 1
   </select>

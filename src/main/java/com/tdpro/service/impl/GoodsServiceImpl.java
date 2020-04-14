@@ -121,7 +121,7 @@ public class GoodsServiceImpl implements GoodsService {
         if (null == orderCart) {
             return ResponseUtils.errorRes("订单不存在或不属于待支付");
         }
-        PVoucher voucher = orderVoucherMapper.findByOrderId(orderCart.getOrderId());
+        GoodsExchangeETD voucher = orderVoucherMapper.findByOrderId(orderCart.getOrderId());
         if(null != voucher){
             orderCart.setVoucher(voucher);
         }
