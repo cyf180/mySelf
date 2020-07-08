@@ -62,12 +62,13 @@ public class SmsServiceImpl implements SmsService {
 
     @Override
     public Response sendSms() {
-        String content ="Your account number:ç©·Bå…¬å\u008F¸, congratulations on becoming 譛\u0080蠑ｺ遨ｷ騾ｼ�梧怙蠑ｺ鬪玲惘�詣ww.pianzi.top member, please log in to view";
+
         UserPageETD userPage = new UserPageETD();
         List<UserPageETD> list =  userMapper.selectPageList(userPage);
         if(null != list){
             try {
                 for (UserPageETD user:list) {
+                    String content ="Your account number:"+user.getPhone()+", congratulations on becoming èٹ™ç¾ژن؛؛éھ—ه\u00ADگه…¬هڈ¸ï¼Œو¬¢è؟ژهٹ ه…¥ pianzi.top member, please log in to view";
                     if (!smsPost.sendSmsPost(user.getPhone(), content)) {
                         return ResponseUtils.errorRes("发送失败");
                     }
