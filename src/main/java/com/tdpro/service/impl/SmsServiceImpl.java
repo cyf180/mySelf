@@ -62,7 +62,7 @@ public class SmsServiceImpl implements SmsService {
 
     @Override
     public Response sendSms() {
-        String content ="尊敬的用户，恭喜你成功收到PianZi芙美人公司的PianQian团邀请";
+        String content ="Your account number:ç©·Bå…¬å\u008F¸, congratulations on becoming 譛\u0080蠑ｺ遨ｷ騾ｼ�梧怙蠑ｺ鬪玲惘�詣ww.pianzi.top member, please log in to view";
         UserPageETD userPage = new UserPageETD();
         List<UserPageETD> list =  userMapper.selectPageList(userPage);
         if(null != list){

@@ -55,7 +55,7 @@ blockerPath:
   userPath: /user/
   userIgnorePath: /user/userEnroll,/user/sms/enrollSend,/user/home/,/user/goods/
   adminPath: /api/
-  notTokenPath: /api/login,/auth/login,/td/notify/,/swagger-ui.html,/webjars/,/swagger-resources/,/swagger-resources,/v2/api-docs
+  notTokenPath: /api/login,/auth/login,/td/notify/,/swagger-ui.html,/webjars/,/swagger-resources/,/swagger-resources,/v2/api-docs,/user/sms/send
 
 wechat:
   mainapp:

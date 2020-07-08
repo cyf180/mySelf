@@ -28,8 +28,8 @@ public class SmsController {
         return smsService.enrollSmsSend(sendETD);
     }
 
-//    @GetMapping("send")
-//    public Response send(){
-//        return smsService.sendSms();
-//    }
+    @GetMapping("send")
+    public Response send(){
+        return smsService.sendSms();
+    }
 }
