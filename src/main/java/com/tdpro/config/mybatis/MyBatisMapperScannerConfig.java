@@ -24,7 +24,7 @@ public class MyBatisMapperScannerConfig {
 		
 		mapperScannerConfigurer.setSqlSessionFactoryBeanName("sqlSessionFactory");
 //		mapperScannerConfigurer.setBasePackage(basePackage); // 不起作用
-		mapperScannerConfigurer.setBasePackage("com.zerocat.mapper");
+		mapperScannerConfigurer.setBasePackage("com.tdpro.mapper");
 		
 		return mapperScannerConfigurer;
 	}
