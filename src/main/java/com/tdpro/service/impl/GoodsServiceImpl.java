@@ -482,7 +482,7 @@ public class GoodsServiceImpl implements GoodsService {
         if (goodsInfoETD.getZoneType().equals(new Integer(1))) {
             exchangeMapper.deleteByGoodsId(goodsId);
         }else{
-            if (null != goodsInfoETD.getSixCouponNum() && new Integer(0).compareTo(goodsInfoETD.getSixCouponNum()) < 0) {
+            if (null != goodsInfoETD.getSixCouponNum() && new Integer(0).compareTo(goodsInfoETD.getSixCouponNum()) <= 0) {
                 GoodsExchangeETD exchangeFind = exchangeMapper.selectByGoodsIdAndVoucherId(goodsId,1L);
                 if(null == exchangeFind){
                     if (!this.insertExchange(goodsId, goodsInfoETD.getSixCouponNum(), 1L)) {
@@ -498,7 +498,7 @@ public class GoodsServiceImpl implements GoodsService {
                 }
 
             }
-            if (null != goodsInfoETD.getThreeCouponNum() && new Integer(0).compareTo(goodsInfoETD.getThreeCouponNum()) < 0) {
+            if (null != goodsInfoETD.getThreeCouponNum() && new Integer(0).compareTo(goodsInfoETD.getThreeCouponNum()) <= 0) {
                 GoodsExchangeETD exchangeFind = exchangeMapper.selectByGoodsIdAndVoucherId(goodsId,2L);
                 if(null == exchangeFind) {
                     if (!this.insertExchange(goodsId, goodsInfoETD.getThreeCouponNum(), 2L)) {
